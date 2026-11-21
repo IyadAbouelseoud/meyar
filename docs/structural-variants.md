@@ -50,7 +50,7 @@ So the gap is real, it is current, and it is Saudi. A Saudi hospital buying a pa
 
 ## What is built and what is roadmap
 
-Built: the gate, the outside-call path, the contract field, and the honest screen text. The demo's CYP2D6 results come from **mock outside-call files**, each marked `mock: true` and naming a pretend caller.
+Built: the gate, the outside-call path, the contract field, and the honest screen text. The demo's CYP2D6 results come from **mock outside-call files** (`engine/data/in/*.outside.tsv`), each marked `# mock: true` and naming a pretend caller and version.
 
 Roadmap, labelled as such: running a copy-number-aware caller ourselves. PharmCAT names one for demonstration purposes:
 
