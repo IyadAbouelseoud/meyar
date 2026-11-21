@@ -20,3 +20,9 @@ Notes: Wraps `pgkb/pharmcat:3.4.0` `pharmcat_pipeline -o /pharmcat/data/out` acr
 Run: `bash engine/run_pharmcat.sh` (requires `engine/data/in/*.vcf` from A1 and Docker).
 Data contract unchanged. No new runtime dependency.
 
+
+## B1 — CPIC recommendation table (21 Nov 2026)
+Files: `tables/cpic_recommendations.json` (169 rows, 18 drugs), `tables/cpic_recommendations.schema.json`, `handoff/B1.md`.
+Notes: Text copied verbatim from the CPIC API (`api.cpicpgx.org/v1/recommendation`): clopidogrel 2022, PPIs 2020, NSAIDs 2020, opioids (codeine, tramadol) 2021, statins 2022. Rows keyed by phenotype per gene plus indication (`population`); `alternatives` filled only where the row text names one (`kind: drug` vs `kind: class`). Open gaps are listed in `_gaps`: warfarin (algorithm-based, no verbatim machine-readable source) and DPWG (not retrieved), so the table is CPIC-only.
+Run: `uv run --with jsonschema python -c "import json;from jsonschema import Draft202012Validator as V;V(json.load(open('tables/cpic_recommendations.schema.json'))).validate(json.load(open('tables/cpic_recommendations.json',encoding='utf8')))"` (no output = valid).
+Data contract unchanged. No new runtime dependency.
