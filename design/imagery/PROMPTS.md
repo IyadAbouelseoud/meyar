@@ -4,6 +4,10 @@ Fifteen photographs that give the showcase, the doctor page, the poster and the 
 
 These images are illustrative. The site footer and the poster say they are AI-generated, and they never stand in for a real patient, a real result or a real clinic.
 
+## Status
+
+All 15 rendered and converted on 21 Nov 2026 (`img-NN.webp`, `-640`, `-1920`, plus `manifest.json`). To replace one, drop the new render into `raw/` with the same ID and run the script again.
+
 ## How to use
 
 1. Open Gemini (the image model, "Nano Banana"). Paste the **Series style** paragraph first, then the prompt for one image. Generate at the aspect ratio given (Gemini accepts 1:1, 3:2, 2:3, 4:3, 3:4, 4:5, 5:4, 16:9, 9:16, 21:9).
