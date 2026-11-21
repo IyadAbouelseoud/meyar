@@ -2,7 +2,7 @@
 // Builds one self-contained HTML file of the showcase (CSS, JS and the sample QR inlined,
 // fonts from Google Fonts) so it can be shared or opened without a server.
 // Usage: node design/showcase/build-standalone.mjs [out.html]
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,7 +23,9 @@ html = html
   .replace('<link rel="stylesheet" href="../tokens.css">', '')
   .replace('<link rel="stylesheet" href="../meyar.css">', `<style>\n${css}\n</style>`)
   .replace(/import \{[^}]+\} from '\.\.\/meyar\.js';/, js).replace(/import \{[^}]+\} from '\.\.\/charts\.js';/, '')
-  .replace('src="sample-qr.svg"', `src="${qr}"`);
+  .replace('src="sample-qr.svg"', `src="${qr}"`)
+  // Inline every photo that exists so the single file shows real images.
+  .replace(/data-img="(img-\d+)"/g, (m, id) => { const f = join(d, 'imagery', id + '.webp'); return existsSync(f) ? `${m} data-src="data:image/webp;base64,${readFileSync(f).toString('base64')}"` : m; });
 
 // Fragment form (no doctype/html/head/body) for hosts that add their own skeleton.
 if (process.argv.includes('--fragment')) {

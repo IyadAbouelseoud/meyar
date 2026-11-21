@@ -568,7 +568,7 @@ import { gauge, rings, area, bars, minibars, tween } from '../charts.js';
 
 initMotion();
 // Image slots: load design/imagery/<id>.webp when it exists; keep the designed placeholder otherwise.
-document.querySelectorAll('.m-photo[data-img]').forEach((f) => { const img = f.querySelector('img'); f.classList.add('is-empty'); img.addEventListener('load', () => f.classList.remove('is-empty')); img.addEventListener('error', () => f.classList.add('is-empty')); img.src = `../imagery/${f.dataset.img}.webp`; });
+document.querySelectorAll('.m-photo[data-img]').forEach((f) => { const img = f.querySelector('img'); f.classList.add('is-empty'); img.addEventListener('load', () => f.classList.remove('is-empty')); img.addEventListener('error', () => f.classList.add('is-empty')); if (f.dataset.src) { img.src = f.dataset.src; return; } const b = `../imagery/${f.dataset.img}`; img.sizes = '(min-width: 900px) 50vw, 100vw'; img.srcset = `${b}-640.webp 640w, ${b}.webp 1280w, ${b}-1920.webp 1920w`; img.src = `${b}.webp`; img.decoding = 'async'; img.loading = 'lazy'; });
 const html = document.documentElement;
 
 // ---- fixtures (mirrors docs/fixtures, mock) ----

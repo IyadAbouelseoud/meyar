@@ -1,0 +1,287 @@
+{
+  "img-01": {
+    "ratio": "16/9",
+    "alt": "Terraced mountain village in Aseer at first light",
+    "sizes": {
+      "img-01-640.webp": {
+        "width": 640,
+        "bytes": 38122
+      },
+      "img-01.webp": {
+        "width": 1280,
+        "bytes": 130160
+      },
+      "img-01-1920.webp": {
+        "width": 1920,
+        "bytes": 291212
+      }
+    },
+    "source": "img-01.jpg"
+  },
+  "img-02": {
+    "ratio": "16/10",
+    "alt": "An older woman reads her phone by a window in a whitewashed home",
+    "sizes": {
+      "img-02-640.webp": {
+        "width": 640,
+        "bytes": 24536
+      },
+      "img-02.webp": {
+        "width": 1280,
+        "bytes": 75678
+      },
+      "img-02-1920.webp": {
+        "width": 1920,
+        "bytes": 171688
+      }
+    },
+    "source": "img-02.jpg"
+  },
+  "img-03": {
+    "ratio": "4/3",
+    "alt": "A pharmacist's hands pass a paper bag of medicine across a counter",
+    "sizes": {
+      "img-03-640.webp": {
+        "width": 640,
+        "bytes": 19472
+      },
+      "img-03.webp": {
+        "width": 1280,
+        "bytes": 47906
+      },
+      "img-03-1920.webp": {
+        "width": 1920,
+        "bytes": 90276
+      }
+    },
+    "source": "img-03.jpg"
+  },
+  "img-04": {
+    "ratio": "4/3",
+    "alt": "Saliva collection tube and sealed mailer on a stone surface",
+    "sizes": {
+      "img-04-640.webp": {
+        "width": 640,
+        "bytes": 69704
+      },
+      "img-04.webp": {
+        "width": 1280,
+        "bytes": 204470
+      },
+      "img-04-1920.webp": {
+        "width": 1920,
+        "bytes": 423942
+      }
+    },
+    "source": "img-04.jpg"
+  },
+  "img-05": {
+    "ratio": "16/10",
+    "alt": "A clinician's hands beside a tablet at a consulting desk",
+    "sizes": {
+      "img-05-640.webp": {
+        "width": 640,
+        "bytes": 15032
+      },
+      "img-05.webp": {
+        "width": 1280,
+        "bytes": 37406
+      },
+      "img-05-1920.webp": {
+        "width": 1920,
+        "bytes": 78410
+      }
+    },
+    "source": "img-05.jpg"
+  },
+  "img-06": {
+    "ratio": "3/2",
+    "alt": "The printed Meyar card on a majlis table beside a dallah and dates",
+    "sizes": {
+      "img-06-640.webp": {
+        "width": 640,
+        "bytes": 36144
+      },
+      "img-06.webp": {
+        "width": 1280,
+        "bytes": 100434
+      },
+      "img-06-1920.webp": {
+        "width": 1920,
+        "bytes": 188616
+      }
+    },
+    "source": "img-06.jpg"
+  },
+  "img-07": {
+    "ratio": "21/7",
+    "alt": "Juniper forest on the Aseer escarpment at dawn",
+    "sizes": {
+      "img-07-640.webp": {
+        "width": 640,
+        "bytes": 10562
+      },
+      "img-07.webp": {
+        "width": 1280,
+        "bytes": 30574
+      },
+      "img-07-1920.webp": {
+        "width": 1920,
+        "bytes": 67540
+      }
+    },
+    "source": "img-07.jpg"
+  },
+  "img-08": {
+    "ratio": "1/1",
+    "alt": "Close detail of hand-painted Al-Qatt Al-Asiri wall patterns",
+    "sizes": {
+      "img-08-640.webp": {
+        "width": 640,
+        "bytes": 84298
+      },
+      "img-08.webp": {
+        "width": 1280,
+        "bytes": 270308
+      },
+      "img-08-1920.webp": {
+        "width": 1920,
+        "bytes": 633412
+      }
+    },
+    "source": "img-08.jpg"
+  },
+  "img-09": {
+    "ratio": "1/1",
+    "alt": "A set of old brass apothecary weights on linen",
+    "sizes": {
+      "img-09-640.webp": {
+        "width": 640,
+        "bytes": 94064
+      },
+      "img-09.webp": {
+        "width": 1280,
+        "bytes": 279868
+      },
+      "img-09-1920.webp": {
+        "width": 1920,
+        "bytes": 567398
+      }
+    },
+    "source": "img-09.jpg"
+  },
+  "img-10": {
+    "ratio": "4/5",
+    "alt": "A young man helps his grandfather with a phone, seen from behind",
+    "sizes": {
+      "img-10-640.webp": {
+        "width": 640,
+        "bytes": 38456
+      },
+      "img-10.webp": {
+        "width": 1280,
+        "bytes": 114412
+      },
+      "img-10-1920.webp": {
+        "width": 1792,
+        "bytes": 277132
+      }
+    },
+    "source": "img-10.jpg"
+  },
+  "img-11": {
+    "ratio": "3/2",
+    "alt": "A gloved hand loads a sample plate in a clinical laboratory",
+    "sizes": {
+      "img-11-640.webp": {
+        "width": 640,
+        "bytes": 15306
+      },
+      "img-11.webp": {
+        "width": 1280,
+        "bytes": 36676
+      },
+      "img-11-1920.webp": {
+        "width": 1920,
+        "bytes": 74490
+      }
+    },
+    "source": "img-11.jpg"
+  },
+  "img-12": {
+    "ratio": "16/9",
+    "alt": "A daylit hospital corridor with soft motion blur",
+    "sizes": {
+      "img-12-640.webp": {
+        "width": 640,
+        "bytes": 17876
+      },
+      "img-12.webp": {
+        "width": 1280,
+        "bytes": 54934
+      },
+      "img-12-1920.webp": {
+        "width": 1920,
+        "bytes": 122684
+      }
+    },
+    "source": "img-12.jpg"
+  },
+  "img-13": {
+    "ratio": "16/9",
+    "alt": "Pharmacy shelves of plain medicine boxes in soft focus",
+    "sizes": {
+      "img-13-640.webp": {
+        "width": 640,
+        "bytes": 11910
+      },
+      "img-13.webp": {
+        "width": 1280,
+        "bytes": 27790
+      },
+      "img-13-1920.webp": {
+        "width": 1920,
+        "bytes": 49444
+      }
+    },
+    "source": "img-13.jpg"
+  },
+  "img-14": {
+    "ratio": "4/3",
+    "alt": "A hand holds the printed card to a scanner at a pharmacy counter",
+    "sizes": {
+      "img-14-640.webp": {
+        "width": 640,
+        "bytes": 16860
+      },
+      "img-14.webp": {
+        "width": 1280,
+        "bytes": 42072
+      },
+      "img-14-1920.webp": {
+        "width": 1920,
+        "bytes": 80914
+      }
+    },
+    "source": "img-14.jpg"
+  },
+  "img-15": {
+    "ratio": "4/5",
+    "alt": "A single capsule resting on the pan of a brass balance",
+    "sizes": {
+      "img-15-640.webp": {
+        "width": 640,
+        "bytes": 30078
+      },
+      "img-15.webp": {
+        "width": 1280,
+        "bytes": 85030
+      },
+      "img-15-1920.webp": {
+        "width": 1792,
+        "bytes": 169070
+      }
+    },
+    "source": "img-15.jpg"
+  }
+}
