@@ -53,3 +53,25 @@ Schema: `docs/data-contract.schema.json`. Fixture: `docs/fixtures/demo-001.contr
 - Candidates are never re-picked from frequency. "Indeterminate" means uncertain allele function, not phase ambiguity.
 - The patient side never says "safe". Its three answers: No gene guidance for your profile / Ask the pharmacist before buying / Do not take without your doctor.
 - Drug–drug interaction checking in general is out of scope; only the gene-mediated inhibitor effect above is in.
+
+## 8. Killed claims — never say, write or code
+- Saudi premarital screening does NOT collect G6PD. Sickle cell trait is NOT PGx-actionable. Co-trimoxazole is low-to-no risk in the 2022 G6PD update. The 25% G6PD figure is Al-Ahsa, not Aseer.
+- Star-allele callers do not generally use population frequency to resolve ambiguous diplotypes (PharmCAT: "as arbitrary as sorting them alphabetically").
+- The physical device is not built: tiers T3/T4 are labelled "Concept render — not built". Cite TAILOR-PCI (JAMA 2020, primary endpoint not significant) ourselves.
+- The PIN-encrypted QR stops casual scanning only; a copied QR can be brute-forced offline.
+- No unsourced number anywhere. No row in `docs/sources.md` → leave it out and flag it.
+
+## 9. PharmCAT rules
+- CLI only, in Docker, GRCh38 with `chr` prefixes. Absent positions are no-calls, not reference. Flags its docs label DANGEROUS must NEVER be used. Pin demo results with an outside-call file, never hand-edited VCFs.
+- Coverage (A5) and phenoconversion (A7) are separate steps after PharmCAT, never inside it.
+
+## 10. How every agent works
+1. Read AGENTS.md, then the task prompt, then `handoff/<TASK>.md`, then `docs/research/README.md` for background.
+2. Produce an Implementation Plan and wait for approval before code.
+3. Ask before: destructive commands, deleting files, new dependencies, changing a port, the data contract or a table you do not own.
+4. UI: verify at 375 px and 1440 px, Arabic RTL and English, with screenshots.
+5. Stop after every Done-when box is proven, or after 3 failed attempts at one step (write the handoff). Never start the next task.
+6. Commit messages: `<TASK>: <what>`. One task per branch or session.
+
+## 11. Review
+Before submission run `prompts/REVIEW-opus-5.5.md` in Claude Code on Opus 5.5. It checks every rule in this file.
