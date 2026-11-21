@@ -2,6 +2,8 @@
 
 One self-contained prompt per task. Each carries the locked context, the data contract, the verified facts and the don't-say list, so it works pasted into a fresh Google Antigravity session with no other context.
 
+Every prompt keeps a live `handoff/<TASK>.md` and stops safely near limits (see AGENTS.md section 3). To resume a stopped task, paste the same prompt again. The demo runs on mock data, so unverified regulations never block a task.
+
 How to use: open the `meyar` repo in Antigravity, start a new agent session, paste one prompt, approve its Implementation Plan, let it build, check its "Done when" boxes. One task per session. When all tasks are in, run [REVIEW-opus-5.5.md](REVIEW-opus-5.5.md) in Claude Code on Opus 5.5.
 
 | Task | Title | Workstream | Hours | Depends on |
@@ -16,7 +18,9 @@ How to use: open the `meyar` repo in Antigravity, start a new agent session, pas
 | [B2](B2.md) | CDS Hooks order-sign service | B | 4 | A4 |
 | [B3](B3.md) | Non-interruptive prescriber card | B | 3 | B2 |
 | [B4](B4.md) | Alert log and counts dashboard | B | 2 | B3 |
+| [A7](A7.md) | Phenoconversion: current medicines shift the effective phenotype | A | 3 | A4, A5, B1 |
 | [B5](B5.md) | Side-by-side alert comparison screen | B | 1 | B3 |
+| [B6](B6.md) | Prescriber card: better-matched alternatives and current-medicine effects | B | 3 | B1, B3, A7 |
 | [C1](C1.md) | Arabic-first patient screen | C | 4 | A4 |
 | [C2](C2.md) | Offline QR encoder | C | 3 | C1 |
 | [C3](C3.md) | Scan-side reader | C | 2 | C2 |
@@ -25,6 +29,7 @@ How to use: open the `meyar` repo in Antigravity, start a new agent session, pas
 | [C6](C6.md) | OTC quick-check search | C | 3 | B1, C1 |
 | [C7](C7.md) | Printable QR card | C | 2 | C2, C8 |
 | [C8](C8.md) | PIN-protected QR payload | C | 3 | C2 |
+| [C9](C9.md) | Patient app: current medicines, better matches, pharmacy check | C | 3 | C1, C6, A7, B6 |
 | [D1](D1.md) | Poster | D | 5 | 0.2 |
 | [D2](D2.md) | Architecture diagram | D | 2 | A4, B2 |
 | [D3](D3.md) | Demo video | D | 3 | A, B, C done |

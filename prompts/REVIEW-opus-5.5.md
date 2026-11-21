@@ -12,6 +12,9 @@
 - Architecture: genotype source (lab, regional array, chain-of-custody saliva kit) → germline-only gate (A6) → PharmCAT 3.4.0 in Docker, batch, once → FHIR phenotype store (HAPI, Genomics Reporting IG) → A5 coverage flag (separate arithmetic step, NEVER inside PharmCAT) → two outputs: CDS Hooks 2.0.1 order-sign card (non-interruptive, with backward sweep) and the Arabic Medication Passport (offline, PIN-encrypted QR that encodes the payload itself, not a URL).
 - Repo `meyar/`: engine/, cds/, passport/, kit/, hardware/, tables/ (shared, ONE OWNER PER FILE), docs/, prompts/. Ports are fixed: HAPI 8080, CDS service 3000, CDS Hooks sandbox 8081, passport 5173. Pinned: pgkb/pharmcat:3.4.0, hapiproject/hapi:v8.12.0-2, bcftools 1.24, Node 22 LTS, Python 3.12.
 - Do NOT install: Java (PharmCAT runs in Docker), Kubernetes, any database server, React Native.
+- Read `AGENTS.md` first; it holds every settled rule and wins over this prompt. Background research digest: `docs/research/README.md`.
+- MOCK DATA: the demo and presentation run on mock data only (synthetic patients, GeT-RM samples, mock medicine and current-medication lists, each `"mock": true`). Unverified regulations (SFDA, PDPL, NPHIES) are NOT blockers: note them as a future deployment step and keep building. Mock data never licenses an invented sourced number.
+- New features (locked): A7 phenoconversion — current medicines that inhibit CYP2D6 shift the effective phenotype (activity score ×0.5 moderate, ×0 strong; inhibitor strength only from tables/cyp_inhibitors.json); B6/C9 better-matched alternatives — shown only when the CPIC row in tables/cpic_recommendations.json names one, never generated. Both the genetic and the effective phenotype are always shown.
 
 ## Data contract (every component reads and writes exactly this shape; schema in docs/data-contract.schema.json)
 ```json
@@ -67,6 +70,11 @@ Audit the whole repository against the build prompts in prompts/ and the context
 8. Hardware: every render and video frame of hardware carries its status label; nothing not built is shown as built.
 9. Ports and versions match the README exactly.
 10. Mandatory lines present: "Research prototype — not for clinical use." and "Runs on synthetic and GeT-RM reference data; no patient data was used."
+11. AGENTS.md compliance: every rule in AGENTS.md sections 2–10 holds in the code and docs; list each violated rule with evidence.
+12. Handoffs: every built task has `handoff/<TASK>.md` with Status: DONE and a matching commit; any IN PROGRESS or BLOCKED handoff is listed with its "Next step".
+13. A7 phenoconversion: `phenotype` is never overwritten; CYP2D6 score uses ×0.5 / ×0 exactly (Thomas et al. 2020); every inhibitor row in tables/cyp_inhibitors.json cites the FDA table; non-CYP2D6 genes are flagged, never scored; demo-002 shows Normal → acting Poor because of paroxetine on card and Passport.
+14. Alternatives (B6/C9): every alternative shown traces to a `alternatives` entry in tables/cpic_recommendations.json with a source; none is generated or ranked; patient app says "ask your doctor", never "switch".
+15. Mock data: every mock record has `"mock": true`, the UI shows a "Demo data" label, and no doc treats an unverified regulation as a blocker or as already approved.
 </task>
 
 <constraints>
@@ -80,8 +88,10 @@ Write docs/REVIEW.md with:
 1. Verdict in one line: ready / ready with fixes / not ready.
 2. Table: task ID, status (pass / fail / not built / could not check), evidence.
 3. Findings ranked by severity (blocks submission / wrong in front of a judge / minor), each with path:line, what is wrong, and the smallest fix.
-4. Cross-cutting checks 1–10, each pass or fail with evidence.
+4. Cross-cutting checks 1–15, each pass or fail with evidence.
 Then print the verdict and the top five findings in the terminal.
 </output_format>
+
+If your context or usage limit approaches before you finish, write what you have to docs/REVIEW.md with a "Not yet checked" list, save `handoff/REVIEW.md` with the next check to run, and stop.
 
 Stop after writing docs/REVIEW.md. If the stack will not start after two attempts, stop and report the error instead of debugging it.
