@@ -20,3 +20,8 @@ Notes: Wraps `pgkb/pharmcat:3.4.0` `pharmcat_pipeline -o /pharmcat/data/out` acr
 Run: `bash engine/run_pharmcat.sh` (requires `engine/data/in/*.vcf` from A1 and Docker).
 Data contract unchanged. No new runtime dependency.
 
+## F1 — Blender static renders (21 Nov 2026)
+Files: `hardware/blender/` (`build_renders.py`, `compose.py`, `art/make_art.py`, `art/out/*.png`, `meyar_t1.blend`, `meyar_t3.blend`, `meyar_t4.blend`, `renders/meyar-t1-saliva-kit.png`, `renders/meyar-t3-single-gene-cathlab-unit-concept.png`, `renders/meyar-t4-multi-gene-reader-concept.png`, `DESIGN-PLAN.md`, `README.md`, `.gitignore`), `handoff/F1.md`.
+Notes: Three 3000 × 2000 Cycles stills with labels baked in ("Kit design — software working" for T1, "Concept render — not built" for T3 and T4). All props carry mock data (kit ID MYR-DEMO-0001). T4 shows CYP2D6 hatched as "Not assessed — copy number" and no results. DESIGN-PLAN.md holds the sourced form/materials/cost/usability research; its numbers still need `docs/sources.md` rows before any slide use.
+Run: `uv run --no-project python hardware/blender/art/make_art.py`, then `blender --background --factory-startup --python hardware/blender/build_renders.py -- --hero t1|t3|t4`, then `blender --background --factory-startup --python hardware/blender/compose.py` (see `hardware/blender/README.md`).
+Data contract unchanged. No new runtime dependency.

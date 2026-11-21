@@ -293,4 +293,4 @@ if __name__ == "__main__":
     caption("t3", "Concept render — not built", "وحدة جين واحد", "T3 · Single-gene cath-lab unit",
             "Roadmap concept for CYP2C19 near the cath lab. Not built, not validated. Research prototype — not for clinical use.")
     caption("t4", "Concept render — not built", "قارئ متعدد الجينات", "T4 · Multi-gene reader",
-            "Concept only: no multi-gene near-patient PGx device exists. It cannot read CYP2D6 copy number, so CYP2D6 is shown as not assessed.")
+            "Concept only: we found no cleared multi-gene near-patient PGx device. It could not read CYP2D6 copy number, so CYP2D6 is shown as not assessed.")
