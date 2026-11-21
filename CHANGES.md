@@ -37,3 +37,9 @@ Files: `hardware/blender/` (`build_renders.py`, `compose.py`, `art/make_art.py`,
 Notes: Three 3000 × 2000 Cycles stills with labels baked in ("Kit design — software working" for T1, "Concept render — not built" for T3 and T4). All props carry mock data (kit ID MYR-DEMO-0001). T4 shows CYP2D6 hatched as "Not assessed — copy number" and no results. DESIGN-PLAN.md holds the sourced form/materials/cost/usability research; its numbers still need `docs/sources.md` rows before any slide use.
 Run: `uv run --no-project python hardware/blender/art/make_art.py`, then `blender --background --factory-startup --python hardware/blender/build_renders.py -- --hero t1|t3|t4`, then `blender --background --factory-startup --python hardware/blender/compose.py` (see `hardware/blender/README.md`).
 Data contract unchanged. No new runtime dependency.
+
+## A4 — Phenotype store in FHIR (22 Nov 2026)
+Files: `engine/load_fhir.py`, `handoff/A4.md`, plus generated `engine/data/out/demo-001`..`demo-006.contract.json` (gitignored per `.gitignore`).
+Notes: Reads PharmCAT 3.4.0 `.phenotype.json` (and optional `.match.json` + `.origin.json` germline check), idempotently `PUT`s pseudonymous `Patient/<patientId>` and one HL7 Genomics Reporting IG `Observation/<patientId>-<gene>` per gene (23 genes/patient, including `LOINC 48002-0` = `LA6683-2` germline, `LOINC 48018-6`, `LOINC 53037-8`, and guideline version) to local HAPI FHIR (`hapiproject/hapi:v8.12.0-2` on `http://localhost:8080/fhir`), and writes `engine/data/out/<patientId>.contract.json` validated against `docs/data-contract.schema.json` (with neutral pre-A5 `coverage` placeholders).
+Run: `docker compose up -d hapi && python engine/load_fhir.py --all`.
+Data contract unchanged. No new runtime dependency.
