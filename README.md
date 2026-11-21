@@ -53,6 +53,7 @@ kit/        chain-of-custody saliva kit software (working)
 hardware/   Blender renders and animation (concept, labelled)
 tables/     SHARED lookup tables, ONE OWNER PER FILE
 docs/       data contract, schema, fixtures, sources, poster, pitch
+design/     design system: tokens, fonts, components, showcase, anti-slop rules
 prompts/    one build prompt per task + the review prompt
 handoff/    one live handoff file per task (progress survives a session limit)
 docs/research/  condensed research digest for builders
@@ -97,6 +98,7 @@ See [docs/data-contract.md](docs/data-contract.md), the schema in [docs/data-con
 - The demo and presentation run on **mock data** only, so an unverified regulation never blocks a build task. Mock rows carry `"mock": true`.
 - Both the genetic phenotype and the effective phenotype (after the patient's current medicines) are always shown; neither replaces the other.
 - Alternatives are shown only where a CPIC/DPWG row names one. Never generated, never ranked.
+- Every screen is built from [design/](design/README.md): the Meyar Scale for every phenotype, status as shape + word + colour, never "safe". See the live [showcase](design/showcase/index.html).
 - Every task keeps `handoff/<TASK>.md` current and stops safely when limits approach (AGENTS.md section 3).
 
 ## Tasks

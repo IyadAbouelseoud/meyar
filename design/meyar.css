@@ -1,0 +1,359 @@
+/* ==========================================================================
+   Meyar component styles  ·  design/meyar.css
+   Load order:  fonts/fonts.css  →  tokens.css  →  meyar.css
+   Vanilla CSS, no framework. Logical properties everywhere so RTL is free.
+   Rules: design/README.md. Banned patterns: design/ANTI-SLOP.md.
+   ========================================================================== */
+
+@property --m-a { syntax: '<number>'; inherits: true; initial-value: 2; }
+@property --m-g { syntax: '<number>'; inherits: true; initial-value: 2; }
+@property --m-fill { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+/* ---------- 0. Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body.m-body {
+  margin: 0;
+  background: var(--m-bg);
+  color: var(--m-text);
+  font-family: var(--m-font-patient);
+  font-size: var(--m-size-md);
+  line-height: var(--m-leading-ui);
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+[lang="ar"] { line-height: var(--m-leading-arabic-body); }
+[data-voice="clinician"] { font-family: var(--m-font-clinician); }
+:where(h1, h2, h3, h4) { margin: 0; line-height: var(--m-leading-tight); text-wrap: balance; }
+:where(p) { margin: 0; text-wrap: pretty; }
+.m-data { font-family: var(--m-font-data); font-variant-numeric: tabular-nums slashed-zero; letter-spacing: 0; unicode-bidi: isolate; direction: ltr; }
+.m-num { font-variant-numeric: tabular-nums; }
+.m-visually-hidden { position: absolute !important; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Focus: a double ring that survives every background. Never removed. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--m-focus);
+  outline-offset: 3px;
+  border-radius: var(--m-radius-control);
+}
+
+/* Texture: paper grain for the patient theme, chart-paper grid for clinician pages. */
+.m-grain { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.11  0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+.m-chartpaper {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--m-line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--m-line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in oklab, var(--m-line) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--m-line) 22%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
+}
+
+/* ---------- 1. Wordmark ---------- */
+.m-wordmark { display: inline-flex; align-items: baseline; gap: .45em; color: var(--m-brand-strong); text-decoration: none; }
+.m-wordmark__ar { font-family: var(--m-font-display); font-weight: 700; font-size: 1.6em; line-height: 1; letter-spacing: 0; }
+.m-wordmark__en { font-family: var(--m-font-data); font-size: .72em; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--m-text2); }
+.m-wordmark__tick { inline-size: .9em; block-size: .9em; flex: none; align-self: center; }
+
+/* ---------- 2. Al-Qatt band (brand ornament, never inside clinical content) ---------- */
+.m-qatt {
+  /* Al-Qatt Al-Asiri band: the painted wall bands of Aseer (KKU's region). Brand ornament only. */
+  --q: 30px;
+  block-size: var(--q);
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='30' viewBox='0 0 24 30'><rect width='24' height='30' fill='%23E2A21B'/><path d='M0 2h24L12 15z' fill='%23B3372C' stroke='%2317160F' stroke-width='1'/><path d='M-12 28 0 15l12 13zM12 28l12-13 12 13z' fill='%231C7A6D' stroke='%2317160F' stroke-width='1'/><rect width='24' height='2.2' fill='%2317160F'/><rect y='27.8' width='24' height='2.2' fill='%2317160F'/></svg>") repeat-x 0 0 / auto 100%;
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+.m-qatt--thin { --q: 14px; }
+.m-qatt[aria-hidden="true"] { pointer-events: none; }
+
+/* ---------- 3. Status: the three answers + info + better match ----------
+   Shape + word + colour, always all three (C5: never colour alone).            */
+.m-status {
+  display: inline-flex; align-items: center; gap: .55em;
+  padding: .45em .85em .45em .7em; padding-inline: .7em .95em;
+  border-radius: var(--m-radius-pill);
+  font-weight: 600; font-size: var(--m-size-sm); line-height: 1.2;
+  border: 1.5px solid currentColor;
+}
+.m-status svg { inline-size: 1.25em; block-size: 1.25em; flex: none; }
+.m-status--stop   { color: var(--m-stop);   background: var(--m-stop-tint); }
+.m-status--ask    { color: var(--m-ask);    background: var(--m-ask-tint); }
+.m-status--none   { color: var(--m-none);   background: var(--m-none-tint); border-style: dashed; }
+.m-status--info   { color: var(--m-info);   background: var(--m-info-tint); }
+.m-status--better { color: var(--m-better); background: transparent; }
+.m-status--lg { font-size: var(--m-size-lg); padding-block: .6em; }
+
+/* ---------- 4. The Meyar Scale (signature component) ----------
+   Five stops from slow to fast. Hollow ring = genetic result.
+   Solid needle = how the body acts right now (A7). Both always visible.
+   Set on the element: --m-g (genetic index 0–4) and --m-a (acting index 0–4).  */
+.m-scale { --seg: 20%; position: relative; padding-block: 34px 6px; container-type: inline-size; }
+.m-scale__track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; block-size: 14px; }
+.m-scale__seg { border-radius: var(--m-radius-hair); transform-origin: bottom; }
+.m-scale__seg:nth-child(1) { background: var(--m-scale-slow2); }
+.m-scale__seg:nth-child(2) { background: var(--m-scale-slow1); }
+.m-scale__seg:nth-child(3) { background: var(--m-scale-normal); }
+.m-scale__seg:nth-child(4) { background: var(--m-scale-fast1); }
+.m-scale__seg:nth-child(5) { background: var(--m-scale-fast2); }
+.m-scale__ticks { position: absolute; inset-inline: 0; inset-block-start: 22px; block-size: 8px;
+  background: repeating-linear-gradient(to right, var(--m-line-strong) 0 1px, transparent 1px calc(var(--seg) / 4)); opacity: .9; }
+[dir="rtl"] .m-scale__ticks { background: repeating-linear-gradient(to left, var(--m-line-strong) 0 1px, transparent 1px calc(var(--seg) / 4)); }
+.m-scale__labels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-block-start: 8px;
+  font-size: var(--m-size-xs); color: var(--m-text2); text-align: center; line-height: 1.25; }
+.m-scale__labels > span[aria-current="true"] { color: var(--m-text); font-weight: 700; }
+.m-scale__genetic, .m-scale__acting { position: absolute; inset-block-start: 0; translate: -50% 0; }
+[dir="rtl"] .m-scale__genetic, [dir="rtl"] .m-scale__acting { translate: 50% 0; }
+.m-scale__genetic { inset-inline-start: calc((var(--m-g) + .5) * var(--seg)); }
+.m-scale__acting  { inset-inline-start: calc((var(--m-a) + .5) * var(--seg)); }
+.m-scale__genetic::after { /* hollow ring sitting on the track */
+  content: ""; position: absolute; inset-block-start: 31px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 22px; block-size: 22px; border-radius: 50%;
+  border: 3px solid var(--m-text); background: var(--m-surface);
+}
+[dir="rtl"] .m-scale__genetic::after { translate: 50% 0; }
+.m-scale__acting::before { /* needle */
+  content: ""; position: absolute; inset-block-start: 14px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 4px; block-size: 40px; border-radius: 2px; background: var(--m-text);
+}
+[dir="rtl"] .m-scale__acting::before { translate: 50% 0; }
+.m-scale__flag { display: block; white-space: nowrap; font-size: var(--m-size-xs); font-weight: 700;
+  padding: 2px 8px; border-radius: var(--m-radius-hair); background: var(--m-text); color: var(--m-surface); }
+.m-scale__genetic .m-scale__flag { background: var(--m-surface); color: var(--m-text); box-shadow: inset 0 0 0 1.5px var(--m-text); opacity: 0; }
+.m-scale.is-converted .m-scale__genetic .m-scale__flag { opacity: 1; }
+/* The shift: a bracket between genetic and acting, only when they differ */
+.m-scale__shift { position: absolute; z-index: 1; inset-block-start: 24px; block-size: 3px; background: var(--m-text);
+  inset-inline-start: calc((min(var(--m-g), var(--m-a)) + .5) * var(--seg));
+  inline-size: calc((max(var(--m-g), var(--m-a)) - min(var(--m-g), var(--m-a))) * var(--seg));
+  opacity: 0; }
+.m-scale.is-converted .m-scale__shift { opacity: 1; background: repeating-linear-gradient(to right, var(--m-text) 0 6px, transparent 6px 10px); }
+.m-scale:not(.is-converted) .m-scale__genetic { visibility: hidden; }
+/* Not assessed (A8) and indeterminate: no marker at all, never a guess */
+.m-scale.is-unassessed .m-scale__seg { background: repeating-linear-gradient(135deg, var(--m-sunken) 0 6px, var(--m-line) 6px 8px) !important; }
+.m-scale.is-unassessed .m-scale__genetic, .m-scale.is-unassessed .m-scale__acting, .m-scale.is-unassessed .m-scale__shift { display: none; }
+.m-scale__void { position: absolute; inset-block-start: 4px; inset-inline-start: 50%; translate: -50% 0; font-size: var(--m-size-xs); font-weight: 700; color: var(--m-text2); white-space: nowrap; }
+[dir="rtl"] .m-scale__void { translate: 50% 0; }
+.m-scale:not(.is-unassessed) .m-scale__void { display: none; }
+@container (max-width: 340px) { .m-scale__labels { font-size: .72rem; } }
+
+/* Motion: calibrate once. Ticks rise, needle starts at genetic and settles at acting. */
+.m-motion .m-scale.is-calibrating .m-scale__seg { animation: m-rise var(--m-dur-reveal) var(--m-ease-enter) both; }
+.m-motion .m-scale.is-calibrating .m-scale__seg:nth-child(2) { animation-delay: calc(var(--m-dur-stagger) * 1); }
+.m-motion .m-scale.is-calibrating .m-scale__seg:nth-child(3) { animation-delay: calc(var(--m-dur-stagger) * 2); }
+.m-motion .m-scale.is-calibrating .m-scale__seg:nth-child(4) { animation-delay: calc(var(--m-dur-stagger) * 3); }
+.m-motion .m-scale.is-calibrating .m-scale__seg:nth-child(5) { animation-delay: calc(var(--m-dur-stagger) * 4); }
+.m-motion .m-scale { transition: --m-a var(--m-dur-sweep) var(--m-ease-settle); }
+.m-motion .m-scale .m-scale__shift, .m-motion .m-scale .m-scale__genetic .m-scale__flag { transition: opacity var(--m-dur-state) var(--m-ease-settle) var(--m-dur-sweep); }
+@keyframes m-rise { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+
+/* Binary genes (HLA-B and similar) are not a scale. */
+.m-binary { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--m-radius-control); background: var(--m-sunken); }
+.m-binary > span { padding: .35em .9em; border-radius: calc(var(--m-radius-control) - 3px); font-weight: 600; color: var(--m-text2); }
+.m-binary > span[aria-current="true"] { background: var(--m-surface); color: var(--m-text); box-shadow: inset 0 0 0 1.5px var(--m-text); }
+
+/* ---------- 5. Coverage comb (A5) ----------
+   One tooth per defining position. Solid = tested. Hollow = not tested.        */
+.m-comb { display: flex; gap: 3px; align-items: flex-end; block-size: 22px; }
+.m-comb > i { inline-size: 7px; border-radius: 1px; background: var(--m-text); block-size: 100%; }
+.m-comb > i.is-gap { background: transparent; box-shadow: inset 0 0 0 1.5px var(--m-text2); block-size: 70%; }
+.m-coverage { display: grid; gap: 8px; }
+.m-coverage__line { font-size: var(--m-size-sm); color: var(--m-text2); }
+.m-coverage__line strong { color: var(--m-text); }
+.m-motion .m-comb.is-drawing > i { animation: m-rise var(--m-dur-state) var(--m-ease-enter) both; animation-delay: calc(var(--i, 0) * 35ms); transform-origin: bottom; }
+
+/* Saudi data tier chip (A5 §8c) */
+.m-tier { display: inline-flex; align-items: center; gap: .45em; font-size: var(--m-size-xs); font-weight: 600; color: var(--m-text2);
+  padding: .25em .6em; border-radius: var(--m-radius-hair); border: 1px solid var(--m-line-strong); }
+.m-tier__n { font-family: var(--m-font-data); font-weight: 600; color: var(--m-text); }
+
+/* ---------- 6. Buttons, toggles, inputs ---------- */
+.m-btn {
+  --bg: var(--m-brand); --fg: var(--m-on-brand);
+  display: inline-flex; align-items: center; justify-content: center; gap: .6em;
+  min-block-size: var(--m-target); padding-inline: 1.25em;
+  border: 0; border-radius: var(--m-radius-control);
+  background: var(--bg); color: var(--fg);
+  font: inherit; font-weight: 600; font-size: var(--m-size-md); cursor: pointer; text-decoration: none;
+  transition: transform var(--m-dur-tap) var(--m-ease-settle), background-color var(--m-dur-state) var(--m-ease-settle);
+}
+.m-btn:hover { --bg: var(--m-brand-strong); }
+.m-btn:active { transform: translateY(1px) scale(.99); }
+.m-btn--secondary { --bg: transparent; --fg: var(--m-text); box-shadow: inset 0 0 0 1.5px var(--m-line-strong); }
+.m-btn--secondary:hover { --bg: var(--m-sunken); }
+.m-btn--quiet { --bg: transparent; --fg: var(--m-brand); padding-inline: .6em; }
+.m-btn--quiet:hover { --bg: var(--m-brand-tint); }
+.m-btn--block { inline-size: 100%; }
+.m-btn svg { inline-size: 1.2em; block-size: 1.2em; }
+
+.m-switch { display: inline-flex; align-items: center; gap: .75em; min-block-size: var(--m-target); cursor: pointer; font-weight: 600; }
+.m-switch input { appearance: none; margin: 0; inline-size: 52px; block-size: 30px; border-radius: var(--m-radius-pill); background: var(--m-line-strong); position: relative; cursor: pointer; transition: background-color var(--m-dur-state) var(--m-ease-settle); }
+.m-switch input::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; inline-size: 24px; block-size: 24px; border-radius: 50%; background: var(--m-surface); transition: translate var(--m-dur-state) var(--m-ease-settle); }
+.m-switch input:checked { background: var(--m-brand); }
+.m-switch input:checked::after { translate: 22px 0; }
+[dir="rtl"] .m-switch input:checked::after { translate: -22px 0; }
+
+.m-seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: var(--m-radius-control); background: var(--m-sunken); }
+.m-seg button { min-block-size: calc(var(--m-target) - 6px); padding-inline: 1em; border: 0; border-radius: calc(var(--m-radius-control) - 3px); background: transparent; color: var(--m-text2); font: inherit; font-weight: 600; cursor: pointer; }
+.m-seg button[aria-pressed="true"] { background: var(--m-surface); color: var(--m-text); box-shadow: 0 1px 0 var(--m-line), inset 0 0 0 1px var(--m-line); }
+
+.m-field { display: grid; gap: 6px; }
+.m-field label { font-weight: 600; font-size: var(--m-size-sm); }
+.m-input { min-block-size: calc(var(--m-target) + 8px); padding-inline: 1em; border-radius: var(--m-radius-control); border: 1.5px solid var(--m-line-strong); background: var(--m-surface); color: var(--m-text); font: inherit; font-size: var(--m-size-lg); }
+.m-input:focus { border-color: var(--m-focus); outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--m-focus) 25%, transparent); }
+
+/* PIN pad: every key shows both digit forms (٣ and 3) for older Saudi readers */
+.m-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-inline-size: 340px; direction: ltr; }
+.m-pin button { min-block-size: calc(var(--m-target) + 16px); border-radius: var(--m-radius-control); border: 1.5px solid var(--m-line); background: var(--m-surface); color: var(--m-text); font: inherit; cursor: pointer; display: grid; place-items: center; line-height: 1; }
+.m-pin button b { font-family: var(--m-font-patient); font-size: var(--m-size-xl); font-weight: 600; }
+.m-pin button small { font-family: var(--m-font-data); font-size: var(--m-size-xs); color: var(--m-text3); margin-block-start: 4px; }
+.m-pin button:active { background: var(--m-sunken); }
+.m-pin-dots { display: flex; gap: 14px; justify-content: center; direction: ltr; }
+.m-pin-dots i { inline-size: 16px; block-size: 16px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--m-text2); }
+.m-pin-dots i.is-on { background: var(--m-text); box-shadow: none; }
+
+/* ---------- 7. Surfaces ---------- */
+.m-sheet { background: var(--m-surface); border-radius: var(--m-radius-sheet); box-shadow: 0 1px 0 var(--m-line), 0 18px 40px -28px rgb(40 30 10 / .35); }
+.m-panel { background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); }
+.m-rule { border: 0; border-block-start: 1px solid var(--m-line); margin: 0; }
+.m-perf { block-size: 0; border-block-start: 2px dashed var(--m-line-strong); margin-block: var(--m-space-5); position: relative; }
+.m-eyebrow { font-family: var(--m-font-data); font-size: var(--m-size-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--m-text3); }
+[lang="ar"] .m-eyebrow { font-family: var(--m-font-patient); letter-spacing: 0; text-transform: none; font-weight: 600; }
+
+/* Honesty labels (AGENTS.md §2, §8): always visible, never decorative */
+.m-mock { display: inline-flex; align-items: center; gap: .4em; padding: .2em .6em; border-radius: var(--m-radius-hair); background: var(--m-mock-badge); color: var(--m-mock-badge-text); font-size: var(--m-size-xs); font-weight: 700; }
+.m-mock::before { content: ""; inline-size: .55em; block-size: .55em; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.m-proto { font-size: var(--m-size-xs); color: var(--m-text2); display: flex; align-items: center; gap: .5em; }
+
+/* ---------- 8. Passport (C1–C9) ---------- */
+.m-cover {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: var(--m-p-juniper-900); color: var(--m-p-paper-0);
+  border-radius: var(--m-radius-sheet); padding: var(--m-space-6) var(--m-space-5);
+  min-block-size: 280px; display: grid; align-content: space-between; gap: var(--m-space-5);
+}
+.m-cover::before { /* embossed scale ticks, like the guilloché of a real passport, drawn from the brand tick */
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .14;
+  background: repeating-radial-gradient(circle at 85% 110%, transparent 0 14px, var(--m-p-saffron-300) 14px 15px);
+}
+.m-cover__title { font-family: var(--m-font-display); font-weight: 700; font-size: var(--m-size-3xl); line-height: 1.05; color: var(--m-p-saffron-300); }
+.m-cover__sub { font-size: var(--m-size-md); color: var(--m-p-juniper-100); }
+.m-cover .m-qatt { position: absolute; inset-inline: 0; inset-block-end: 0; }
+
+.m-gene {
+  display: grid; gap: var(--m-space-4);
+  padding: var(--m-space-5); background: var(--m-surface); border-radius: var(--m-radius-card);
+  border: 1px solid var(--m-line);
+}
+.m-gene__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--m-space-3); flex-wrap: wrap; }
+.m-gene__name { font-family: var(--m-font-data); font-weight: 600; font-size: var(--m-size-sm); color: var(--m-text2); }
+.m-gene__plain { font-size: var(--m-size-xl); line-height: 1.3; font-weight: 600; letter-spacing: -.01em; }
+[lang="ar"] .m-gene__plain { letter-spacing: 0; }
+.m-gene__because { font-size: var(--m-size-md); color: var(--m-text); }
+.m-gene__because b { font-weight: 700; }
+.m-gene__drugs { display: grid; gap: var(--m-space-3); }
+.m-drugrow { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-3); padding-block: var(--m-space-3); border-block-start: 1px solid var(--m-line); flex-wrap: wrap; }
+.m-drugrow__name { font-weight: 600; font-size: var(--m-size-lg); }
+
+.m-better { display: flex; gap: var(--m-space-3); align-items: flex-start; padding: var(--m-space-4); border-radius: var(--m-radius-card); background: var(--m-brand-tint); color: var(--m-brand-strong); }
+.m-better svg { flex: none; inline-size: 1.5em; block-size: 1.5em; margin-block-start: .1em; }
+
+.m-answer { display: grid; gap: var(--m-space-3); padding: var(--m-space-5); border-radius: var(--m-radius-card); border: 2px solid currentColor; }
+.m-answer--stop { color: var(--m-stop); background: var(--m-stop-tint); }
+.m-answer--ask  { color: var(--m-ask);  background: var(--m-ask-tint); }
+.m-answer--none { color: var(--m-none); background: var(--m-none-tint); border-style: dashed; }
+.m-answer__title { font-size: var(--m-size-xl); font-weight: 700; display: flex; gap: .5em; align-items: center; }
+.m-answer__title svg { inline-size: 1.3em; block-size: 1.3em; flex: none; }
+.m-answer__body { color: var(--m-text); font-size: var(--m-size-md); }
+
+/* Passport navigation, medicine list, figure captions */
+.m-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--m-surface); border: 1px solid var(--m-line); border-radius: 16px; padding: 6px; }
+.m-tabs a { display: grid; justify-items: center; gap: 2px; padding-block: 8px; border-radius: 11px; font-size: var(--m-size-xs); color: var(--m-text2); text-decoration: none; min-block-size: var(--m-target); align-content: center; }
+.m-tabs a[aria-current="page"] { background: var(--m-brand-tint); color: var(--m-brand-strong); font-weight: 700; }
+.m-tabs svg { inline-size: 22px; block-size: 22px; }
+.m-medlist { display: grid; gap: 0; background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); }
+.m-medlist > div { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; border-block-start: 1px solid var(--m-line); }
+.m-medlist > div:first-child { border-block-start: 0; }
+.m-medlist small { color: var(--m-text2); }
+.m-caption { font-size: var(--m-size-sm); color: var(--m-text2); border-block-start: 1px solid var(--m-line); padding-block-start: 12px; }
+
+/* ---------- 9. Prescriber card (B3/B6) — Meyar's own render of the CDS card ---------- */
+.m-cds { font-family: var(--m-font-clinician); background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); overflow: hidden; }
+.m-cds__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-block-end: 1px solid var(--m-line); background: var(--m-sunken); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__indicator { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-family: var(--m-font-data); }
+.m-cds__indicator svg { inline-size: 14px; block-size: 14px; }
+.m-cds__indicator--warning { color: var(--m-ask); }
+.m-cds__indicator--info { color: var(--m-info); }
+.m-cds__body { padding: 18px 16px; display: grid; gap: 14px; }
+.m-cds__summary { font-size: var(--m-size-lg); font-weight: 600; line-height: 1.3; }
+.m-cds__pheno { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: var(--m-size-sm); align-items: baseline; }
+.m-cds__pheno dt { color: var(--m-text2); }
+.m-cds__pheno dd { margin: 0; font-weight: 600; }
+.m-cds__rec { margin: 0; padding: 12px 14px; background: var(--m-sunken); border-radius: var(--m-radius-hair); font-size: var(--m-size-sm); }
+.m-cds__rec cite { display: block; margin-block-start: 6px; font-style: normal; font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__suggest { display: grid; gap: 8px; }
+.m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: 44px; justify-content: flex-start; text-align: start; padding-block: 8px; }
+.m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
+
+/* ---------- 10. Instrument dashboard (B4) ---------- */
+.m-dash { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+.m-tile { grid-column: span 12; background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); padding: 16px 18px; display: grid; gap: 12px; align-content: start; font-family: var(--m-font-clinician); }
+.m-tile__label { font-size: var(--m-size-xs); color: var(--m-text2); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.m-tile--kpi { grid-template-rows: auto 1fr; align-content: stretch; }
+.m-tile--kpi .m-count { align-self: end; }
+.m-count { font-family: var(--m-font-data); font-size: var(--m-size-3xl); font-weight: 500; line-height: 1; letter-spacing: -.02em; color: var(--m-text); }
+.m-count small { font-size: var(--m-size-sm); color: var(--m-text2); letter-spacing: 0; margin-inline-start: .4em; }
+.m-hbar { display: grid; grid-template-columns: minmax(90px, 9rem) 1fr 3.2rem; gap: 10px; align-items: center; font-size: var(--m-size-sm); }
+.m-hbar__track { block-size: 10px; background: var(--m-sunken); border-radius: 1px; overflow: hidden; }
+.m-hbar__fill { block-size: 100%; inline-size: calc(var(--m-fill) * 100%); background: var(--m-brand); }
+.m-hbar__fill--ask { background: var(--m-ask); } .m-hbar__fill--stop { background: var(--m-stop); } .m-hbar__fill--none { background: var(--m-none); }
+.m-motion .m-hbar__fill { transition: inline-size var(--m-dur-sweep) var(--m-ease-settle); }
+.m-feed { display: grid; gap: 0; font-size: var(--m-size-sm); max-block-size: 340px; overflow: auto; }
+.m-feed__row { display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 12px; padding: 9px 0; border-block-start: 1px solid var(--m-line); align-items: center; }
+.m-motion .m-feed__row.is-new { animation: m-arrive var(--m-dur-reveal) var(--m-ease-enter) both; }
+@keyframes m-arrive { from { opacity: 0; transform: translateY(-6px); background: var(--m-brand-tint); } to { opacity: 1; transform: none; background: transparent; } }
+.m-matrix { display: grid; gap: 3px; font-size: var(--m-size-xs); }
+.m-matrix__cell { block-size: 30px; border-radius: 2px; display: grid; place-items: center; font-family: var(--m-font-data); color: var(--m-text);
+  background: color-mix(in oklab, var(--c, var(--m-brand)) calc(var(--v, 0) * 85%), var(--m-sunken)); }
+.m-matrix__cell.is-hi { color: var(--m-on-brand); }
+.m-live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--m-font-data); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-live i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--m-brand); }
+@media (min-width: 900px) {
+  .m-tile--3 { grid-column: span 3; } .m-tile--4 { grid-column: span 4; } .m-tile--5 { grid-column: span 5; }
+  .m-tile--6 { grid-column: span 6; } .m-tile--12 { grid-column: span 12; } .m-tile--7 { grid-column: span 7; } .m-tile--8 { grid-column: span 8; }
+}
+
+/* ---------- 11. Kit chain-of-custody timeline (F3) ---------- */
+.m-chain { list-style: none; margin: 0; padding: 0; display: grid; }
+.m-chain li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; position: relative; padding-block-end: 18px; }
+.m-chain li::before { content: ""; position: absolute; inset-inline-start: 13px; inset-block: 22px 0; inline-size: 2px; background: var(--m-line-strong); }
+.m-chain li:last-child::before { display: none; }
+.m-chain__node { inline-size: 28px; block-size: 28px; border-radius: 6px; display: grid; place-items: center; background: var(--m-brand); color: var(--m-on-brand); font-family: var(--m-font-data); font-size: 12px; font-weight: 600; }
+.m-chain li.is-broken .m-chain__node { background: var(--m-stop); }
+.m-chain__hash { font-family: var(--m-font-data); font-size: var(--m-size-xs); color: var(--m-text3); overflow-wrap: anywhere; }
+
+/* ---------- 12. Print: ID-1 card and A6 fold-out (C7) ---------- */
+.m-id1 { inline-size: 85.6mm; block-size: 53.98mm; border-radius: 3.18mm; overflow: hidden; position: relative; background: var(--m-p-paper-0); color: var(--m-p-ink-1);
+  display: grid; grid-template-columns: 1fr 34mm; font-family: var(--m-font-patient); box-shadow: 0 0 0 .2mm var(--m-p-ink-line);
+  print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.m-id1__left { padding: 4mm 3.5mm 0; display: grid; align-content: start; gap: 1.6mm; }
+.m-id1__qr { padding: 3mm; display: grid; place-items: center; background: #fff; }
+.m-id1__qr svg, .m-id1__qr img, .m-id1__qr canvas { inline-size: 28mm; block-size: 28mm; image-rendering: pixelated; }
+.m-id1__brand { font-family: var(--m-font-display); font-weight: 700; font-size: 6.2mm; line-height: 1; color: var(--m-p-juniper-900); }
+.m-id1__pin { font-size: 2.9mm; font-weight: 600; line-height: 1.35; }
+.m-id1__proto { font-size: 2mm; color: var(--m-p-ink-2); line-height: 1.3; }
+.m-id1__mrz { position: absolute; inset-inline: 0; inset-block-end: 4.4mm; padding-inline: 3.5mm; font-family: var(--m-font-data); font-size: 2mm; letter-spacing: .06em; color: var(--m-p-ink-2); direction: ltr; text-align: left; white-space: nowrap; overflow: hidden; }
+.m-id1 .m-qatt { position: absolute; inset-inline: 0; inset-block-end: 0; --q: 3.8mm; }
+.m-a6 { inline-size: 105mm; min-block-size: 148mm; padding: 9mm; background: var(--m-p-paper-0); color: var(--m-p-ink-1); font-size: 5.2mm; line-height: 1.7; box-shadow: 0 0 0 .2mm var(--m-p-ink-line); }
+@media print {
+  body.m-body { background: #fff; }
+  .m-noprint { display: none !important; }
+  @page { margin: 8mm; }
+}
+
+/* ---------- 13. Motion guards ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}
+[data-elder="on"] .m-scale, [data-elder="on"] .m-hbar__fill { transition-duration: 1ms !important; }
+[data-elder="on"] .m-scale__seg, [data-elder="on"] .m-comb > i { animation: none !important; }
+[data-elder="on"] .m-scale { padding-block-start: 42px; }
+[data-elder="on"] .m-scale__track { block-size: 20px; }
+[data-elder="on"] .m-scale__labels { font-size: var(--m-size-sm); }
