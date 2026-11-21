@@ -66,4 +66,4 @@ EEVEE renders about 9 s a frame on an Intel Arc laptop GPU, so both shots take a
 
 - T3's internals are illustrative shapes, not a design: the reader module callout says "chemistry not chosen", and the caption says "Internals are illustrative". No size, time, price or accuracy appears.
 - The callouts state only design intent from `DESIGN-PLAN.md` (built-in screen, keyed cartridge, wristband-to-cartridge scanner, sealed button and shell). None claims a clinical benefit.
-- The T1 label "Kit design — software working" is the label the F1 prompt set; it becomes true only once F3 (chain-of-custody software) ships. Callout Arabic is a draft for the C4 review.
+- The T1 label "Kit design — software working" is the label the F1 prompt set (the chain-of-custody software is F3); the physical kit itself is a design. Callout Arabic is a draft for the C4 review.
