@@ -11,7 +11,7 @@ Every screen, card, dashboard, printed card and poster panel in Meyar is built f
 | `tokens.css` | Generated CSS custom properties. Never edit by hand |
 | `meyar.css` | Component styles. Vanilla CSS, logical properties, RTL by default |
 | `meyar.js` | ES module helpers: the scale, the coverage comb, motion switch, count-up, language and elder mode |
-| `fonts/` | Self-hosted Readex Pro, IBM Plex Sans Arabic, Reem Kufi, IBM Plex Mono (OFL), Arabic + Latin subsets |
+| `fonts/` | Self-hosted Readex Pro, IBM Plex Sans Arabic, Alexandria, IBM Plex Mono (OFL), Arabic + Latin subsets |
 | `ANTI-SLOP.md` | What generic AI-made UI looks like, and what Meyar does instead. Pre-merge checklist |
 | `showcase/` | Living reference of every surface |
 
@@ -76,7 +76,7 @@ Every colour is a token. Components use semantic tokens (`--m-stop`), never prim
 
 **There is no green "safe" colour and no tick icon on the patient side.** The design makes the banned word impossible to imply.
 
-**Contrast is checked, not eyeballed.** `node design/build-tokens.mjs` computes the WCAG 2.2 contrast ratio of 28 declared text/background pairs in both themes (56 checks) and refuses to write `tokens.css` if any pair is under 4.5:1 for text or 3:1 for non-text marks (SC 1.4.3, 1.4.11). Current result: 56/56 pass. If you add a pair to a component, add it to `contrastPairs` in `tokens.json` first.
+**Contrast is checked, not eyeballed.** `node design/build-tokens.mjs` computes the WCAG 2.2 contrast ratio of 31 declared text/background pairs in both themes (62 checks) and refuses to write `tokens.css` if any pair is under 4.5:1 for text or 3:1 for non-text marks (SC 1.4.3, 1.4.11). Current result: 62/62 pass. If you add a pair to a component, add it to `contrastPairs` in `tokens.json` first.
 
 ## 4. Typography
 
@@ -84,7 +84,7 @@ Every colour is a token. Components use semantic tokens (`--m-stop`), never prim
 |---|---|---|---|
 | Patient | `--m-font-patient` | Readex Pro (Arabic + Latin in one family) | Passport, fold-out, printed card |
 | Clinician | `--m-font-clinician` | IBM Plex Sans Arabic | Prescriber card, dashboard, tables, kit staff screens |
-| Display | `--m-font-display` | Reem Kufi | The word مِعيار, the cover title, the A6 heading. Never body, never clinical text |
+| Display | `--m-font-display` | Alexandria (variable 100–900) | Headlines, the word مِعيار, the cover title, big dashboard numbers. Use the extremes: 800 for Arabic headlines, 200 for the English line under them. Never body, never clinical text. Reem Kufi is banned for this project (owner decision, 21 Nov 2026) |
 | Data | `--m-font-data` | IBM Plex Mono | Gene symbols, star alleles, activity scores, codes, timestamps. Never prose |
 
 Scale (rem, 1rem = 16px): xs 0.8125 · sm 0.9375 · **md 1.125 (patient body minimum, 18px)** · lg 1.375 · xl 1.75 · 2xl 2.375 · 3xl 3.25 · 4xl 4.75. Elder mode multiplies the whole scale by 1.3.
@@ -136,7 +136,7 @@ All class names start with `m-`. Markup examples live in `showcase/index.html`.
 
 **Gene card** `.m-gene` — gene symbol in `.m-data`, one plain-language sentence (`.m-gene__plain`), the scale, the "because of <drug>" line, then drug rows with statuses, then the comb and tier. Read-aloud button (C5) sits in the header.
 
-**Passport cover** `.m-cover` — juniper, Kufi title, saffron call-to-action ("Show a doctor or pharmacist"), Qatt band at the bottom. Home screen only.
+**Passport cover** `.m-cover` — juniper, Alexandria 800 title, saffron call-to-action ("Show a doctor or pharmacist"), Qatt band at the bottom. Home screen only.
 
 **PIN** `.m-pin` + `.m-pin-dots` — 64px keys in elder mode, both digit forms, honesty line under the pad.
 
@@ -144,7 +144,22 @@ All class names start with `m-`. Markup examples live in `showcase/index.html`.
 
 **Prescriber card** `.m-cds` — bar (indicator chip + guideline version + Demo data), summary, Genetic / Acting like list, mini scale, guideline quote with citation, comb, suggestion buttons, foot ("Advises, does not prescribe" + guideline link). Lives in a side rail, never a modal.
 
-**Dashboard** `.m-dash` grid of `.m-tile`; `.m-count` (mono, tabular), `.m-hbar`, `.m-matrix` (per-action colour via `--c`), `.m-feed`, sparkline with faint grid and emphasised endpoint. Every tile states its source (`cds/data/alerts.jsonl`) and carries Demo data while the log is synthetic.
+**Dashboard (instrument theme)** `.m-dash` 12-column grid of `.m-tile` (radius 20, spans `--3` to `--12`). Pieces: `.m-kpi` + `.m-delta` + `.m-minibars` for the KPI row; `.m-live` pulsing chip; `.m-seg` range switch (Today / 7 days); `.m-feed` live alert feed with `.m-mono` drug monogram and `.is-new` arrival; `.m-watch` phenoconversion watch (fixtures only); `.m-heat` gene coverage (no numbers, hatched SV for CYP2D6). Charts come from `design/charts.js` (dependency-free SVG, theme colours from `--m-data`, `--m-data2`, `--m-data3`):
+
+| Function | Use |
+| --- | --- |
+| `area(el, {series:[{x,y}], label, unit})` | Cards over time. Clip reveal, crosshair, tooltip, arrow keys, rests on the peak |
+| `gauge(el, {value, max, label, ticks})` | Share of a whole (for example cards acted on). 220° segmented arc, number counts up |
+| `bars(el, {data:[{x,y}], label})` | Cards by drug. Active bar shows a value pill, hover and focus move it |
+| `rings(el, {parts:[{label,value,color}], centre, centreLabel})` | Response mix (accepted, switched, overridden) |
+| `minibars(el, values)` | Sparkline inside a KPI tile |
+| `tween(node, to, ms)` | Count-up; instant when motion is off |
+
+Every tile states its source (`cds/data/alerts.jsonl`) and carries Demo data while the log is synthetic. A gauge or ring is a share of this log, never a national rate, and says so.
+
+**Photo slot** `.m-photo[data-img="img-NN"]` with `--ar` aspect ratio. Loads `design/imagery/img-NN.webp`; while the file is missing it shows a designed placeholder with the ID, so layouts never break. Images are illustrative and the footer says they are AI-generated. Prompts and the conversion script live in `design/imagery/`.
+
+**Government-platform alignment.** Clinician surfaces follow the Saudi Digital Government Authority Platforms Code where it overlaps: IBM Plex Sans Arabic, RTL first, Hijri (Umm al-Qura) date beside the Gregorian one, clear focus rings. Meyar keeps its own juniper and saffron, so it reads as a Saudi product without imitating a government brand.
 
 **Chain** `.m-chain` — F3 timeline, a node per event, broken links switch to the stop colour **and** a "!" node.
 

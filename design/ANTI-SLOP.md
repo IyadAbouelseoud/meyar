@@ -11,7 +11,7 @@ For a clinical product there is a second cost: decoration that carries no meanin
 ### Type
 | Banned | Why it reads as generated | Meyar instead |
 |---|---|---|
-| Inter, Roboto, Arial, Open Sans or system-ui as the only face | The default every model reaches for | Readex Pro (patient), IBM Plex Sans Arabic (clinician), Reem Kufi (name only), Plex Mono (data only) |
+| Inter, Roboto, Arial, Open Sans or system-ui as the only face | The default every model reaches for | Readex Pro (patient), IBM Plex Sans Arabic (clinician), Alexandria (headlines only), Plex Mono (data only) |
 | Monospace on prose for a "technical" feel | Tone without function | Mono only inside `.m-data` for genotypes, scores, codes and times |
 | Gradient-filled headlines or numbers | Decoration that hurts legibility | Solid ink; saffron only on the hero headline accent and cover title |
 | Title Case Buttons | Template habit | Sentence case, verb first |
@@ -24,7 +24,7 @@ For a clinical product there is a second cost: decoration that carries no meanin
 | Purple-to-blue or indigo gradients | The Tailwind `indigo-500` default, everywhere in training data | Juniper and saffron from Aseer, flat fills |
 | Cyan or neon on near-black, glowing halos | "Cool" with no decision behind it | Instrument theme is warm kohl with flat marks, no glow, no blur |
 | Pure #000 / #fff | Unconsidered | Tinted paper `#EDF2EC`, ink `#14201B`, kohl `#100F0C` |
-| Cream paper + serif display + terracotta accent | The other current AI cluster | Green-tinted security paper, geometric Kufi, terracotta only at the fast end of the scale |
+| Cream paper + serif display + terracotta accent | The other current AI cluster | Green-tinted security paper, geometric Alexandria, terracotta only at the fast end of the scale |
 | Grey text on coloured fills | Fails contrast | Darker shade of the fill's own hue (`--m-stop` on `--m-stop-tint`) |
 | Green tick for "safe" | Implies the banned word | No green status and no tick on the patient side |
 | Colour as the only signal | Fails WCAG 1.4.1 and colour-blind users | Shape + word + colour on every status |

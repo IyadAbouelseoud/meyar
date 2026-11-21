@@ -19,31 +19,52 @@ body.m-body { background: var(--m-bg); }
 .band--chart { background-color: var(--m-bg); }
 .band--instrument { background: var(--m-bg); color: var(--m-text); }
 .sec-head { display: grid; gap: var(--m-space-3); max-inline-size: 68ch; }
-.sec-head h2 { font-size: var(--m-size-2xl); font-weight: 600; letter-spacing: -.015em; }
 .sec-head p { color: var(--m-text2); }
-.sec-id { font-family: var(--m-font-data); font-size: var(--m-size-xs); color: var(--m-text3); letter-spacing: .1em; }
 
-/* Hero */
+/* Hero: Arabic statement on the left, the instrument floating over a photograph on the right */
 .hero { background: var(--m-p-juniper-950); color: var(--m-p-paper-0); position: relative; overflow: hidden; isolation: isolate;
-  margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: calc(env(safe-area-inset-top, 0px) + 0px); }
-.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .09;
-  background: repeating-radial-gradient(circle at 92% 120%, transparent 0 18px, var(--m-p-saffron-300) 18px 19px); }
-.hero .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); padding-block: var(--m-space-7) var(--m-space-8); display: grid; gap: var(--m-space-6); }
+  margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .08;
+  background: repeating-radial-gradient(circle at 96% 115%, transparent 0 22px, var(--m-p-saffron-300) 22px 23px); }
+.hero .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); padding-block: var(--m-space-6) var(--m-space-8); display: grid; gap: var(--m-space-7); }
 .hero nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .hero .m-wordmark { color: var(--m-p-saffron-300); }
 .hero .m-wordmark__en { color: var(--m-p-juniper-100); }
-.hero nav ul { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; font-size: var(--m-size-sm); }
-.hero nav a { color: var(--m-p-juniper-100); text-decoration: none; }
-.hero nav a:hover { color: var(--m-p-paper-0); text-decoration: underline; text-underline-offset: 4px; }
-.hero h1 { font-size: clamp(2.2rem, 5.6vw, 4.6rem); font-weight: 300; letter-spacing: -.03em; line-height: 1.02; max-inline-size: 15ch; }
-.hero h1 b { font-weight: 600; color: var(--m-p-saffron-300); }
-.hero__ar { font-family: var(--m-font-display); font-size: clamp(1.6rem, 3.4vw, 2.6rem); color: var(--m-p-juniper-100); line-height: 1.3; }
-.hero__grid { display: grid; gap: var(--m-space-6); align-items: end; }
-@media (min-width: 980px) { .hero__grid { grid-template-columns: 1.05fr 1fr; } }
-.hero__instrument { background: var(--m-p-paper-0); color: var(--m-p-ink-1); border-radius: var(--m-radius-card); padding: var(--m-space-5); display: grid; gap: var(--m-space-4); }
-.hero__instrument .m-scale { padding-block-start: 40px; }
+.hero nav ul { display: flex; flex-wrap: wrap; gap: 4px 6px; list-style: none; margin: 0; padding: 4px; font-size: var(--m-size-sm); background: rgb(255 255 255 / .06); border-radius: 14px; }
+.hero nav a { display: block; padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
+.hero nav a:hover { color: var(--m-p-paper-0); background: rgb(255 255 255 / .08); }
+.hero__grid { display: grid; gap: var(--m-space-7); align-items: center; }
+@media (min-width: 980px) { .hero__grid { grid-template-columns: 1.1fr .9fr; } }
+.hero__copy { display: grid; gap: var(--m-space-4); align-content: center; }
+.hero__kicker { font-size: var(--m-size-sm); color: var(--m-p-juniper-300); }
+.hero__ar { font-family: var(--m-font-display); font-weight: 800; font-size: clamp(3rem, 8vw, 6.4rem); line-height: 1.08; color: var(--m-p-paper-0); inline-size: fit-content; letter-spacing: -.01em; }
+.hero__en { font-family: var(--m-font-display); font-weight: 200; font-size: clamp(1.5rem, 3.2vw, 2.6rem); color: var(--m-p-saffron-300); letter-spacing: -.02em; line-height: 1.1; }
 .hero__lede { color: var(--m-p-juniper-100); max-inline-size: 52ch; font-size: var(--m-size-md); }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-block-start: var(--m-space-3); }
+.hero__btn { --bg: var(--m-p-saffron-300); --fg: var(--m-p-juniper-950); }
+.hero__btn:hover { --bg: var(--m-p-saffron-500); }
+.hero__btn2 { --fg: var(--m-p-paper-0); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .3); }
+.hero__btn2:hover { --bg: rgb(255 255 255 / .08); }
+.hero__stage { position: relative; display: grid; padding-block-end: 40px; }
+.hero__photo { inline-size: min(100%, 420px); justify-self: end; }
+.hero__instrument { position: relative; margin-block-start: -150px; margin-inline-end: 34px; inline-size: min(100%, 430px); background: var(--m-surface); color: var(--m-text); border-radius: var(--m-radius-tile); padding: 20px; display: grid; gap: 12px; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6); }
+.hero__inst-title { font-family: var(--m-font-display); font-weight: 600; font-size: var(--m-size-lg); letter-spacing: -.01em; }
+.hero__instrument .m-scale { padding-block-start: 40px; }
+.hero__chip { position: absolute; inset-block-start: 28px; inset-inline-start: 0; display: grid; gap: 4px; padding: 12px 14px; border-radius: 16px; background: var(--m-surface); color: var(--m-text); box-shadow: 0 20px 40px -24px rgb(0 0 0 / .6); }
+.hero__chip small { font-size: 11px; color: var(--m-text3); }
+@media (max-width: 979px) { .hero__photo { justify-self: stretch; inline-size: 100%; } .hero__instrument { margin-inline: 12px; inline-size: auto; } .hero__chip { inset-inline-start: 12px; } }
 .replay { justify-self: start; }
+
+/* Section heads: Arabic title first, English second */
+.sec-ar { font-family: var(--m-font-display); font-weight: 700; font-size: var(--m-size-2xl); line-height: 1.2; color: var(--m-brand-strong); inline-size: fit-content; }
+.sec-head h2 { font-family: var(--m-font-display); font-weight: 300; font-size: var(--m-size-xl); letter-spacing: -.02em; color: var(--m-text2); }
+.dash-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; }
+.dash-ctl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: flex-end; }
+.dash-date { display: grid; text-align: end; font-size: var(--m-size-xs); color: var(--m-text2); line-height: 1.4; }
+#dashboard .m-seg { background: var(--m-surface); border: 1px solid var(--m-line); }
+#dashboard .m-seg button[aria-pressed="true"] { background: var(--m-data); color: var(--m-on-brand); box-shadow: none; }
+.head-split { display: grid; gap: var(--m-space-5); align-items: end; }
+@media (min-width: 900px) { .head-split { grid-template-columns: 1.3fr 1fr; } }
 
 /* Controls for the passport frames */
 .ctrl { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
@@ -92,15 +113,8 @@ details.json pre { overflow-x: auto; background: var(--m-sunken); padding: 12px;
 .modal-mock__box div { padding: 14px; font-size: 13px; display: grid; gap: 10px; }
 .modal-mock__box button { font: inherit; padding: 8px; border: 1px solid #999; background: #eee; }
 
-/* Dashboard */
-.dash-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
-.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: var(--m-size-xs); color: var(--m-text2); }
-.legend i { display: inline-block; inline-size: 10px; block-size: 10px; margin-inline-end: 6px; vertical-align: -1px; border-radius: 1px; }
-.mx { display: grid; grid-template-columns: minmax(84px, 8rem) repeat(4, 1fr); gap: 3px; align-items: center; }
-.mx > span { font-size: var(--m-size-xs); color: var(--m-text2); }
-.mx > span.h { text-align: center; }
-.spark { inline-size: 100%; block-size: auto; aspect-ratio: 300 / 72; max-inline-size: 100%; }
-.m-feed { max-block-size: 380px; }
+.footer-photo .m-photo { border-radius: 0; }
+.footer-photo .m-photo__ph { padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
 
 /* Foundations */
 .swatches { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -141,32 +155,37 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M3 11.5 21 3l-6.5 18-3-7.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
 </svg>
 
-<!-- ================= HERO: the Meyar Scale itself ================= -->
+<!-- ================= HERO ================= -->
 <header class="hero">
   <div class="in">
     <nav aria-label="Sections">
-      <a class="m-wordmark" href="#top" id="top"><svg class="m-wordmark__tick" aria-hidden="true"><use href="#i-mark"/></svg><span class="m-wordmark__ar" lang="ar">مِعيار</span><span class="m-wordmark__en">Meyar · design system v1</span></a>
+      <a class="m-wordmark" href="#top" id="top"><svg class="m-wordmark__tick" aria-hidden="true"><use href="#i-mark"/></svg><span class="m-wordmark__ar" lang="ar">مِعيار</span><span class="m-wordmark__en">Meyar</span></a>
       <ul>
         <li><a href="#passport">Passport</a></li>
         <li><a href="#card">Printed card</a></li>
         <li><a href="#prescriber">Prescriber</a></li>
-        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#dashboard">Alert log</a></li>
         <li><a href="#foundations">Foundations</a></li>
-        <li><a href="#refused">What we refused</a></li>
       </ul>
     </nav>
     <div class="hero__grid">
-      <div style="display:grid;gap:var(--m-space-5)">
-        <p class="hero__ar" lang="ar" dir="rtl" style="inline-size:fit-content">الجرعة الصحيحة من أول مرة</p>
-        <h1>A measuring instrument for <b>how your body handles a medicine.</b></h1>
-        <p class="hero__lede">Meyar means “the standard measure”. Every surface is built around one honest instrument: the scale in the panel. The ring is the genetic result. The needle is how the body acts today, after the medicines it already takes. Neither ever replaces the other.</p>
+      <div class="hero__copy">
+        <p class="hero__kicker"><span lang="ar">جواز الدواء</span> · Medication Passport · pharmacogenomics</p>
+        <h1 class="hero__ar" lang="ar" dir="rtl">الجرعة الصحيحة<br>من أول مرة</h1>
+        <p class="hero__en">The right dose, the first time.</p>
+        <p class="hero__lede">Meyar reads a patient’s genes once, then measures every new prescription against them. One instrument runs through every screen: the ring is the genetic result, the needle is how the body acts today with the medicines it already takes.</p>
+        <div class="hero__cta"><a class="m-btn hero__btn" href="#passport">See the Passport</a><a class="m-btn m-btn--secondary hero__btn2" href="#dashboard">Open the alert log</a></div>
       </div>
-      <div class="hero__instrument" data-theme="paper" id="hero-instrument">
-        <div class="m-gene__head"><span class="m-gene__name">CYP2D6 · <span class="m-data">*1/*1</span></span><span class="m-mock">Demo data</span></div>
-        <p class="m-gene__plain" style="font-size:var(--m-size-xl)">Genetic: Normal · Acting like: Poor</p>
-        <div id="hero-scale"></div>
-        <p class="m-gene__because">Because of <b>paroxetine</b>, a strong CYP2D6 inhibitor. Activity score <span class="m-data">2.0 → 0.0</span> (Thomas et al. 2020).</p>
-        <button class="m-btn m-btn--secondary replay" type="button" id="replay">Replay calibration</button>
+      <div class="hero__stage">
+        <figure class="m-photo hero__photo" data-img="img-15" style="--ar: 4 / 5"><img alt="A single capsule resting on the pan of a brass apothecary balance, soft daylight"><div class="m-photo__ph"><b>IMG-15</b><span>Capsule on a brass balance · awaiting render</span></div></figure>
+        <div class="hero__instrument" data-theme="paper" id="hero-instrument">
+          <div class="m-gene__head"><span class="m-gene__name">CYP2D6 · <span class="m-data">*1/*1</span></span><span class="m-mock">Demo data</span></div>
+          <p class="hero__inst-title">Genetic: Normal · Acting like: Poor</p>
+          <div id="hero-scale"></div>
+          <p class="m-gene__because" style="font-size:var(--m-size-sm)">Because of <b>paroxetine</b>, a strong CYP2D6 inhibitor. Activity score <span class="m-data">2.0 → 0.0</span>.</p>
+          <button class="m-btn m-btn--quiet replay" type="button" id="replay">Replay calibration</button>
+        </div>
+        <div class="hero__chip" data-theme="paper"><span class="m-status m-status--better"><svg aria-hidden="true"><use href="#i-match"/></svg>Better matched: prasugrel</span><small>CPIC row, demo-001</small></div>
       </div>
     </div>
   </div>
@@ -177,11 +196,11 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <!-- ================= PASSPORT ================= -->
 <section class="band band--paper m-grain" id="passport" data-theme="paper">
   <div class="in">
-    <div class="sec-head">
-      <span class="sec-id">C1–C9 · PATIENT VOICE · READEX PRO</span>
+    <div class="head-split"><div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">جواز الدواء</span>
       <h2>Medication Passport</h2>
       <p>Arabic first, built for an older reader holding the phone at arm’s length. One task per screen. Every status is a shape, a word and a colour together. Switch the frames below to English, or turn on elder mode and watch type, spacing and targets grow while motion switches off.</p>
-    </div>
+    </div><figure class="m-photo" data-img="img-02" style="--ar: 16 / 10"><img alt="An older Saudi woman reading her phone by a window in a whitewashed Abha home, face turned away"><div class="m-photo__ph"><b>IMG-02</b><span>Reading the Passport at home · awaiting render</span></div></figure></div>
     <div class="ctrl m-noprint">
       <div class="m-seg" role="group" aria-label="Language">
         <button type="button" id="lang-ar" aria-pressed="true">العربية</button>
@@ -293,7 +312,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <section class="band band--paper" id="card" data-theme="paper" style="background:var(--m-sunken)">
   <div class="in">
     <div class="sec-head">
-      <span class="sec-id">C7 · ISO/IEC 7810 ID-1 · 85.60 × 53.98 MM</span>
+      <span class="sec-ar" lang="ar" dir="rtl">البطاقة المطبوعة</span>
       <h2>The printed card</h2>
       <p>Sized in millimetres, not pixels, so it prints to wallet size. The face carries no name, no ID number and no result. Only the encrypted QR, the PIN instruction and the honesty line. The strip along the bottom echoes a passport’s machine-readable zone but holds only the envelope version and the issue date.</p>
     </div>
@@ -325,6 +344,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
         </div>
         <figcaption>A6 fold-out (105 × 148 mm), large-type C4 lines. The patient chooses to print it.</figcaption>
       </figure>
+      <figure style="margin:0;display:grid;gap:10px;flex:1 1 280px;max-inline-size:420px"><figure class="m-photo" data-img="img-06" style="--ar: 3 / 2"><img alt="The printed Meyar card on a majlis table beside a dallah coffee pot and dates"><div class="m-photo__ph"><b>IMG-06</b><span>The card on a majlis table · awaiting render</span></div></figure></figure>
     </div>
   </div>
 </section>
@@ -332,11 +352,11 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <!-- ================= PRESCRIBER ================= -->
 <section class="band band--chart m-chartpaper" id="prescriber" data-theme="paper" data-voice="clinician">
   <div class="in">
-    <div class="sec-head">
-      <span class="sec-id">B3 · B6 · CLINICIAN VOICE · IBM PLEX SANS ARABIC</span>
+    <div class="head-split"><div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">بطاقة الطبيب</span>
       <h2>Prescriber card</h2>
       <p>The card sits in the side rail of the order screen and never blocks signing. It leads with what to do, then shows the two phenotypes, the guideline line with its version, the coverage comb, and the CPIC-named alternatives as one-click suggestions. The chart-paper ground marks every clinician surface.</p>
-    </div>
+    </div><figure class="m-photo" data-img="img-05" style="--ar: 16 / 10"><img alt="A clinician's hands on a desk beside a tablet showing an order screen"><div class="m-photo__ph"><b>IMG-05</b><span>Clinician at the order screen · awaiting render</span></div></figure></div>
     <div class="ehr">
       <div class="ehr__order">
         <header><span><b>Orders</b> · demo-001 <span class="m-mock">Demo data</span></span><span style="color:var(--m-text2)">order-sign · CDS Hooks 2.0.1</span></header>
@@ -401,7 +421,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
     </div>
 
     <div class="sec-head" style="margin-block-start:var(--m-space-6)">
-      <span class="sec-id">B5 · SIDE-BY-SIDE</span>
+      
       <h2>Why the card does not interrupt</h2>
     </div>
     <div class="compare">
@@ -423,26 +443,40 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <!-- ================= DASHBOARD ================= -->
 <section class="band band--instrument" id="dashboard" data-theme="instrument" data-voice="clinician">
   <div class="in">
-    <div class="dash-head">
+    <div class="dash-top">
       <div class="sec-head">
-        <span class="sec-id">B4 · INSTRUMENT THEME · GET /dashboard</span>
+        <span class="sec-ar" lang="ar" dir="rtl">سجل التنبيهات</span>
         <h2>Alert log</h2>
-        <p>No published national adverse-drug-reaction rate exists for Saudi Arabia. This log is a first measurement instrument. It shows counts only, never an invented rate.</p>
+        <p>No published national adverse-drug-reaction rate exists for Saudi Arabia. This log is a first measurement instrument: it counts what prescribers did with each card, and never shows an invented rate.</p>
       </div>
-      <div style="display:grid;gap:8px;justify-items:end"><span class="m-mock">Demo log · synthetic sessions</span><span class="m-live"><i></i> cds/data/alerts.jsonl · updates as cards fire</span></div>
+      <div class="dash-ctl">
+        <div class="dash-date"><span id="hijri" lang="ar" dir="rtl"></span><span id="greg"></span></div>
+        <div class="m-seg" role="group" aria-label="Range"><button type="button" data-range="today" aria-pressed="true">Today</button><button type="button" data-range="week" aria-pressed="false">7 days</button></div>
+        <span class="m-live"><i></i>Live · cds/data/alerts.jsonl</span>
+        <span class="m-mock">Demo log · synthetic sessions</span>
+      </div>
     </div>
     <div class="m-dash">
-      <div class="m-tile m-tile--3 m-tile--kpi"><div class="m-tile__label"><span>Cards fired</span><span class="m-data">order-sign</span></div><div class="m-count" id="k-fired">0</div></div>
-      <div class="m-tile m-tile--3 m-tile--kpi"><div class="m-tile__label"><span>Better match accepted</span><span class="m-data">suggestion</span></div><div class="m-count" id="k-accepted">0</div></div>
-      <div class="m-tile m-tile--3 m-tile--kpi"><div class="m-tile__label"><span>Sent to pharmacist</span><span class="m-data">action</span></div><div class="m-count" id="k-pharm">0</div></div>
-      <div class="m-tile m-tile--3 m-tile--kpi"><div class="m-tile__label"><span>Sweep cards</span><span class="m-data">existing orders</span></div><div class="m-count" id="k-sweep">0</div></div>
-      <div class="m-tile m-tile--7"><div class="m-tile__label"><span>Prescriber response by drug</span><span class="legend"><span><i style="background:var(--m-brand)"></i>Accepted</span><span><i style="background:var(--m-ask)"></i>Pharmacist</span><span><i style="background:var(--m-none)"></i>Dismissed</span></span></div>
-        <div class="mx" id="matrix"></div>
-        <div class="m-tile__label" style="margin-block-start:8px"><span>Cards per session hour</span><span class="m-data">demo run</span></div>
-        <svg class="spark" id="spark" viewBox="0 0 300 72" role="img" aria-label="Cards per hour in the demo run"></svg>
-      </div>
-      <div class="m-tile m-tile--5"><div class="m-tile__label"><span>Live feed</span><span class="m-data">newest first</span></div><div class="m-feed" id="feed" aria-live="polite" tabindex="0" aria-label="Live alert feed"></div></div>
-      <div class="m-tile m-tile--12"><div class="m-tile__label"><span>Cards by gene</span><span class="m-data">count</span></div><div id="bygene" style="display:grid;gap:10px 40px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))"></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Cards fired</span><span class="m-tile__meta">order-sign</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-fired">0</span><span class="m-delta" id="d-fired"></span></div><div id="s-fired"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Better match accepted</span><span class="m-tile__meta">suggestion</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-acc">0</span><span class="m-delta" id="d-acc"></span></div><div id="s-acc"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Sent to pharmacist</span><span class="m-tile__meta">action</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-ph">0</span><span class="m-delta" id="d-ph"></span></div><div id="s-ph"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Backward sweep</span><span class="m-tile__meta">existing orders</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-sw">0</span><span class="m-delta" id="d-sw"></span></div><div id="s-sw"></div></div></div>
+
+      <div class="m-tile m-tile--8"><div class="m-tile__head"><span class="m-tile__title">Cards fired over time</span><span class="m-tile__meta" id="area-meta">per hour · hover or use arrow keys</span></div><div class="m-areabox" id="area"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Acted on</span><span class="m-tile__meta">accepted or sent to pharmacist</span></div><div class="m-gaugebox" id="gauge"></div>
+        <p class="m-tile__meta" style="text-align:center">Share of cards in this log. Not a national rate.</p></div>
+
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Cards by drug</span><span class="m-tile__meta">count</span></div><div id="bars"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Response mix</span><span class="m-tile__meta">prescriber action</span></div><div id="rings" style="display:grid;gap:16px"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Phenoconversion watch</span><span class="m-tile__meta">A7 · fixtures</span></div><div class="m-watch" id="watch"></div></div>
+
+      <div class="m-tile m-tile--7"><div class="m-tile__head"><span class="m-tile__title">Live feed</span><span class="m-tile__meta">newest first</span></div><div class="m-feed" id="feed" aria-live="polite" tabindex="0" aria-label="Live alert feed"></div></div>
+      <div class="m-tile m-tile--5"><div class="m-tile__head"><span class="m-tile__title">Coverage by patient</span><span class="m-tile__meta">A5 · darker = more positions tested</span></div><div class="m-heat" id="heat"></div>
+        <p class="m-tile__meta">Hatched: CYP2D6 not called from VCF (A8). Shading is demo data.</p></div>
     </div>
   </div>
 </section>
@@ -451,10 +485,11 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <section class="band band--paper" id="kit" data-theme="paper">
   <div class="in cols">
     <div class="sec-head">
-      <span class="sec-id">F3 · CHAIN OF CUSTODY</span>
+      <span class="sec-ar" lang="ar" dir="rtl">سلسلة حفظ العيّنة</span>
       <h2>Saliva kit timeline</h2>
       <p>Each event is hash-chained to the one before. The verify button recomputes the chain and paints a broken link in the stop colour, with its shape changing too.</p>
       <button class="m-btn m-btn--secondary" type="button" id="tamper" style="justify-self:start">Simulate a tampered event</button>
+      <figure class="m-photo" data-img="img-04" style="--ar: 4 / 3"><img alt="Saliva collection tube with a barcode label and a sealed mailer on a stone surface"><div class="m-photo__ph"><b>IMG-04</b><span>Chain-of-custody kit · awaiting render</span></div></figure>
     </div>
     <ol class="m-chain" id="chain"></ol>
   </div>
@@ -463,7 +498,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <!-- ================= FOUNDATIONS ================= -->
 <section class="band band--paper" id="foundations" data-theme="paper" style="background:var(--m-surface)">
   <div class="in">
-    <div class="sec-head"><span class="sec-id">TOKENS · design/tokens.json</span><h2>Foundations</h2>
+    <div class="sec-head"><span class="sec-ar" lang="ar" dir="rtl">الأساسيات</span><h2>Foundations</h2>
       <p>Contrast ratios below are computed live in your browser from the same tokens the components use. The build script refuses to write tokens.css if any pair drops below its WCAG minimum.</p></div>
     <h3>Colour</h3>
     <div class="swatches" id="swatches"></div>
@@ -486,7 +521,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
     </div>
     <h3>Type</h3>
     <div class="type-spec">
-      <div><span class="meta">--m-font-display · Reem Kufi · wordmark, cover, section numerals only</span><span style="font-family:var(--m-font-display);font-size:var(--m-size-3xl);font-weight:700;color:var(--m-brand-strong)" lang="ar" dir="rtl">جواز الدواء · مِعيار</span></div>
+      <div><span class="meta">--m-font-display · Alexandria · headlines, wordmark, cover, big numbers · weights 200 and 800</span><span style="font-family:var(--m-font-display);font-size:var(--m-size-4xl);font-weight:800;line-height:1.1;color:var(--m-brand-strong)" lang="ar" dir="rtl">مِعيار ١٢٨٤</span><span style="font-family:var(--m-font-display);font-size:var(--m-size-2xl);font-weight:200">The right dose, the first time</span></div>
       <div><span class="meta">--m-font-patient · Readex Pro · Arabic and Latin in one family · body 18 px minimum, line-height 1.75 Arabic</span>
         <span lang="ar" dir="rtl" style="font-size:var(--m-size-2xl);font-weight:600">الآن جسمك يعمل ببطء مع بعض الأدوية</span>
         <span lang="ar" dir="rtl" style="font-size:var(--m-size-md);line-height:var(--m-leading-arabic-body)">جيناتك طبيعية. لكنك الآن تعمل ببطء بسبب دواء تتناوله. أخبر طبيبك قبل أي دواء جديد.</span>
@@ -500,18 +535,18 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 <!-- ================= REFUSED ================= -->
 <section class="band band--paper" id="refused" data-theme="paper">
   <div class="in">
-    <div class="sec-head"><span class="sec-id">design/ANTI-SLOP.md</span><h2>What we refused, and what we did instead</h2></div>
+    <div class="sec-head"><h2>What we refused, and what we did instead</h2></div>
     <div class="table-wrap"><table class="ban">
       <thead><tr><th>Default look</th><th>Meyar instead</th></tr></thead>
       <tbody>
         <tr><td>Purple-to-blue gradient hero on white</td><td>Juniper and saffron from Aseer, flat fills, the scale as the hero</td></tr>
-        <tr><td>Inter or system font everywhere</td><td>Readex Pro for patients, Plex Sans Arabic for clinicians, Kufi only for the name</td></tr>
+        <tr><td>Inter or system font everywhere</td><td>Readex Pro for patients, Plex Sans Arabic for clinicians (the Saudi government platform face), Alexandria for headlines</td></tr>
         <tr><td>Three identical icon cards</td><td>One instrument per gene, sized by what it says</td></tr>
         <tr><td>Glassmorphism, glow, neon on black</td><td>Warm kohl black with flat marks; texture is paper grain and chart-paper grid</td></tr>
         <tr><td>Thick coloured stripe on one side of a rounded card</td><td>Status as shape + word + colour; indicator as a labelled chip</td></tr>
         <tr><td>Bouncy springs and fade-up on every block</td><td>One calibration sweep per screen; decelerate, never overshoot</td></tr>
         <tr><td>Decorative sparklines and round-number “proof”</td><td>Only logged counts, labelled Demo data; sourced numbers only from docs/sources.md</td></tr>
-        <tr><td>Cream paper, serif display, terracotta accent</td><td>Green-tinted security paper, geometric Kufi, terracotta kept only for the fast end of the scale</td></tr>
+        <tr><td>Cream paper, serif display, terracotta accent</td><td>Green-tinted security paper, geometric Alexandria, terracotta kept only for the fast end of the scale</td></tr>
         <tr><td>“Safe ✓” green tick</td><td>Never says safe. Three answers only</td></tr>
       </tbody>
     </table></div>
@@ -519,17 +554,21 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
 </section>
 </main>
 
+<div class="footer-photo"><figure class="m-photo" data-img="img-07" style="--ar: 21 / 7"><img alt="Juniper forest on the Aseer mountains near Abha at dawn, mist in the valleys"><div class="m-photo__ph"><b>IMG-07</b><span>Aseer juniper at dawn · awaiting render</span></div></figure></div>
 <footer class="foot">
   <div class="in">
     <span class="m-wordmark" style="color:var(--m-p-saffron-300)"><span class="m-wordmark__ar" lang="ar">مِعيار</span></span>
-    <p>Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used. Every patient-facing Arabic string here is a draft for the C4 native-speaker review.</p>
+    <p>Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used. Every patient-facing Arabic string here is a draft for the C4 native-speaker review. Photographs are illustrative and AI-generated (Gemini); they show no real patients.</p>
   </div>
 </footer>
 
 <script type="module">
-import { scaleHTML, combHTML, calibrate, initMotion, countTo } from '../meyar.js';
+import { scaleHTML, combHTML, calibrate, initMotion } from '../meyar.js';
+import { gauge, rings, area, bars, minibars, tween } from '../charts.js';
 
 initMotion();
+// Image slots: load design/imagery/<id>.webp when it exists; keep the designed placeholder otherwise.
+document.querySelectorAll('.m-photo[data-img]').forEach((f) => { const img = f.querySelector('img'); f.classList.add('is-empty'); img.addEventListener('load', () => f.classList.remove('is-empty')); img.addEventListener('error', () => f.classList.add('is-empty')); img.src = `../imagery/${f.dataset.img}.webp`; });
 const html = document.documentElement;
 
 // ---- fixtures (mirrors docs/fixtures, mock) ----
@@ -603,53 +642,86 @@ document.getElementById('pinpad').innerHTML = [1,2,3,4,5,6,7,8,9,null,0,'⌫'].m
     ? '<button type="button" aria-label="Delete"><b>⌫</b></button>'
     : `<button type="button" aria-label="${d}"><b>${AD[d]}</b><small>${d}</small></button>`).join('');
 
-// ---- Dashboard: mock alert log (synthetic), counts only ----
-const DRUGS = ['Clopidogrel', 'Codeine', 'Simvastatin', 'Warfarin'];
-const GENE_OF = { Clopidogrel: 'CYP2C19', Codeine: 'CYP2D6', Simvastatin: 'SLCO1B1', Warfarin: 'CYP2C9 + VKORC1' };
-const ACTIONS = ['accepted', 'pharmacist', 'dismissed'];
-const seed = [
-  ['Clopidogrel','accepted'],['Codeine','pharmacist'],['Clopidogrel','accepted'],['Simvastatin','dismissed'],['Warfarin','pharmacist'],
-  ['Clopidogrel','pharmacist'],['Codeine','accepted'],['Simvastatin','accepted'],['Clopidogrel','accepted'],['Codeine','dismissed'],
-  ['Warfarin','accepted'],['Clopidogrel','dismissed'],['Simvastatin','pharmacist'],['Codeine','accepted'],['Clopidogrel','accepted'],
-];
-const log = []; let sweep = 0; let t0 = new Date('2026-11-21T09:00:00');
-const hourly = [2, 3, 1, 4, 2, 5, 3];
-function add(drug, action, isNew) {
-  t0 = new Date(t0.getTime() + 7 * 60000);
-  log.unshift({ drug, action, t: t0.toTimeString().slice(0, 5), sweep: drug === 'Codeine' || drug === 'Simvastatin' });
-  if (log[0].sweep) sweep++;
-  render(isNew);
+// ---- Dashboard: deterministic mock alert log (synthetic), counts only ----
+const rnd = (seed) => () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const DRUGS = [['Clopidogrel','CYP2C19'],['Codeine','CYP2D6'],['Simvastatin','SLCO1B1'],['Warfarin','CYP2C9 · VKORC1'],['Ondansetron','CYP2D6'],['Voriconazole','CYP2C19']];
+const RANGES = {
+  today: { buckets: ['08','09','10','11','12','13','14','15','16'], seed: 7, prevSeed: 3, per: [1, 4], meta: 'per hour · hover or use arrow keys', vs: 'vs yesterday' },
+  week: { buckets: ['Sat','Sun','Mon','Tue','Wed','Thu','Fri'], seed: 11, prevSeed: 5, per: [3, 9], meta: 'per day · hover or use arrow keys', vs: 'vs last week' },
+};
+function makeLog(r, seed) {
+  const R = rnd(seed), ev = [];
+  r.buckets.forEach((b, bi) => {
+    const n = r.per[0] + Math.floor(R() * (r.per[1] - r.per[0] + 1));
+    for (let k = 0; k < n; k++) {
+      const [drug, gene] = DRUGS[Math.floor(R() * DRUGS.length)], x = R();
+      ev.push({ b: bi, drug, gene, action: x < .46 ? 'accepted' : x < .76 ? 'pharmacist' : 'dismissed', sweep: R() < .22, pt: 'P' + String(10 + Math.floor(R() * 80)), min: Math.floor(R() * 60) });
+    }
+  });
+  return ev;
 }
-function render(isNew) {
-  countTo(document.getElementById('k-fired'), log.length);
-  countTo(document.getElementById('k-accepted'), log.filter((e) => e.action === 'accepted').length);
-  countTo(document.getElementById('k-pharm'), log.filter((e) => e.action === 'pharmacist').length);
-  countTo(document.getElementById('k-sweep'), sweep);
-  const max = Math.max(1, ...DRUGS.flatMap((d) => ACTIONS.map((a) => log.filter((e) => e.drug === d && e.action === a).length)));
-  document.getElementById('matrix').innerHTML = '<span></span>' + ['Accepted','Pharmacist','Dismissed','Total'].map((h) => `<span class="h">${h}</span>`).join('') +
-    DRUGS.map((d) => { const row = ACTIONS.map((a) => log.filter((e) => e.drug === d && e.action === a).length);
-      return `<span>${d}</span>` + row.map((v, j) => `<div class="m-matrix__cell${v / max > .6 ? ' is-hi' : ''}" style="--v:${v / max};--c:var(${['--m-brand','--m-ask','--m-none'][j]})">${v}</div>`).join('') + `<div class="m-matrix__cell" style="--v:0">${row.reduce((x, y) => x + y, 0)}</div>`; }).join('');
-  const feed = document.getElementById('feed');
-  const ic = { accepted: ['match', 'Better match accepted', 'info'], pharmacist: ['send', 'Sent to pharmacist', 'ask'], dismissed: ['none', 'Dismissed', 'none'] };
-  feed.innerHTML = log.slice(0, 9).map((e, i) => `<div class="m-feed__row${i === 0 && isNew ? ' is-new' : ''}"><span class="m-data" style="color:var(--m-text2)">${e.t}</span><span><b>${e.drug}</b> · <span class="m-data" style="color:var(--m-text2)">${GENE_OF[e.drug]}</span>${e.sweep ? ' · sweep' : ''}</span><span class="m-status m-status--${ic[e.action][2]}" style="font-size:12px"><svg aria-hidden="true"><use href="#i-${ic[e.action][0]}"/></svg>${ic[e.action][1]}</span></div>`).join('');
-  const genes = {}; log.forEach((e) => { genes[GENE_OF[e.drug]] = (genes[GENE_OF[e.drug]] || 0) + 1; });
-  const gmax = Math.max(...Object.values(genes));
-  const bg = document.getElementById('bygene');
-  bg.innerHTML = Object.entries(genes).sort((a, b) => b[1] - a[1]).map(([g, n]) => `<div class="m-hbar"><span class="m-data">${g}</span><div class="m-hbar__track"><div class="m-hbar__fill" style="--m-fill:0" data-f="${n / gmax}"></div></div><span class="m-data">${n}</span></div>`).join('');
-  requestAnimationFrame(() => requestAnimationFrame(() => bg.querySelectorAll('.m-hbar__fill').forEach((f) => f.style.setProperty('--m-fill', f.dataset.f))));
-  // sparkline from the demo run's hourly counts, endpoint emphasised
-  const hmax = Math.max(...hourly), W = 300, H = 72, pad = 8;
-  const pts = hourly.map((v, i) => [pad + i * (W - 2 * pad) / (hourly.length - 1), H - pad - v / hmax * (H - 2 * pad)]);
-  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
-  const last = pts[pts.length - 1];
-  document.getElementById('spark').innerHTML =
-    [0.25, 0.5, 0.75].map((f) => `<line x1="0" x2="${W}" y1="${pad + f * (H - 2 * pad)}" y2="${pad + f * (H - 2 * pad)}" stroke="var(--m-line)" stroke-width="1"/>`).join('') +
-    `<path d="${line} L ${last[0]} ${H - pad} L ${pad} ${H - pad} Z" fill="var(--m-brand-tint)"/><path d="${line}" fill="none" stroke="var(--m-brand)" stroke-width="2" vector-effect="non-scaling-stroke"/><circle cx="${last[0]}" cy="${last[1]}" r="4" fill="var(--m-brand)"/>`;
+let range = 'today', log = [], prev = [];
+const count = (l, f) => l.filter(f).length;
+const pct = (a, b) => (b ? Math.round(((a - b) / b) * 100) : 0);
+function delta(el, a, b) { const d = pct(a, b); el.textContent = `${d > 0 ? '▲ +' : d < 0 ? '▼ −' : ''}${Math.abs(d)}% ${RANGES[range].vs}`; el.className = 'm-delta' + (d === 0 ? ' m-delta--flat' : d < 0 ? ' m-delta--down' : ''); }
+const ACT = { accepted: ['match', 'Better match accepted', 'info'], pharmacist: ['send', 'Sent to pharmacist', 'ask'], dismissed: ['none', 'Dismissed', 'none'] };
+function feedRow(e, isNew) {
+  const r = RANGES[range], when = range === 'today' ? `${r.buckets[e.b]}:${String(e.min).padStart(2, '0')}` : r.buckets[e.b];
+  return `<div class="m-feed__row${isNew ? ' is-new' : ''}"><span class="m-mono">${e.pt}</span><span class="m-feed__what"><span><b>${e.drug}</b> · <span class="m-data" style="color:var(--m-text2)">${e.gene}</span>${e.sweep ? ' · sweep' : ''}</span><small>${when} · patient ${e.pt} (pseudonym)</small></span><span class="m-status m-status--${ACT[e.action][2]}" style="font-size:12px"><svg aria-hidden="true"><use href="#i-${ACT[e.action][0]}"/></svg>${ACT[e.action][1]}</span></div>`;
 }
-seed.forEach(([d, a]) => add(d, a, false));
-let i = 0;
-const more = [['Codeine','pharmacist'],['Clopidogrel','accepted'],['Warfarin','dismissed'],['Simvastatin','accepted'],['Clopidogrel','pharmacist']];
-setInterval(() => { if (document.hidden || i >= more.length * 4) return; const [d, a] = more[i++ % more.length]; hourly[hourly.length - 1]++; add(d, a, true); }, 4200);
+function kpis() {
+  const k = [['fired', () => true], ['acc', (e) => e.action === 'accepted'], ['ph', (e) => e.action === 'pharmacist'], ['sw', (e) => e.sweep]];
+  for (const [id, f] of k) {
+    tween(document.getElementById('k-' + id), count(log, f));
+    delta(document.getElementById('d-' + id), count(log, f), count(prev, f));
+    minibars(document.getElementById('s-' + id), RANGES[range].buckets.map((_, i) => count(log, (e) => e.b === i && f(e))));
+  }
+}
+function drawDash() {
+  const r = RANGES[range];
+  log = makeLog(r, r.seed); prev = makeLog(r, r.prevSeed);
+  kpis();
+  document.getElementById('area-meta').textContent = r.meta;
+  area(document.getElementById('area'), { series: r.buckets.map((x, i) => ({ x, y: count(log, (e) => e.b === i) })), label: 'Cards fired per ' + (range === 'today' ? 'hour' : 'day'), unit: ' cards' });
+  gauge(document.getElementById('gauge'), { value: count(log, (e) => e.action !== 'dismissed'), max: log.length, label: 'Acted on' });
+  bars(document.getElementById('bars'), { data: DRUGS.map(([d]) => ({ x: d.slice(0, 5), y: count(log, (e) => e.drug === d) })), label: 'Cards by drug' });
+  rings(document.getElementById('rings'), { centre: log.length, centreLabel: 'cards', parts: [
+    { label: 'Better match accepted', value: count(log, (e) => e.action === 'accepted'), color: 'var(--m-data)' },
+    { label: 'Sent to pharmacist', value: count(log, (e) => e.action === 'pharmacist'), color: 'var(--m-data2)' },
+    { label: 'Dismissed', value: count(log, (e) => e.action === 'dismissed'), color: 'var(--m-text3)' }] });
+  document.getElementById('feed').innerHTML = log.slice().sort((a, b) => b.b - a.b || b.min - a.min).slice(0, 8).map((e) => feedRow(e, false)).join('');
+}
+// Phenoconversion watch (fixtures only, never a scored non-CYP2D6 gene)
+document.getElementById('watch').innerHTML = [
+  ['demo-002 · CYP2D6 *1/*1', 'paroxetine · strong', G.cyp2d6],
+  ['demo-001 · CYP2C19 *2/*2', 'no current inhibitor', G.cyp2c19],
+  ['demo-004 · CYP2D6 from VCF', 'not assessed (A8)', G.unassessed],
+].map(([a, b, g]) => `<div class="m-watch__row"><header><span class="m-data">${a}</span><span>${b}</span></header>${scaleHTML(g, 'clinician')}</div>`).join('');
+// Coverage heat (demo shading; CYP2D6 hatched because it is never called from VCF)
+const HG = ['CYP2C19', 'CYP2C9', 'VKORC1', 'SLCO1B1', 'DPYD', 'CYP2D6'], HR = rnd(42);
+document.getElementById('heat').innerHTML = `<div class="m-heat__row" style="--n:${HG.length}"><span></span>${HG.map((g) => `<span style="font-size:9.5px;text-align:center">${g}</span>`).join('')}</div>` +
+  ['demo-001','demo-002','demo-003','demo-004','demo-005'].map((p) => `<div class="m-heat__row" style="--n:${HG.length}"><span>${p}</span>${HG.map((g) => g === 'CYP2D6' ? '<span class="m-heat__cell is-na" title="Not called from VCF (A8)">SV</span>' : `<span class="m-heat__cell" style="--v:${(.25 + HR() * .75).toFixed(2)}" title="demo shading"></span>`).join('')}</div>`).join('');
+// Dates: Hijri (Umm al-Qura) and Gregorian
+const now = new Date();
+try { document.getElementById('hijri').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(now); } catch { /* calendar unsupported */ }
+document.getElementById('greg').textContent = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(now);
+document.querySelectorAll('[data-range]').forEach((b) => b.addEventListener('click', () => {
+  range = b.dataset.range;
+  document.querySelectorAll('[data-range]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  drawDash();
+}));
+drawDash();
+// Live: a new synthetic card arrives every few seconds while the page is visible
+const LR = rnd(99); let live = 0;
+setInterval(() => {
+  if (document.hidden || live > 24) return;
+  live++;
+  const [drug, gene] = DRUGS[Math.floor(LR() * DRUGS.length)], x = LR();
+  const e = { b: RANGES[range].buckets.length - 1, drug, gene, action: x < .46 ? 'accepted' : x < .76 ? 'pharmacist' : 'dismissed', sweep: LR() < .22, pt: 'P' + String(10 + Math.floor(LR() * 80)), min: 50 + (live % 10) };
+  log.push(e); kpis();
+  const feed = document.getElementById('feed'); feed.insertAdjacentHTML('afterbegin', feedRow(e, true));
+  while (feed.children.length > 8) feed.lastElementChild.remove();
+}, 4500);
 
 // ---- Kit chain: real SHA-256 hash chain in the browser ----
 const events = [['issued','Kit KKU-0042 issued','Abha · clinic desk'],['collected','Saliva collected','Abha · home'],['sealed','Tube sealed','Abha · home'],['shipped','Shipped','Courier'],['received','Received at lab','Central lab'],['genotyped','Genotyped · germline','Central lab']];

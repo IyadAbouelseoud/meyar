@@ -6,7 +6,7 @@ All four families are licensed under the SIL Open Font License 1.1 and were down
 |---|---|
 | Readex Pro (variable 160–700) | Patient voice, Arabic and Latin |
 | IBM Plex Sans Arabic (400–700) | Clinician voice, dashboards, tables |
-| Reem Kufi (variable 400–700) | Wordmark, cover, section numerals only |
+| Alexandria (variable 100–900) | Headlines, wordmark, cover, big numbers |
 | IBM Plex Mono (400–600, Latin) | Genotype data only |
 
 Full licence text: https://openfontlicense.org
