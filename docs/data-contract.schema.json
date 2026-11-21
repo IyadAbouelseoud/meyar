@@ -78,6 +78,78 @@
           },
           "guidelineVersion": {
             "type": "string"
+          },
+          "effectivePhenotype": {
+            "type": "string"
+          },
+          "phenoconversion": {
+            "type": "object",
+            "required": [
+              "applied"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "applied": {
+                "type": "boolean"
+              },
+              "cause": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "inhibitorStrength": {
+                "enum": [
+                  "strong",
+                  "moderate",
+                  null
+                ]
+              },
+              "geneticActivityScore": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "adjustedActivityScore": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "method": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "currentMedications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "source",
+          "mock"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "rxnorm": {
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "hospital-record",
+              "patient-entered"
+            ]
+          },
+          "mock": {
+            "type": "boolean"
           }
         }
       }
