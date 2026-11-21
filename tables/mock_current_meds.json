@@ -1,5 +1,60 @@
 {
   "_owner": "A7",
-  "_note": "Only the owner edits this file. Every row needs a source. Mock current-medication lists per demo patient. Every row mock:true.",
-  "rows": []
+  "_note": "Only the owner edits this file. Every row needs a source. Mock current-medication lists per demo patient (demo-001..demo-005). Every row and medication item carries mock:true.",
+  "rows": [
+    {
+      "patientId": "demo-001",
+      "medications": [],
+      "source": "Synthetic demo cohort (A7 mock medication list; no real patient data)",
+      "mock": true
+    },
+    {
+      "patientId": "demo-002",
+      "medications": [
+        {
+          "name": "paroxetine",
+          "source": "hospital-record",
+          "mock": true
+        }
+      ],
+      "source": "Synthetic demo cohort (A7 mock medication list; matches docs/fixtures/demo-002.contract.json)",
+      "mock": true
+    },
+    {
+      "patientId": "demo-003",
+      "medications": [
+        {
+          "name": "fluvoxamine",
+          "source": "hospital-record",
+          "mock": true
+        }
+      ],
+      "source": "Synthetic demo cohort (A7 mock medication list; exercises CYP2C19 strong-inhibitor flag)",
+      "mock": true
+    },
+    {
+      "patientId": "demo-004",
+      "medications": [
+        {
+          "name": "duloxetine",
+          "source": "patient-entered",
+          "mock": true
+        }
+      ],
+      "source": "Synthetic demo cohort (A7 mock medication list; exercises patient-entered moderate CYP2D6 inhibitor)",
+      "mock": true
+    },
+    {
+      "patientId": "demo-005",
+      "medications": [
+        {
+          "name": "metformin",
+          "source": "hospital-record",
+          "mock": true
+        }
+      ],
+      "source": "Synthetic demo cohort (A7 mock medication list; non-inhibitor baseline)",
+      "mock": true
+    }
+  ]
 }
