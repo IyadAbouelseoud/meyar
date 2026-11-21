@@ -11,9 +11,10 @@
         "whole-gene deletion (*5)",
         "CYP2D6/CYP2D7 hybrid (*13, *68)"
       ],
-      "justification": "PharmCAT documentation: 'we do NOT recommend calling CYP2D6 from VCF' because of 'the large influence of structural variation (SV) and copy number variation (CNV) on inferring CYP2D6 phenotype'; 'CYP2D6 UMs cannot be called using only SNPs and INDELs in a VCF file'.",
+      "justification": "PharmCAT documentation: 'we do NOT recommend calling CYP2D6 from VCF' because of 'the large influence of structural variation (SV) and copy number variation (CNV) on inferring CYP2D6 phenotype'; 'CYP2D6 UMs cannot be called using only SNPs and INDELs in a VCF file'; and 'missing the copy number of a normal or decreased function allele can misrepresent a normal metabolizer (NM)'.",
       "matcherBehaviour": "PharmCAT NamedAlleleMatcher: 'does not currently support structural variants, including gene copy number. If structural variants are detected in the VCF data, it will be ignored and a warning will be issued.'",
-      "requiredInput": "WGS BAM/CRAM with a CNV-aware caller (PharmCAT names StellarPGx for demonstration and discourages WES or low-coverage WGS), or a laboratory report",
+      "requiredInput": "WGS BAM/CRAM with a CNV-aware caller, or a lab report",
+      "roadmapCallerNote": "PharmCAT names StellarPGx only for demonstration (WGS CRAM/BAM) and strongly discourages WES or low-coverage WGS to call CYP2D6.",
       "independentConfirmation": "Goljan et al., PLoS ONE 2022;17(1):e0263137 excluded CYP2D6 from an 11,889-person Saudi study: 'we were not able to call star alleles with whole gene deletions, duplications or hybrids ... Accordingly, we did not include CYP2D6 in our analysis.'",
       "sourceAccessed": "2026-11-21"
     }

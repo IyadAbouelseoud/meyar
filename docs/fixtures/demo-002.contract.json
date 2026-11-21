@@ -20,9 +20,16 @@
         "definingPositionsAssayed": 0,
         "definingPositionsTotal": 0,
         "untestedLocalAlleles": [],
-        "uninformativeNormalRisk": 0
+        "uninformativeNormalRisk": null,
+        "saudiDataTier": 0,
+        "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called."
       },
-      "guidelineVersion": "CPIC (fill from B1 row)",
+      "guidelineVersion": "CPIC 2021",
+      "callability": {
+        "method": "outside-call",
+        "svAssessed": true,
+        "source": "Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype)"
+      },
       "effectivePhenotype": "Poor Metabolizer",
       "phenoconversion": {
         "applied": true,
@@ -35,6 +42,5 @@
         "method": "Thomas et al. 2020"
       }
     }
-  ],
-  "_note": "MOCK fixture for A7/B6/C9 demo. Coverage numbers are placeholders for A5 to fill; inhibitor strength must match tables/cyp_inhibitors.json."
+  ]
 }
