@@ -26,3 +26,9 @@ Files: `tables/cpic_recommendations.json` (128 rows), `tables/cpic_recommendatio
 Notes: Text copied verbatim from the CPIC database; alternatives only where the CPIC text names them. Model cross-check only: a human must work through `docs/cpic-signoff.md`.
 Run: `python3 tables/tools/build_cpic_table.py` (rebuilds the table and the checklist).
 Data contract unchanged. No new runtime dependency.
+
+## A3 — Validate against GeT-RM reference samples (21 Nov 2026)
+Files: `engine/validation/run_validation.py`, `engine/validation/README.md`, `engine/validation/results.md`, `engine/validation/data/consensus_getrm.json`, `engine/validation/.gitignore`, `engine/validation/data/out/.gitkeep`, `handoff/A3.md`.
+Notes: Checked ENA `PRJEB19931` (`ERR1955333`/`NA07348.bam`: Isaac-aligned GRCh37, no `chr` prefixes; not lifted over per A3 rule). Streamed only the `chr10:94760000-94995000` (`CYP2C19` + `CYP2C9`) slice for 5 GeT-RM samples (`NA07348`, `NA10831`, `NA11839`, `NA18564`, `NA19122`) from the 1000 Genomes / NYGC 30x GRCh38 phased panel (`chr10` length `133797422`) and ran `pgkb/pharmcat:3.4.0` with zero DANGEROUS reference-imputation flags. Concordance: 9/10 exact or co-equal candidate matches (`NA10831` `CYP2C9` and `NA11839` `CYP2C9` retain `Indeterminate` candidate ties due to absent polymorphic-panel sites remaining no-calls); 1 mismatch reported transparently (`NA11839` `CYP2C19`: published `*1/*1` vs PharmCAT `*1/*38` due to PharmVar's `*1`/`*38` split at `rs3758581` `chr10:94842866`, both Normal Metabolizer).
+Run: `python engine/validation/run_validation.py` (requires Docker `pgkb/pharmcat:3.4.0` and Python 3.12+).
+Data contract unchanged. No new runtime dependency.

@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "description": "Published CDC/Coriell GeT-RM consensus diplotypes for 5 reference samples covering CYP2C19 and CYP2C9",
+    "consensusSourceUrl": "https://www.coriell.org/GetRM/PGxSearch",
+    "consensusApiEndpoints": [
+      "https://www.coriell.org/GeTRM/PGxSearch",
+      "https://www.coriell.org/GeTRM/getStarAlleleSamplesByGene"
+    ],
+    "enaCohortAccession": "PRJEB19931",
+    "enaCohortUrl": "https://www.ebi.ac.uk/ena/browser/view/PRJEB19931",
+    "grch38VcfSourceUrl": "https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr10.filtered.SNV_INDEL_SV_phased_panel.vcf.gz",
+    "region": "chr10:94760000-94995000",
+    "assembly": "GRCh38",
+    "accessDate": "2026-11-21"
+  },
+  "samples": [
+    {
+      "sampleId": "NA07348",
+      "population": "CEPH/UTAH PEDIGREE 1345",
+      "enaRun": "ERR1955333",
+      "genes": {
+        "CYP2C19": {
+          "publishedDiplotype": "*2/*17",
+          "coriellLitRef": "2,4"
+        },
+        "CYP2C9": {
+          "publishedDiplotype": "*1/*1",
+          "coriellLitRef": "2,4"
+        }
+      }
+    },
+    {
+      "sampleId": "NA10831",
+      "population": "CEPH/UTAH PEDIGREE 1424",
+      "enaRun": "ERR1955335",
+      "genes": {
+        "CYP2C19": {
+          "publishedDiplotype": "*1/*17",
+          "coriellLitRef": "2,4"
+        },
+        "CYP2C9": {
+          "publishedDiplotype": "*1/*2",
+          "coriellLitRef": "2,4"
+        }
+      }
+    },
+    {
+      "sampleId": "NA11839",
+      "population": "CEPH/UTAH PEDIGREE 1349",
+      "enaRun": "ERR1955340",
+      "genes": {
+        "CYP2C19": {
+          "publishedDiplotype": "*1/*1",
+          "coriellLitRef": "2,4"
+        },
+        "CYP2C9": {
+          "publishedDiplotype": "*2/*3",
+          "coriellLitRef": "4",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/35134542/"
+        }
+      }
+    },
+    {
+      "sampleId": "NA18564",
+      "population": "HAN CHINESE IN BEIJING, CHINA",
+      "enaRun": "ERR1955358",
+      "genes": {
+        "CYP2C19": {
+          "publishedDiplotype": "*2/*3",
+          "coriellLitRef": "2,4"
+        },
+        "CYP2C9": {
+          "publishedDiplotype": "*1/*1",
+          "coriellLitRef": "2,4"
+        }
+      }
+    },
+    {
+      "sampleId": "NA19122",
+      "population": "YORUBA IN IBADAN, NIGERIA",
+      "enaRun": "ERR1955375",
+      "genes": {
+        "CYP2C19": {
+          "publishedDiplotype": "*2/*35",
+          "coriellLitRef": "4",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/35134542/"
+        },
+        "CYP2C9": {
+          "publishedDiplotype": "*1/*11",
+          "coriellLitRef": "2,4"
+        }
+      }
+    }
+  ]
+}
