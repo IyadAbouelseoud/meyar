@@ -24,7 +24,7 @@
         "saudiDataTier": 0,
         "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called."
       },
-      "guidelineVersion": "CPIC (fill from B1 row)",
+      "guidelineVersion": "CPIC 2021",
       "callability": {
         "method": "outside-call",
         "svAssessed": true,
