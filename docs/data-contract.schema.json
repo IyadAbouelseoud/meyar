@@ -33,17 +33,22 @@
             "type": "string"
           },
           "diplotype": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "phenotype": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "candidates": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "minItems": 1
+            }
           },
           "coverage": {
             "type": "object",
@@ -92,6 +97,35 @@
           },
           "guidelineVersion": {
             "type": "string"
+          },
+          "callability": {
+            "type": "object",
+            "required": [
+              "method",
+              "svAssessed"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "vcf",
+                  "outside-call",
+                  "not-assessed"
+                ]
+              },
+              "svAssessed": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "requiredInput": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              }
+            }
           },
           "effectivePhenotype": {
             "type": "string"
