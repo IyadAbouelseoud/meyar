@@ -413,6 +413,26 @@ def phenoconvert_contract(
         gene_symbol = str(g["gene"])
         causes, strongest = _collect_gene_inhibitors(gene_symbol, meds, inhibitors)
 
+        if g.get("phenotype") is None:
+            # A8 not-assessed gene (phenotype null): there is no genetic result to
+            # shift, so never write an effective phenotype (and never the string "None").
+            if strongest is not None:
+                logger.info(
+                    "%s not assessed (no genetic phenotype); not applying phenoconversion from %s",
+                    gene_symbol,
+                    causes,
+                )
+            g.pop("effectivePhenotype", None)
+            g["phenoconversion"] = {
+                "applied": False,
+                "cause": [],
+                "inhibitorStrength": None,
+                "geneticActivityScore": None,
+                "adjustedActivityScore": None,
+            }
+            new_genes.append(g)
+            continue
+
         if gene_symbol == "CYP2D6":
             effective, phenoconv = _phenoconvert_cyp2d6(g, causes, strongest)
         else:

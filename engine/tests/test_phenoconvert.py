@@ -64,9 +64,11 @@ def _validate_against_contract_schema(doc: Dict[str, Any], schema: Dict[str, Any
         assert req_gene.issubset(g.keys()), f"Missing gene keys: {req_gene - g.keys()}"
         assert set(g.keys()).issubset(allowed_gene), f"Extra gene keys: {set(g.keys()) - allowed_gene}"
         assert isinstance(g["gene"], str)
-        assert isinstance(g["diplotype"], str)
-        assert isinstance(g["phenotype"], str)
-        assert isinstance(g["candidates"], list) and len(g["candidates"]) >= 1
+        # A8: an SV gene that is not assessed carries diplotype/phenotype null and no candidates.
+        not_assessed = (g.get("callability") or {}).get("method") == "not-assessed"
+        assert g["diplotype"] is None or isinstance(g["diplotype"], str)
+        assert g["phenotype"] is None or isinstance(g["phenotype"], str)
+        assert isinstance(g["candidates"], list) and (not_assessed or len(g["candidates"]) >= 1)
         assert all(isinstance(c, str) for c in g["candidates"])
         assert isinstance(g["guidelineVersion"], str)
 
@@ -77,8 +79,9 @@ def _validate_against_contract_schema(doc: Dict[str, Any], schema: Dict[str, Any
         assert isinstance(cov["definingPositionsAssayed"], int) and cov["definingPositionsAssayed"] >= 0
         assert isinstance(cov["definingPositionsTotal"], int) and cov["definingPositionsTotal"] >= 0
         assert isinstance(cov["untestedLocalAlleles"], list)
-        assert isinstance(cov["uninformativeNormalRisk"], (int, float))
-        assert 0 <= cov["uninformativeNormalRisk"] <= 1
+        # A5: Tier 0/2 genes carry a null score.
+        risk = cov["uninformativeNormalRisk"]
+        assert risk is None or (isinstance(risk, (int, float)) and 0 <= risk <= 1)
 
         if "effectivePhenotype" in g:
             assert isinstance(g["effectivePhenotype"], str)
@@ -279,6 +282,24 @@ class TestPhenoconvert(unittest.TestCase):
         self.assertIsNone(g["phenoconversion"]["geneticActivityScore"])
         self.assertIsNone(g["phenoconversion"]["adjustedActivityScore"])
         _validate_against_contract_schema(result, self.schema)
+
+    def test_not_assessed_sv_gene_gets_no_effective_phenotype(self) -> None:
+        # A8 not-assessed CYP2D6: phenotype/diplotype null. A strong inhibitor must not
+        # produce an effective phenotype, and never the literal string "None".
+        contract = _sample_contract(
+            meds=[{"name": "paroxetine", "source": "hospital-record", "mock": True}],
+        )
+        g0 = contract["genes"][0]
+        g0["diplotype"] = None
+        g0["phenotype"] = None
+        g0["candidates"] = []
+        g0["callability"] = {"method": "not-assessed", "svAssessed": False, "reason": "test"}
+        result = phenoconvert.phenoconvert_contract(contract, self.inhibitors)
+        g = result["genes"][0]
+        self.assertIsNone(g["phenotype"])
+        self.assertNotIn("effectivePhenotype", g)
+        self.assertFalse(g["phenoconversion"]["applied"])
+        self.assertIsNone(g["phenoconversion"]["geneticActivityScore"])
 
     def test_non_germline_contract_rejected(self) -> None:
         contract = _sample_contract()
