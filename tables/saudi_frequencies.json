@@ -1,5 +1,2063 @@
 {
   "_owner": "A5",
-  "_note": "Only the owner edits this file. Every row needs a source.",
-  "rows": []
+  "_note": "Only the owner edits this file. Every row carries saudiDataTier and a source citation with n and table number. Tier 1 frequencies are verbatim from Goljan et al. 2022 Table 1. Never substitute global, European, or Gulf-neighbour frequencies into Tier 2 genes.",
+  "_coverageStatement": "Saudi allele frequencies for Tier 1 genes (CYP2C9, CYP2C19, CYP3A5, CYP4F2, VKORC1, DPYD, TPMT, NUDT15) come directly from Goljan et al. (PLoS ONE 2022;17(1):e0263137, Table 1), representing 11,889 unrelated Saudi nationals (9,961 exomes and 1,928 PGx panels) sequenced in the Saudi Human Genome Program (2015-2019). Genes without published Saudi allele frequencies (Tier 2, such as SLCO1B1) return null risk rather than borrowing non-Saudi figures, and CYP2D6 (Tier 0) receives no A5 score because structural variants were excluded from that study and are gated by A8.",
+  "_cautions": [
+    "Raw SHGP data are not public ('Data cannot be shared publicly because of National policy'); only published Table 1 values are cited.",
+    "Goljan et al. 2022 reports CYP3A5*3 as 84.5% in Table 1 and 84.7% in the Results text; this table uses Table 1 (84.5%).",
+    "The paper's abstract and results disagree on the rare-variant count, so that figure is intentionally omitted."
+  ],
+  "rows": [
+    {
+      "gene": "CYP2C9",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 78.9,
+          "frequency": 0.789,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*2",
+          "coreVariant": "rs1799853",
+          "coreVariantRsids": [
+            "rs1799853"
+          ],
+          "variantType": "Missense (R144C)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 13.4,
+          "frequency": 0.134,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3",
+          "coreVariant": "rs1057910",
+          "coreVariantRsids": [
+            "rs1057910"
+          ],
+          "variantType": "Missense (I359L)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 5.3,
+          "frequency": 0.053,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*4",
+          "coreVariant": "rs56165452",
+          "coreVariantRsids": [
+            "rs56165452"
+          ],
+          "variantType": "Missense (I359T)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*5",
+          "coreVariant": "rs28371686",
+          "coreVariantRsids": [
+            "rs28371686"
+          ],
+          "variantType": "Missense (D360E)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.2,
+          "frequency": 0.002,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*6",
+          "coreVariant": "rs9332131",
+          "coreVariantRsids": [
+            "rs9332131"
+          ],
+          "variantType": "Frameshift",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*7",
+          "coreVariant": "rs67807361",
+          "coreVariantRsids": [
+            "rs67807361"
+          ],
+          "variantType": "Missense (L19I)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*8",
+          "coreVariant": "rs7900194",
+          "coreVariantRsids": [
+            "rs7900194"
+          ],
+          "variantType": "Missense (R150H)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.5,
+          "frequency": 0.005,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*9",
+          "coreVariant": "rs2256871",
+          "coreVariantRsids": [
+            "rs2256871"
+          ],
+          "variantType": "Missense (H251R)",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 0.7,
+          "frequency": 0.007,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*11",
+          "coreVariant": "rs28371685",
+          "coreVariantRsids": [
+            "rs28371685"
+          ],
+          "variantType": "Missense (R335W)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.6,
+          "frequency": 0.006,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*12",
+          "coreVariant": "rs9332239",
+          "coreVariantRsids": [
+            "rs9332239"
+          ],
+          "variantType": "Missense (P489S)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*13",
+          "coreVariant": "rs72558187",
+          "coreVariantRsids": [
+            "rs72558187"
+          ],
+          "variantType": "Missense (L90P)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*14",
+          "coreVariant": "rs72558189",
+          "coreVariantRsids": [
+            "rs72558189"
+          ],
+          "variantType": "Missense (R125H)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*24",
+          "coreVariant": "rs749060448",
+          "coreVariantRsids": [
+            "rs749060448"
+          ],
+          "variantType": "Missense (E354K)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*32",
+          "coreVariant": "rs868182778",
+          "coreVariantRsids": [
+            "rs868182778"
+          ],
+          "variantType": "Missense (V490F)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*33",
+          "coreVariant": "rs200183364",
+          "coreVariantRsids": [
+            "rs200183364"
+          ],
+          "variantType": "Missense (R132Q)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.3,
+          "frequency": 0.003,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*36",
+          "coreVariant": "rs114071557",
+          "coreVariantRsids": [
+            "rs114071557"
+          ],
+          "variantType": "Start lost",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*39",
+          "coreVariant": "rs762239445",
+          "coreVariantRsids": [
+            "rs762239445"
+          ],
+          "variantType": "Missense(R124W)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*43",
+          "coreVariant": "rs767576260",
+          "coreVariantRsids": [
+            "rs767576260"
+          ],
+          "variantType": "Missense (R124W)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*44",
+          "coreVariant": "rs200965026",
+          "coreVariantRsids": [
+            "rs200965026"
+          ],
+          "variantType": "Missense (T130M))",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*45",
+          "coreVariant": "rs199523631",
+          "coreVariantRsids": [
+            "rs199523631"
+          ],
+          "variantType": "Missense (R132W)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*60",
+          "coreVariant": "rs767284820",
+          "coreVariantRsids": [
+            "rs767284820"
+          ],
+          "variantType": "Missense (L467P)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "CYP2C19",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 63.3,
+          "frequency": 0.633,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*2",
+          "coreVariant": "rs4244285",
+          "coreVariantRsids": [
+            "rs4244285"
+          ],
+          "variantType": "Splicing defect",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 9.6,
+          "frequency": 0.096,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3",
+          "coreVariant": "rs4986893",
+          "coreVariantRsids": [
+            "rs4986893"
+          ],
+          "variantType": "Stop-gain (W212X)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*4A",
+          "coreVariant": "rs28399504",
+          "coreVariantRsids": [
+            "rs28399504"
+          ],
+          "variantType": "Start lost",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*4B",
+          "coreVariant": "rs28399504, rs12248560",
+          "coreVariantRsids": [
+            "rs28399504",
+            "rs12248560"
+          ],
+          "variantType": "Start lost, Regulatory",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*5",
+          "coreVariant": "rs56337013",
+          "coreVariantRsids": [
+            "rs56337013"
+          ],
+          "variantType": "Missense (R433W)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*6",
+          "coreVariant": "rs72552267",
+          "coreVariantRsids": [
+            "rs72552267"
+          ],
+          "variantType": "Missense (R132Q)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*7",
+          "coreVariant": "rs72558186",
+          "coreVariantRsids": [
+            "rs72558186"
+          ],
+          "variantType": "Splicing defect",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*8",
+          "coreVariant": "rs41291556",
+          "coreVariantRsids": [
+            "rs41291556"
+          ],
+          "variantType": "Missense (W120R)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*9",
+          "coreVariant": "rs17884712",
+          "coreVariantRsids": [
+            "rs17884712"
+          ],
+          "variantType": "Missense (R144H)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.2,
+          "frequency": 0.002,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*10",
+          "coreVariant": "rs6413438",
+          "coreVariantRsids": [
+            "rs6413438"
+          ],
+          "variantType": "Missense (P227L)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*12",
+          "coreVariant": "rs55640102",
+          "coreVariantRsids": [
+            "rs55640102"
+          ],
+          "variantType": "Stop-lost (X491C)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*13",
+          "coreVariant": "rs17879685",
+          "coreVariantRsids": [
+            "rs17879685"
+          ],
+          "variantType": "Missense (R410C)",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 0.4,
+          "frequency": 0.004,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*15",
+          "coreVariant": "rs17882687",
+          "coreVariantRsids": [
+            "rs17882687"
+          ],
+          "variantType": "Missense (I19L)",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 0.4,
+          "frequency": 0.004,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*16",
+          "coreVariant": "rs192154563",
+          "coreVariantRsids": [
+            "rs192154563"
+          ],
+          "variantType": "Missense (R442C)",
+          "functionalStatus": "Decreased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*17",
+          "coreVariant": "rs12248560",
+          "coreVariantRsids": [
+            "rs12248560"
+          ],
+          "variantType": "Regulatory",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 25.9,
+          "frequency": 0.259,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*24",
+          "coreVariant": "rs118203757",
+          "coreVariantRsids": [
+            "rs118203757"
+          ],
+          "variantType": "Missense (R335Q)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*28",
+          "coreVariant": "rs113934938",
+          "coreVariantRsids": [
+            "rs113934938"
+          ],
+          "variantType": "Missense (V374I)",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*30",
+          "coreVariant": "rs145328984",
+          "coreVariantRsids": [
+            "rs145328984"
+          ],
+          "variantType": "Missense (R73C)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*34",
+          "coreVariant": "rs367543002, rs367543003",
+          "coreVariantRsids": [
+            "rs367543002",
+            "rs367543003"
+          ],
+          "variantType": "Missense (P3S, F4L)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "CYP3A5",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137); CYP3A5*3 uses Table 1 value (84.5%, vs 84.7% in text)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 12.5,
+          "frequency": 0.125,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*2",
+          "coreVariant": "rs28365083",
+          "coreVariantRsids": [
+            "rs28365083"
+          ],
+          "variantType": "Missense (T398N)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3",
+          "coreVariant": "rs776746",
+          "coreVariantRsids": [
+            "rs776746"
+          ],
+          "variantType": "Splicing defect",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 84.5,
+          "frequency": 0.845,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false,
+            "note": "Goljan et al. 2022 reports CYP3A5*3 as 84.5% in Table 1 and 84.7% in the Results text; Table 1 (84.5%) is used here."
+          }
+        },
+        {
+          "allele": "*6",
+          "coreVariant": "rs10264272",
+          "coreVariantRsids": [
+            "rs10264272"
+          ],
+          "variantType": "Splicing defect",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 2.4,
+          "frequency": 0.024,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*7",
+          "coreVariant": "rs41303343",
+          "coreVariantRsids": [
+            "rs41303343"
+          ],
+          "variantType": "Frameshift",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.4,
+          "frequency": 0.004,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*8",
+          "coreVariant": "rs55817950",
+          "coreVariantRsids": [
+            "rs55817950"
+          ],
+          "variantType": "Missense (R28C)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "CYP4F2",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 55.6,
+          "frequency": 0.556,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3",
+          "coreVariant": "rs2108622",
+          "coreVariantRsids": [
+            "rs2108622"
+          ],
+          "variantType": "Missense (V433M)",
+          "functionalStatus": "Decreased function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 44.4,
+          "frequency": 0.444,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "VKORC1",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "Wild-type",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 15.08,
+          "frequency": 0.1508,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "1173C>T (*2)",
+          "coreVariant": "rs9934438",
+          "coreVariantRsids": [
+            "rs9934438"
+          ],
+          "variantType": "Regulatory",
+          "functionalStatus": "Decreased expression",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 53.7,
+          "frequency": 0.537,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "3730G>A",
+          "coreVariant": "rs7294",
+          "coreVariantRsids": [
+            "rs7294"
+          ],
+          "variantType": "UTR",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 29.2,
+          "frequency": 0.292,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "85G>T",
+          "coreVariant": "rs104894539",
+          "coreVariantRsids": [
+            "rs104894539"
+          ],
+          "variantType": "Missense(V29L)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "106G>T",
+          "coreVariant": "rs61742245",
+          "coreVariantRsids": [
+            "rs61742245"
+          ],
+          "variantType": "Missense (D36Y)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 2.1,
+          "frequency": 0.021,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "172A>G",
+          "coreVariant": "rs104894541",
+          "coreVariantRsids": [
+            "rs104894541"
+          ],
+          "variantType": "Missense (R58G)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "196G>A",
+          "coreVariant": "rs72547529",
+          "coreVariantRsids": [
+            "rs72547529"
+          ],
+          "variantType": "Missense (V66M)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "292C>G",
+          "coreVariant": "rs72547528",
+          "coreVariantRsids": [
+            "rs72547528"
+          ],
+          "variantType": "Missense (R98W)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "383T>G",
+          "coreVariant": "rs104894542",
+          "coreVariantRsids": [
+            "rs104894542"
+          ],
+          "variantType": "Missense (L128R)",
+          "functionalStatus": "Increased",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "DPYD",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 99.82,
+          "frequency": 0.9982,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "2846A>T",
+          "coreVariant": "rs67376798",
+          "coreVariantRsids": [
+            "rs67376798"
+          ],
+          "variantType": "Missense (D949V)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*2A",
+          "coreVariant": "rs3918290",
+          "coreVariantRsids": [
+            "rs3918290"
+          ],
+          "variantType": "Splicing defect",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*8",
+          "coreVariant": "rs1801266",
+          "coreVariantRsids": [
+            "rs1801266"
+          ],
+          "variantType": "Missense(R235W)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "557A>G",
+          "coreVariant": "rs115232898",
+          "coreVariantRsids": [
+            "rs115232898"
+          ],
+          "variantType": "Missense (Y186C)",
+          "functionalStatus": "Decreased function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "2279C>T",
+          "coreVariant": "rs112766203.1",
+          "coreVariantRsids": [
+            "rs112766203"
+          ],
+          "variantType": "Missense (T760I)",
+          "functionalStatus": "Decreased function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "1475C>T",
+          "coreVariant": "rs72549304",
+          "coreVariantRsids": [
+            "rs72549304"
+          ],
+          "variantType": "Missense (S492L)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "868A>G",
+          "coreVariant": "rs146356975",
+          "coreVariantRsids": [
+            "rs146356975"
+          ],
+          "variantType": "Missense (K290E)",
+          "functionalStatus": "Decreased function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "1236G>A (HapB3)",
+          "coreVariant": "rs56038477",
+          "coreVariantRsids": [
+            "rs56038477"
+          ],
+          "variantType": "Synonymous (E412 =)",
+          "functionalStatus": "Decreased function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.5,
+          "frequency": 0.005,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "TPMT",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 99.1,
+          "frequency": 0.991,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*2",
+          "coreVariant": "rs1800462",
+          "coreVariantRsids": [
+            "rs1800462"
+          ],
+          "variantType": "Missense (A80P)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3A",
+          "coreVariant": "rs1800460, rs1142345",
+          "coreVariantRsids": [
+            "rs1800460",
+            "rs1142345"
+          ],
+          "variantType": "Missense (A154T, Y240C)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.3,
+          "frequency": 0.003,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3B",
+          "coreVariant": "rs1800460",
+          "coreVariantRsids": [
+            "rs1800460"
+          ],
+          "variantType": "Missense (A154T)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3C",
+          "coreVariant": "rs1142345",
+          "coreVariantRsids": [
+            "rs1142345"
+          ],
+          "variantType": "Missense (Y240C)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.4,
+          "frequency": 0.004,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*6",
+          "coreVariant": "rs75543815",
+          "coreVariantRsids": [
+            "rs75543815"
+          ],
+          "variantType": "Missense (Y180F)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.0,
+          "frequency": 0.0,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*8",
+          "coreVariant": "rs56161402",
+          "coreVariantRsids": [
+            "rs56161402"
+          ],
+          "variantType": "Missense (R215H)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.2,
+          "frequency": 0.002,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*12",
+          "coreVariant": "rs200220210",
+          "coreVariantRsids": [
+            "rs200220210"
+          ],
+          "variantType": "Missense (S125L)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*24",
+          "coreVariant": "rs6921269",
+          "coreVariantRsids": [
+            "rs6921269"
+          ],
+          "variantType": "Missense (Q179H)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 0.1,
+          "frequency": 0.001,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*25",
+          "coreVariant": "rs377085266",
+          "coreVariantRsids": [
+            "rs377085266"
+          ],
+          "variantType": "Missense(C212R)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*34",
+          "coreVariant": "rs111901354",
+          "coreVariantRsids": [
+            "rs111901354"
+          ],
+          "variantType": "Missense (R82W)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "NUDT15",
+      "saudiDataTier": 1,
+      "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+        "table": "Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": [
+        {
+          "allele": "*1",
+          "coreVariant": "None",
+          "coreVariantRsids": [],
+          "variantType": "",
+          "functionalStatus": "Normal",
+          "isNonNormalFunction": false,
+          "reportedFrequencyPct": 98.5,
+          "frequency": 0.985,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*3",
+          "coreVariant": "rs116855232",
+          "coreVariantRsids": [
+            "rs116855232"
+          ],
+          "variantType": "Missense (R139C)",
+          "functionalStatus": "Inactive",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": 1.8,
+          "frequency": 0.018,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        },
+        {
+          "allele": "*5",
+          "coreVariant": "rs186364861",
+          "coreVariantRsids": [
+            "rs186364861"
+          ],
+          "variantType": "Missense (V18I)",
+          "functionalStatus": "Uncertain function",
+          "isNonNormalFunction": true,
+          "reportedFrequencyPct": "<0.1",
+          "frequency": null,
+          "saudiDataTier": 1,
+          "source": {
+            "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137.",
+            "doi": "10.1371/journal.pone.0263137",
+            "n": 11889,
+            "cohort": "11,889 unrelated Saudi nationals (9,961 exomes + 1,928 custom PGx panels, Saudi Human Genome Program, 2015-2019)",
+            "table": "Table 1",
+            "rawDataPublic": false
+          }
+        }
+      ]
+    },
+    {
+      "gene": "CYP2D6",
+      "saudiDataTier": 0,
+      "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called.",
+      "source": {
+        "study": "Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. Identification of pharmacogenetic variants from large scale next generation sequencing data in the Saudi population. PLoS ONE 2022;17(1):e0263137. (CYP2D6 explicitly excluded; see Methods/Limitations) and tables/sv_genes.json (owner A8)",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Excluded from Table 1 (whole-gene deletions, duplications, and hybrids not callable)",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "SLCO1B1",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "ABCG2",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "CACNA1S",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "CFTR",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "CYP2B6",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "CYP3A4",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "F2",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "F5",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "G6PD",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "HLA-A",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "HLA-B",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "IFNL3",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "MT-RNR1",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "NAT2",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "RYR1",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    },
+    {
+      "gene": "UGT1A1",
+      "saudiDataTier": 2,
+      "saudiDataNote": "No published Saudi frequency for this gene",
+      "source": {
+        "study": "Not covered in Goljan et al., PLoS ONE 2022;17(1):e0263137 (n=11,889); no published Saudi per-allele frequency integrated",
+        "doi": "10.1371/journal.pone.0263137",
+        "n": 11889,
+        "table": "Not in Table 1",
+        "rawDataPublic": false
+      },
+      "alleles": []
+    }
+  ]
 }
