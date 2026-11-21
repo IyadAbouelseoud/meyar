@@ -20,3 +20,9 @@ Notes: Wraps `pgkb/pharmcat:3.4.0` `pharmcat_pipeline -o /pharmcat/data/out` acr
 Run: `bash engine/run_pharmcat.sh` (requires `engine/data/in/*.vcf` from A1 and Docker).
 Data contract unchanged. No new runtime dependency.
 
+
+## B1 — CPIC recommendation table (21 Nov 2026)
+Files: `tables/cpic_recommendations.json` (128 rows), `tables/cpic_recommendations.schema.json`, `tables/tools/build_cpic_table.py`, `tables/tools/cpic_extract.json`, `docs/cpic-signoff.md`, `docs/sources.md` (rows), `handoff/B1.md`.
+Notes: Text copied verbatim from the CPIC database; alternatives only where the CPIC text names them. Model cross-check only: a human must work through `docs/cpic-signoff.md`.
+Run: `python3 tables/tools/build_cpic_table.py` (rebuilds the table and the checklist).
+Data contract unchanged. No new runtime dependency.
