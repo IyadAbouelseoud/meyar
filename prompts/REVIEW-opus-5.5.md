@@ -70,6 +70,11 @@ Audit the whole repository against the build prompts in prompts/ and the context
 8. Hardware: every render and video frame of hardware carries its status label; nothing not built is shown as built.
 9. Ports and versions match the README exactly.
 10. Mandatory lines present: "Research prototype — not for clinical use." and "Runs on synthetic and GeT-RM reference data; no patient data was used."
+11. AGENTS.md compliance: every rule in AGENTS.md sections 2–10 holds in the code and docs; list each violated rule with evidence.
+12. Handoffs: every built task has `handoff/<TASK>.md` with Status: DONE and a matching commit; any IN PROGRESS or BLOCKED handoff is listed with its "Next step".
+13. A7 phenoconversion: `phenotype` is never overwritten; CYP2D6 score uses ×0.5 / ×0 exactly (Thomas et al. 2020); every inhibitor row in tables/cyp_inhibitors.json cites the FDA table; non-CYP2D6 genes are flagged, never scored; demo-002 shows Normal → acting Poor because of paroxetine on card and Passport.
+14. Alternatives (B6/C9): every alternative shown traces to a `alternatives` entry in tables/cpic_recommendations.json with a source; none is generated or ranked; patient app says "ask your doctor", never "switch".
+15. Mock data: every mock record has `"mock": true`, the UI shows a "Demo data" label, and no doc treats an unverified regulation as a blocker or as already approved.
 </task>
 
 <constraints>
@@ -83,8 +88,10 @@ Write docs/REVIEW.md with:
 1. Verdict in one line: ready / ready with fixes / not ready.
 2. Table: task ID, status (pass / fail / not built / could not check), evidence.
 3. Findings ranked by severity (blocks submission / wrong in front of a judge / minor), each with path:line, what is wrong, and the smallest fix.
-4. Cross-cutting checks 1–10, each pass or fail with evidence.
+4. Cross-cutting checks 1–15, each pass or fail with evidence.
 Then print the verdict and the top five findings in the terminal.
 </output_format>
+
+If your context or usage limit approaches before you finish, write what you have to docs/REVIEW.md with a "Not yet checked" list, save `handoff/REVIEW.md` with the next check to run, and stop.
 
 Stop after writing docs/REVIEW.md. If the stack will not start after two attempts, stop and report the error instead of debugging it.
