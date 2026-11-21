@@ -22,7 +22,7 @@
         "untestedLocalAlleles": [],
         "uninformativeNormalRisk": 0
       },
-      "guidelineVersion": "CPIC (fill from B1 row)",
+      "guidelineVersion": "CPIC 2021",
       "effectivePhenotype": "Poor Metabolizer",
       "phenoconversion": {
         "applied": true,
@@ -35,6 +35,5 @@
         "method": "Thomas et al. 2020"
       }
     }
-  ],
-  "_note": "MOCK fixture for A7/B6/C9 demo. Coverage numbers are placeholders for A5 to fill; inhibitor strength must match tables/cyp_inhibitors.json."
+  ]
 }
