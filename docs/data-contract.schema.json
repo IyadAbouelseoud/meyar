@@ -33,17 +33,22 @@
             "type": "string"
           },
           "diplotype": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "phenotype": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "candidates": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "minItems": 1
+            }
           },
           "coverage": {
             "type": "object",
@@ -70,14 +75,57 @@
                 }
               },
               "uninformativeNormalRisk": {
-                "type": "number",
+                "type": [
+                  "number",
+                  "null"
+                ],
                 "minimum": 0,
                 "maximum": 1
+              },
+              "saudiDataTier": {
+                "type": "integer",
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              "saudiDataNote": {
+                "type": "string"
               }
             }
           },
           "guidelineVersion": {
             "type": "string"
+          },
+          "callability": {
+            "type": "object",
+            "required": [
+              "method",
+              "svAssessed"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "vcf",
+                  "outside-call",
+                  "not-assessed"
+                ]
+              },
+              "svAssessed": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "requiredInput": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              }
+            }
           },
           "effectivePhenotype": {
             "type": "string"
