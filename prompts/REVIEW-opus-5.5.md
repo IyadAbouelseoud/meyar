@@ -12,6 +12,9 @@
 - Architecture: genotype source (lab, regional array, chain-of-custody saliva kit) → germline-only gate (A6) → PharmCAT 3.4.0 in Docker, batch, once → FHIR phenotype store (HAPI, Genomics Reporting IG) → A5 coverage flag (separate arithmetic step, NEVER inside PharmCAT) → two outputs: CDS Hooks 2.0.1 order-sign card (non-interruptive, with backward sweep) and the Arabic Medication Passport (offline, PIN-encrypted QR that encodes the payload itself, not a URL).
 - Repo `meyar/`: engine/, cds/, passport/, kit/, hardware/, tables/ (shared, ONE OWNER PER FILE), docs/, prompts/. Ports are fixed: HAPI 8080, CDS service 3000, CDS Hooks sandbox 8081, passport 5173. Pinned: pgkb/pharmcat:3.4.0, hapiproject/hapi:v8.12.0-2, bcftools 1.24, Node 22 LTS, Python 3.12.
 - Do NOT install: Java (PharmCAT runs in Docker), Kubernetes, any database server, React Native.
+- Read `AGENTS.md` first; it holds every settled rule and wins over this prompt. Background research digest: `docs/research/README.md`.
+- MOCK DATA: the demo and presentation run on mock data only (synthetic patients, GeT-RM samples, mock medicine and current-medication lists, each `"mock": true`). Unverified regulations (SFDA, PDPL, NPHIES) are NOT blockers: note them as a future deployment step and keep building. Mock data never licenses an invented sourced number.
+- New features (locked): A7 phenoconversion — current medicines that inhibit CYP2D6 shift the effective phenotype (activity score ×0.5 moderate, ×0 strong; inhibitor strength only from tables/cyp_inhibitors.json); B6/C9 better-matched alternatives — shown only when the CPIC row in tables/cpic_recommendations.json names one, never generated. Both the genetic and the effective phenotype are always shown.
 
 ## Data contract (every component reads and writes exactly this shape; schema in docs/data-contract.schema.json)
 ```json
