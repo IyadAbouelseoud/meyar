@@ -14,6 +14,7 @@ services:
     volumes:
       - ./engine/data/out:/data/contracts:ro
       - ./tables:/data/tables:ro
+      - ./design:/data/design:ro   # design system, served by cds at /design/* (B4, B5)
     depends_on:
       - hapi
 # PharmCAT is not a long-running service. Run it per batch:

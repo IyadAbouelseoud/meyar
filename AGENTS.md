@@ -86,5 +86,12 @@ Schema: `docs/data-contract.schema.json`. Fixture: `docs/fixtures/demo-001.contr
 5. Stop after every Done-when box is proven, or after 3 failed attempts at one step (write the handoff). Never start the next task.
 6. Commit messages: `<TASK>: <what>`. One task per branch or session.
 
-## 11. Review
+## 11. Design system (every screen, card, dashboard, print and poster)
+- Build every UI from `design/` (tokens, fonts, components, helpers). Spec: `design/README.md`. Live reference: `design/showcase/index.html`. `design/` is read-only for build tasks; request changes in `docs/requests.md`.
+- The Meyar Scale is the one way a phenotype is drawn: hollow ring = genetic result, needle = acting-like result (A7). Not-assessed and indeterminate genes show a hatched scale with no marker, never a default.
+- Every status is shape + word + colour. The patient side has no green "safe" colour and no tick. Saffron and the Al-Qatt band are ornament only, never inside clinical content.
+- Motion: one orchestrated moment per screen, decelerate only, nothing bounces, off for `prefers-reduced-motion` and elder mode.
+- Before Done: `node design/build-tokens.mjs` passes and `design/ANTI-SLOP.md` has fewer than two ticks.
+
+## 12. Review
 Before submission run `prompts/REVIEW-opus-5.5.md` in Claude Code on Opus 5.5. It checks every rule in this file.

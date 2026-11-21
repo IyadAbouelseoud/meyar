@@ -25,4 +25,4 @@
 | Saudi per-allele PGx frequencies, 11,889 unrelated Saudi nationals (9,961 exomes + 1,928 panels), 8 CPIC genes, Table 1 | Goljan E, Abouelhoda M, ElKalioby MM, Jabaan A, Alghithi N, Meyer BF, Monies D. PLoS ONE 2022;17(1):e0263137, doi:10.1371/journal.pone.0263137 |
 | CYP2D6 excluded from that Saudi study because deletions, duplications and hybrids could not be called | Goljan et al. 2022, same paper (quote in tables/sv_genes.json) |
 | Exome and panel sequencing do not reliably identify structural changes and copy number variation | Goljan et al. 2022, limitations section |
-
+| CDS Hooks card summary under 140 characters; indicator values info / warning / critical | CDS Hooks 2.0 specification, "Card Attributes", cds-hooks.hl7.org |

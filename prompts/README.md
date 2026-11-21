@@ -4,6 +4,8 @@ One self-contained prompt per task. Each carries the locked context, the data co
 
 Every prompt keeps a live `handoff/<TASK>.md` and stops safely near limits (see AGENTS.md section 3). To resume a stopped task, paste the same prompt again. The demo runs on mock data, so unverified regulations never block a task.
 
+Every UI and print prompt (B3–B6, C1–C9, D1, D2, F3, F4) now carries a **Design system** section pointing at [design/README.md](../design/README.md) and a Done-when box for the anti-slop checklist. Open `design/showcase/index.html` before building any screen.
+
 How to use: open the `meyar` repo in Antigravity, start a new agent session, paste one prompt, approve its Implementation Plan, let it build, check its "Done when" boxes. One task per session. When all tasks are in, run [REVIEW-opus-5.5.md](REVIEW-opus-5.5.md) in Claude Code on Opus 5.5.
 
 | Task | Title | Workstream | Hours | Depends on |

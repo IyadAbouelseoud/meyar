@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-elder="off">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meyar Design System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../meyar.css">
+<style>
+/* Layout concept: a long specimen sheet. Each surface sits on its own true ground
+   (security paper, chart paper, instrument black), so the page reads as the product, not a mood board. */
+:root { --gut: max(16px, env(safe-area-inset-left, 0px)); --gut-r: max(16px, env(safe-area-inset-right, 0px)); --wrap: 1240px; }
+body.m-body { background: var(--m-bg); }
+.band { padding-block: var(--m-space-8); }
+.band > .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); display: grid; gap: var(--m-space-6); }
+.band--paper { background: var(--m-bg); color: var(--m-text); }
+.band--chart { background-color: var(--m-bg); }
+.band--instrument { background: var(--m-bg); color: var(--m-text); }
+.sec-head { display: grid; gap: var(--m-space-3); max-inline-size: 68ch; }
+.sec-head p { color: var(--m-text2); }
+
+/* Hero: Arabic statement on the left, the instrument floating over a photograph on the right */
+.hero { background: var(--m-p-juniper-950); color: var(--m-p-paper-0); position: relative; overflow: hidden; isolation: isolate;
+  margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .08;
+  background: repeating-radial-gradient(circle at 96% 115%, transparent 0 22px, var(--m-p-saffron-300) 22px 23px); }
+.hero .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); padding-block: var(--m-space-6) var(--m-space-8); display: grid; gap: var(--m-space-7); }
+.hero nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hero .m-wordmark { color: var(--m-p-saffron-300); }
+.hero .m-wordmark__en { color: var(--m-p-juniper-100); }
+.hero nav ul { display: flex; flex-wrap: wrap; gap: 4px 6px; list-style: none; margin: 0; padding: 4px; font-size: var(--m-size-sm); background: rgb(255 255 255 / .06); border-radius: 14px; }
+.hero nav a { display: block; padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
+.hero nav a:hover { color: var(--m-p-paper-0); background: rgb(255 255 255 / .08); }
+.hero__grid { display: grid; gap: var(--m-space-7); align-items: center; }
+@media (min-width: 980px) { .hero__grid { grid-template-columns: 1.1fr .9fr; } }
+.hero__copy { display: grid; gap: var(--m-space-4); align-content: center; }
+.hero__kicker { font-size: var(--m-size-sm); color: var(--m-p-juniper-300); }
+.hero__ar { font-family: var(--m-font-display); font-weight: 800; font-size: clamp(3rem, 8vw, 6.4rem); line-height: 1.08; color: var(--m-p-paper-0); inline-size: fit-content; letter-spacing: -.01em; }
+.hero__en { font-family: var(--m-font-display); font-weight: 200; font-size: clamp(1.5rem, 3.2vw, 2.6rem); color: var(--m-p-saffron-300); letter-spacing: -.02em; line-height: 1.1; }
+.hero__lede { color: var(--m-p-juniper-100); max-inline-size: 52ch; font-size: var(--m-size-md); }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-block-start: var(--m-space-3); }
+.hero__btn { --bg: var(--m-p-saffron-300); --fg: var(--m-p-juniper-950); }
+.hero__btn:hover { --bg: var(--m-p-saffron-500); }
+.hero__btn2 { --fg: var(--m-p-paper-0); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .3); }
+.hero__btn2:hover { --bg: rgb(255 255 255 / .08); }
+.hero__stage { position: relative; display: grid; padding-block-end: 40px; }
+.hero__photo { inline-size: min(100%, 420px); justify-self: end; }
+.hero__instrument { position: relative; margin-block-start: -150px; margin-inline-end: 34px; inline-size: min(100%, 430px); background: var(--m-surface); color: var(--m-text); border-radius: var(--m-radius-tile); padding: 20px; display: grid; gap: 12px; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6); }
+.hero__inst-title { font-family: var(--m-font-display); font-weight: 600; font-size: var(--m-size-lg); letter-spacing: -.01em; }
+.hero__instrument .m-scale { padding-block-start: 40px; }
+.hero__chip { position: absolute; inset-block-start: 28px; inset-inline-start: 0; display: grid; gap: 4px; padding: 12px 14px; border-radius: 16px; background: var(--m-surface); color: var(--m-text); box-shadow: 0 20px 40px -24px rgb(0 0 0 / .6); }
+.hero__chip small { font-size: 11px; color: var(--m-text3); }
+@media (max-width: 979px) { .hero__photo { justify-self: stretch; inline-size: 100%; } .hero__instrument { margin-inline: 12px; inline-size: auto; } .hero__chip { inset-inline-start: 12px; } }
+.replay { justify-self: start; }
+
+/* Section heads: Arabic title first, English second */
+.sec-ar { font-family: var(--m-font-display); font-weight: 700; font-size: var(--m-size-2xl); line-height: 1.2; color: var(--m-brand-strong); inline-size: fit-content; }
+.sec-head h2 { font-family: var(--m-font-display); font-weight: 300; font-size: var(--m-size-xl); letter-spacing: -.02em; color: var(--m-text2); }
+.dash-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; }
+.dash-ctl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: flex-end; }
+.dash-date { display: grid; text-align: end; font-size: var(--m-size-xs); color: var(--m-text2); line-height: 1.4; }
+#dashboard .m-seg { background: var(--m-surface); border: 1px solid var(--m-line); }
+#dashboard .m-seg button[aria-pressed="true"] { background: var(--m-data); color: var(--m-on-brand); box-shadow: none; }
+.head-split { display: grid; gap: var(--m-space-5); align-items: end; }
+@media (min-width: 900px) { .head-split { grid-template-columns: 1.3fr 1fr; } }
+
+/* Controls for the passport frames */
+.ctrl { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+
+/* Phone frames */
+.phones { display: grid; gap: var(--m-space-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); align-items: start; }
+.phone { background: var(--m-bg); border: 1px solid var(--m-line); border-radius: 30px; padding: 14px; display: grid; gap: 14px; min-width: 0; }
+.phone__bar { display: flex; justify-content: space-between; align-items: center; font-size: var(--m-size-xs); color: var(--m-text2); padding-inline: 6px; }
+.phone__cap { font-family: var(--m-font-data); font-size: 11px; color: var(--m-text3); text-align: center; letter-spacing: .06em; direction: ltr; }
+.phone .stack { display: grid; gap: 14px; }
+.speak { display: inline-flex; gap: .5em; align-items: center; }
+
+/* Print */
+.print-row { display: flex; flex-wrap: wrap; gap: var(--m-space-6); align-items: flex-start; }
+.print-row figure { margin: 0; display: grid; gap: 10px; }
+.print-row figcaption { font-size: var(--m-size-xs); color: var(--m-text2); font-family: var(--m-font-data); }
+.scaler { transform-origin: top left; }
+[dir="rtl"] .scaler { transform-origin: top right; }
+@media (min-width: 720px) { .scaler--x2 { transform: scale(1.75); margin-block-end: calc(53.98mm * .75); margin-inline-end: calc(85.6mm * .75); } }
+
+/* Prescriber page */
+.ehr { display: grid; gap: var(--m-space-5); }
+@media (min-width: 1020px) { .ehr { grid-template-columns: 1fr 440px; align-items: start; } }
+.ehr__order { background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); font-family: var(--m-font-clinician); }
+.ehr__order header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-block-end: 1px solid var(--m-line); font-size: var(--m-size-sm); }
+.ehr__order table { inline-size: 100%; border-collapse: collapse; font-size: var(--m-size-sm); }
+.ehr__order th, .ehr__order td { text-align: start; padding: 10px 16px; border-block-end: 1px solid var(--m-line); }
+.ehr__order th { color: var(--m-text2); font-weight: 500; font-size: var(--m-size-xs); }
+.ehr__order tr.is-pending td { background: var(--m-ask-tint); }
+.ehr__rail { display: grid; gap: 14px; }
+.rail-label { display: flex; justify-content: space-between; font-size: var(--m-size-xs); color: var(--m-text2); font-family: var(--m-font-data); }
+.mini .m-scale { padding-block-start: 30px; }
+.mini .m-scale__track { block-size: 10px; }
+.mini .m-scale__genetic::after { inset-block-start: 26px; inline-size: 18px; block-size: 18px; }
+.mini .m-scale__acting::before { inset-block-start: 12px; block-size: 32px; }
+details.json { font-size: var(--m-size-xs); }
+details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: 40px; display: flex; align-items: center; }
+details.json pre { overflow-x: auto; background: var(--m-sunken); padding: 12px; border-radius: var(--m-radius-hair); font-family: var(--m-font-data); font-size: 12px; line-height: 1.5; direction: ltr; text-align: left; }
+
+/* Compare */
+.compare { display: grid; gap: var(--m-space-5); }
+@media (min-width: 900px) { .compare { grid-template-columns: 1fr 1fr; } }
+.modal-mock { position: relative; border-radius: var(--m-radius-card); background: var(--m-p-ink-2); padding: 28px; display: grid; place-items: center; min-block-size: 300px; }
+.modal-mock__box { background: #fff; color: #222; font-family: Arial, sans-serif; max-inline-size: 340px; border-radius: 4px; overflow: hidden; box-shadow: 0 10px 30px rgb(0 0 0 / .4); }
+.modal-mock__box header { background: #c62828; color: #fff; padding: 10px 14px; font-weight: 700; font-size: 14px; }
+.modal-mock__box div { padding: 14px; font-size: 13px; display: grid; gap: 10px; }
+.modal-mock__box button { font: inherit; padding: 8px; border: 1px solid #999; background: #eee; }
+
+.footer-photo .m-photo { border-radius: 0; }
+.footer-photo .m-photo__ph { padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+
+/* Foundations */
+.swatches { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.sw { border: 1px solid var(--m-line); border-radius: var(--m-radius-card); overflow: hidden; background: var(--m-surface); font-size: var(--m-size-xs); }
+.sw > div:first-child { block-size: 64px; }
+.sw > div:last-child { padding: 8px 10px; display: grid; gap: 2px; }
+.sw code { font-family: var(--m-font-data); color: var(--m-text2); }
+.type-spec { display: grid; gap: var(--m-space-5); }
+.type-spec > div { display: grid; gap: 6px; padding-block: var(--m-space-4); border-block-start: 1px solid var(--m-line); }
+.type-spec .meta { font-family: var(--m-font-data); font-size: var(--m-size-xs); color: var(--m-text3); }
+.cols { display: grid; gap: var(--m-space-5); }
+@media (min-width: 900px) { .cols { grid-template-columns: 1fr 1fr; } .cols--3 { grid-template-columns: repeat(3, 1fr); } }
+.curve { inline-size: 100%; max-inline-size: 260px; block-size: auto; }
+.ban { inline-size: 100%; border-collapse: collapse; font-size: var(--m-size-sm); }
+.ban th, .ban td { text-align: start; vertical-align: top; padding: 10px 12px 10px 0; border-block-start: 1px solid var(--m-line); }
+.ban th { font-size: var(--m-size-xs); color: var(--m-text2); font-weight: 600; }
+.ban td:first-child { color: var(--m-text2); text-decoration: line-through; text-decoration-color: var(--m-stop); text-decoration-thickness: 2px; }
+.table-wrap { overflow-x: auto; }
+footer.foot { padding-block: var(--m-space-6); background: var(--m-p-juniper-950); color: var(--m-p-juniper-100); font-size: var(--m-size-sm); }
+footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); display: grid; gap: 10px; }
+</style>
+</head>
+<body class="m-body">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-stop" viewBox="0 0 24 24"><path d="M8 2.5h8l5.5 5.5v8L16 21.5H8L2.5 16V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7.5 12h9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><path d="M12 3 22 20.5H2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9.5v5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.25" fill="currentColor"/></symbol>
+  <symbol id="i-none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3.2 2.6"/><path d="M8.5 12h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.25" fill="currentColor"/></symbol>
+  <symbol id="i-match" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.3 12.2 2.6 2.6 4.9-5.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 21v-5M7.5 21v-8M12 21V9M16.5 21v-8M21 21v-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 1.8 14.3 4.6 12 7.4 9.7 4.6z" fill="currentColor"/></symbol>
+  <symbol id="i-speak" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-genes" viewBox="0 0 24 24"><path d="M7 3c0 6 10 6 10 12s-10 3-10 6M17 3c0 6-10 6-10 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 7.5h7M8.5 16.5h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><rect x="2.8" y="8.2" width="18.4" height="7.6" rx="3.8" transform="rotate(-35 12 12)" fill="none" stroke="currentColor" stroke-width="2"/><path d="m10.1 9.3 3.8 5.4" stroke="currentColor" stroke-width="2" transform="rotate(0)"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M3 11.5 21 3l-6.5 18-3-7.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="in">
+    <nav aria-label="Sections">
+      <a class="m-wordmark" href="#top" id="top"><svg class="m-wordmark__tick" aria-hidden="true"><use href="#i-mark"/></svg><span class="m-wordmark__ar" lang="ar">مِعيار</span><span class="m-wordmark__en">Meyar</span></a>
+      <ul>
+        <li><a href="#passport">Passport</a></li>
+        <li><a href="#card">Printed card</a></li>
+        <li><a href="#prescriber">Prescriber</a></li>
+        <li><a href="#dashboard">Alert log</a></li>
+        <li><a href="#foundations">Foundations</a></li>
+      </ul>
+    </nav>
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <p class="hero__kicker"><span lang="ar">جواز الدواء</span> · Medication Passport · pharmacogenomics</p>
+        <h1 class="hero__ar" lang="ar" dir="rtl">الجرعة الصحيحة<br>من أول مرة</h1>
+        <p class="hero__en">The right dose, the first time.</p>
+        <p class="hero__lede">Meyar reads a patient’s genes once, then measures every new prescription against them. One instrument runs through every screen: the ring is the genetic result, the needle is how the body acts today with the medicines it already takes.</p>
+        <div class="hero__cta"><a class="m-btn hero__btn" href="#passport">See the Passport</a><a class="m-btn m-btn--secondary hero__btn2" href="#dashboard">Open the alert log</a></div>
+      </div>
+      <div class="hero__stage">
+        <figure class="m-photo hero__photo" data-img="img-15" style="--ar: 4 / 5"><img alt="A single capsule resting on the pan of a brass apothecary balance, soft daylight"><div class="m-photo__ph"><b>IMG-15</b><span>Capsule on a brass balance · awaiting render</span></div></figure>
+        <div class="hero__instrument" data-theme="paper" id="hero-instrument">
+          <div class="m-gene__head"><span class="m-gene__name">CYP2D6 · <span class="m-data">*1/*1</span></span><span class="m-mock">Demo data</span></div>
+          <p class="hero__inst-title">Genetic: Normal · Acting like: Poor</p>
+          <div id="hero-scale"></div>
+          <p class="m-gene__because" style="font-size:var(--m-size-sm)">Because of <b>paroxetine</b>, a strong CYP2D6 inhibitor. Activity score <span class="m-data">2.0 → 0.0</span>.</p>
+          <button class="m-btn m-btn--quiet replay" type="button" id="replay">Replay calibration</button>
+        </div>
+        <div class="hero__chip" data-theme="paper"><span class="m-status m-status--better"><svg aria-hidden="true"><use href="#i-match"/></svg>Better matched: prasugrel</span><small>CPIC row, demo-001</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="m-qatt" aria-hidden="true"></div>
+</header>
+
+<main>
+<!-- ================= PASSPORT ================= -->
+<section class="band band--paper m-grain" id="passport" data-theme="paper">
+  <div class="in">
+    <div class="head-split"><div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">جواز الدواء</span>
+      <h2>Medication Passport</h2>
+      <p>Arabic first, built for an older reader holding the phone at arm’s length. One task per screen. Every status is a shape, a word and a colour together. Switch the frames below to English, or turn on elder mode and watch type, spacing and targets grow while motion switches off.</p>
+    </div><figure class="m-photo" data-img="img-02" style="--ar: 16 / 10"><img alt="An older Saudi woman reading her phone by a window in a whitewashed Abha home, face turned away"><div class="m-photo__ph"><b>IMG-02</b><span>Reading the Passport at home · awaiting render</span></div></figure></div>
+    <div class="ctrl m-noprint">
+      <div class="m-seg" role="group" aria-label="Language">
+        <button type="button" id="lang-ar" aria-pressed="true">العربية</button>
+        <button type="button" id="lang-en" aria-pressed="false">English</button>
+      </div>
+      <label class="m-switch"><input type="checkbox" id="elder"> <span>Elder mode (C5)</span></label>
+    </div>
+
+    <div class="phones" id="phones" dir="rtl" lang="ar">
+      <!-- Phone 1: cover + my medicines -->
+      <div class="phone">
+        <div class="phone__bar"><span data-t="proto">نموذج بحثي — ليس للاستخدام السريري</span><span class="m-mock" data-t="demo">بيانات تجريبية</span></div>
+        <div class="stack">
+          <div class="m-cover">
+            <div>
+              <span class="m-eyebrow" style="color:var(--m-p-juniper-100)" data-t="kicker">مِعيار</span>
+              <p class="m-cover__title" data-t="passport">جواز الدواء</p>
+              <p class="m-cover__sub" data-t="coverSub">نتائج جيناتك مع الأدوية، تعمل دون إنترنت.</p>
+            </div>
+            <button class="m-btn" type="button" style="--bg:var(--m-p-saffron-300);--fg:var(--m-p-juniper-950);justify-self:start"><svg aria-hidden="true"><use href="#i-qr"/></svg><span data-t="showDoctor">اعرضه على الطبيب أو الصيدلي</span></button>
+            <div class="m-qatt m-qatt--thin" aria-hidden="true"></div>
+          </div>
+          <h3 style="font-size:var(--m-size-lg)" data-t="myMeds">أدويتي</h3>
+          <div class="m-medlist">
+            <div><div><b data-t="parox">باروكسيتين</b><br><small data-t="fromHospital">من سجل المستشفى</small></div><span class="m-status m-status--info"><svg aria-hidden="true"><use href="#i-info"/></svg><span data-t="changes">يغيّر عمل جين</span></span></div>
+            <div><div><b data-t="addMed">أضف دواءً تتناوله</b><br><small data-t="addMedSub">يُحفظ على هاتفك فقط</small></div><button class="m-btn m-btn--secondary" type="button" data-t="add">إضافة</button></div>
+          </div>
+        </div>
+        <nav class="m-tabs" aria-label="Passport">
+          <a href="#passport" aria-current="page"><svg aria-hidden="true"><use href="#i-genes"/></svg><span data-t="tGenes">جيناتي</span></a>
+          <a href="#passport"><svg aria-hidden="true"><use href="#i-pill"/></svg><span data-t="tMeds">أدويتي</span></a>
+          <a href="#passport"><svg aria-hidden="true"><use href="#i-search"/></svg><span data-t="tCheck">افحص دواء</span></a>
+          <a href="#passport"><svg aria-hidden="true"><use href="#i-qr"/></svg><span data-t="tShow">اعرض</span></a>
+        </nav>
+        <p class="phone__cap">HOME · MY MEDICINES</p>
+      </div>
+
+      <!-- Phone 2: gene cards -->
+      <div class="phone">
+        <div class="phone__bar"><span data-t="proto">نموذج بحثي — ليس للاستخدام السريري</span><span class="m-mock" data-t="demo">بيانات تجريبية</span></div>
+        <div class="stack">
+          <article class="m-gene" aria-labelledby="g1">
+            <div class="m-gene__head"><span class="m-gene__name m-data">CYP2D6</span>
+              <button class="m-btn m-btn--quiet speak" type="button"><svg aria-hidden="true"><use href="#i-speak"/></svg><span data-t="read">اقرأ لي</span></button></div>
+            <p class="m-gene__plain" id="g1" data-t="g1plain">الآن جسمك يعمل ببطء مع بعض الأدوية</p>
+            <div data-scale="cyp2d6"></div>
+            <p class="m-gene__because" data-t="g1because">جيناتك: طبيعية. الآن تعمل ببطء <b>بسبب الباروكسيتين</b>. أخبر طبيبك قبل البدء بالكودايين.</p>
+            <div class="m-gene__drugs">
+              <div class="m-drugrow"><span class="m-drugrow__name" data-t="codeine">كودايين</span><span class="m-status m-status--stop"><svg aria-hidden="true"><use href="#i-stop"/></svg><span data-t="dont">لا تتناوله دون طبيبك</span></span></div>
+            </div>
+            <div class="m-better"><svg aria-hidden="true"><use href="#i-match"/></svg><span data-t="better">أنسب لجيناتك: مسكّن آخر غير الترامادول — اسأل طبيبك. (CPIC)</span></div>
+          </article>
+          <article class="m-gene" aria-labelledby="g2">
+            <div class="m-gene__head"><span class="m-gene__name m-data">CYP2C19 · *2/*2</span><span class="m-tier" data-t-html="tier1"><span class="m-tier__n">1</span> بيانات سعودية منشورة</span></div>
+            <p class="m-gene__plain" id="g2" data-t="g2plain">جسمك بطيء مع هذه الأدوية</p>
+            <div data-scale="cyp2c19"></div>
+            <div class="m-coverage"><div data-comb="cyp2c19"></div><p class="m-coverage__line" data-t-html="cov">فحصنا <strong>٩ من ١١</strong> موضعاً. لم نفحص <span class="m-data">*35</span>.</p></div>
+          </article>
+          <article class="m-gene" aria-labelledby="g3">
+            <div class="m-gene__head"><span class="m-gene__name m-data">CYP2D6 · VCF</span><span class="m-tier"><span class="m-tier__n">0</span> <span data-t="tier0">تغيّر بنيوي</span></span></div>
+            <p class="m-gene__plain" id="g3" style="font-size:var(--m-size-xl)" data-t="g3plain">لم يُفحص هذا الجين بعد</p>
+            <div data-scale="unassessed"></div>
+            <p class="m-coverage__line" data-t="g3why">هذا الفحص لا يرى عدد نسخ الجين، لذلك لا نعطي نتيجة. هذا ليس اطمئناناً.</p>
+          </article>
+        </div>
+        <p class="phone__cap">GENE CARDS · A7 · A5 · A8</p>
+      </div>
+
+      <!-- Phone 3: OTC check -->
+      <div class="phone">
+        <div class="phone__bar"><span data-t="proto">نموذج بحثي — ليس للاستخدام السريري</span><span class="m-mock" data-t="demo">بيانات تجريبية</span></div>
+        <div class="stack">
+          <h3 style="font-size:var(--m-size-xl)" data-t="checkTitle">قبل أن تشتري دواءً</h3>
+          <div class="m-field"><label for="otc" data-t="otcLabel">اكتب اسم الدواء</label><input class="m-input" id="otc" value="باراسيتامول" autocomplete="off"></div>
+          <div class="m-answer m-answer--none" role="status">
+            <p class="m-answer__title"><svg aria-hidden="true"><use href="#i-none"/></svg><span data-t="ansNone">لا توجد توصية جينية لملفك</span></p>
+            <p class="m-answer__body" data-t="ansNoneBody">لا يوجد دليل جيني لهذا الدواء. تعليمات العلبة المعتادة ما زالت تنطبق.</p>
+          </div>
+          <div class="m-answer m-answer--ask">
+            <p class="m-answer__title"><svg aria-hidden="true"><use href="#i-ask"/></svg><span data-t="ansAsk">اسأل الصيدلي قبل الشراء</span></p>
+            <p class="m-answer__body" data-t="ansAskBody">مثال لشكل الجواب الثاني.</p>
+          </div>
+          <div class="m-answer m-answer--stop">
+            <p class="m-answer__title"><svg aria-hidden="true"><use href="#i-stop"/></svg><span data-t="ansStop">لا تتناوله دون طبيبك</span></p>
+            <p class="m-answer__body" data-t="ansStopBody">مثال لشكل الجواب الثالث. لا نقول أبداً «آمن».</p>
+          </div>
+        </div>
+        <p class="phone__cap">OTC QUICK-CHECK · C6 · THREE ANSWERS ONLY</p>
+      </div>
+
+      <!-- Phone 4: scanner PIN -->
+      <div class="phone">
+        <div class="phone__bar"><span data-t="proto">نموذج بحثي — ليس للاستخدام السريري</span><span class="m-mock" data-t="demo">بيانات تجريبية</span></div>
+        <div class="stack" style="justify-items:center;text-align:center">
+          <svg aria-hidden="true" style="inline-size:40px;block-size:40px;color:var(--m-brand)"><use href="#i-lock"/></svg>
+          <h3 style="font-size:var(--m-size-xl)" data-t="pinTitle">اطلب الرمز من صاحب البطاقة</h3>
+          <p style="color:var(--m-text2);font-size:var(--m-size-sm)" data-t="pinSub">٦ أرقام. يُفك التشفير على هذا الجهاز فقط، دون إنترنت.</p>
+          <div class="m-pin-dots" role="img" aria-label="2 of 6 digits entered"><i class="is-on"></i><i class="is-on"></i><i></i><i></i><i></i><i></i></div>
+          <div class="m-pin" id="pinpad"></div>
+          <p style="color:var(--m-text3);font-size:var(--m-size-xs)" data-t="pinHonest">الرمز يمنع القراءة العابرة فقط. السجل الكامل لدى المستشفى.</p>
+        </div>
+        <p class="phone__cap">SCAN-SIDE PIN · C3 · C8</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRINTED CARD ================= -->
+<section class="band band--paper" id="card" data-theme="paper" style="background:var(--m-sunken)">
+  <div class="in">
+    <div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">البطاقة المطبوعة</span>
+      <h2>The printed card</h2>
+      <p>Sized in millimetres, not pixels, so it prints to wallet size. The face carries no name, no ID number and no result. Only the encrypted QR, the PIN instruction and the honesty line. The strip along the bottom echoes a passport’s machine-readable zone but holds only the envelope version and the issue date.</p>
+    </div>
+    <div class="print-row">
+      <figure>
+        <div class="scaler scaler--x2">
+          <div class="m-id1" dir="rtl" lang="ar">
+            <div class="m-id1__left">
+              <span class="m-id1__brand">مِعيار</span>
+              <span style="font-size:3.4mm;font-weight:600;color:var(--m-p-juniper-700)">جواز الدواء</span>
+              <span class="m-id1__pin">اطلب الرمز من صاحب البطاقة<br><span style="font-weight:400;font-size:2.5mm" dir="ltr">Ask the holder for the PIN</span></span>
+              <span class="m-id1__proto">نموذج بحثي — ليس للاستخدام السريري<br><span dir="ltr">Research prototype — not for clinical use</span></span>
+            </div>
+            <div class="m-id1__qr"><img src="sample-qr.svg" alt="Sample QR in the C8 envelope shape (random bytes, not real data)"></div>
+            <div class="m-id1__mrz">MEYAR&lt;&lt;PGX&lt;ENV&lt;V1&lt;&lt;ISSUED&lt;20261121&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+            <div class="m-qatt" aria-hidden="true"></div>
+          </div>
+        </div>
+        <figcaption>Front, shown at 1.75× on wide screens. The QR is random bytes in the C8 envelope shape.</figcaption>
+      </figure>
+      <figure>
+        <div class="m-a6" dir="rtl" lang="ar" style="inline-size:min(105mm,100%)">
+          <p style="font-family:var(--m-font-display);font-size:8mm;color:var(--m-p-juniper-900);line-height:1.2">جواز الدواء</p>
+          <hr class="m-rule" style="margin-block:4mm">
+          <p><b>CYP2C19</b>: جسمك بطيء مع بعض الأدوية مثل كلوبيدوقريل.</p>
+          <p><b>CYP2D6</b>: جيناتك طبيعية، لكنك الآن تعمل ببطء بسبب باروكسيتين.</p>
+          <p style="margin-block-start:4mm">أخبر طبيبك أو الصيدلي قبل أي دواء جديد.</p>
+          <p class="m-id1__proto" style="font-size:3mm;margin-block-start:6mm">نموذج بحثي — ليس للاستخدام السريري · بيانات تجريبية</p>
+        </div>
+        <figcaption>A6 fold-out (105 × 148 mm), large-type C4 lines. The patient chooses to print it.</figcaption>
+      </figure>
+      <figure style="margin:0;display:grid;gap:10px;flex:1 1 280px;max-inline-size:420px"><figure class="m-photo" data-img="img-06" style="--ar: 3 / 2"><img alt="The printed Meyar card on a majlis table beside a dallah coffee pot and dates"><div class="m-photo__ph"><b>IMG-06</b><span>The card on a majlis table · awaiting render</span></div></figure></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRESCRIBER ================= -->
+<section class="band band--chart m-chartpaper" id="prescriber" data-theme="paper" data-voice="clinician">
+  <div class="in">
+    <div class="head-split"><div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">بطاقة الطبيب</span>
+      <h2>Prescriber card</h2>
+      <p>The card sits in the side rail of the order screen and never blocks signing. It leads with what to do, then shows the two phenotypes, the guideline line with its version, the coverage comb, and the CPIC-named alternatives as one-click suggestions. The chart-paper ground marks every clinician surface.</p>
+    </div><figure class="m-photo" data-img="img-05" style="--ar: 16 / 10"><img alt="A clinician's hands on a desk beside a tablet showing an order screen"><div class="m-photo__ph"><b>IMG-05</b><span>Clinician at the order screen · awaiting render</span></div></figure></div>
+    <div class="ehr">
+      <div class="ehr__order">
+        <header><span><b>Orders</b> · demo-001 <span class="m-mock">Demo data</span></span><span style="color:var(--m-text2)">order-sign · CDS Hooks 2.0.1</span></header>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Medicine</th><th>Route</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="is-pending"><td><b>Clopidogrel</b></td><td>Oral</td><td>Signing now</td></tr>
+            <tr><td>Atorvastatin</td><td>Oral</td><td>Active</td></tr>
+            <tr><td>Paroxetine</td><td>Oral</td><td>Active (demo-002)</td></tr>
+          </tbody>
+        </table></div>
+        <div style="padding:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="m-btn" type="button">Sign order</button><button class="m-btn m-btn--secondary" type="button">Cancel</button></div>
+        <div style="border-block-start:1px solid var(--m-line);padding:16px;display:grid;gap:18px">
+          <div class="rail-label"><span>PHARMACOGENOMIC PROFILE · ALL GENES ON FILE</span><span>germline · LOINC 48002-0</span></div>
+          <div class="cols"><div class="mini" style="display:grid;gap:6px"><span class="m-data" style="font-size:var(--m-size-sm)">CYP2C19 *2/*2 · vcf</span><div data-scale="cyp2c19-clin"></div></div>
+          <div class="mini" style="display:grid;gap:6px"><span class="m-data" style="font-size:var(--m-size-sm)">CYP2D6 *1/*1 · outside call (mock)</span><div data-scale="cyp2d6-clin"></div></div>
+          <div class="mini" style="display:grid;gap:6px"><span class="m-data" style="font-size:var(--m-size-sm)">CYP2D6 · if called from VCF</span><div data-scale="unassessed-clin"></div><span class="m-coverage__line">Copy number not assessed by this test — no result reported.</span></div></div>
+        </div>
+      </div>
+      <aside class="ehr__rail" aria-label="Meyar decision support">
+        <div class="rail-label"><span>MEYAR · 2 CARDS</span><span>non-interruptive</span></div>
+        <article class="m-cds">
+          <div class="m-cds__bar"><span class="m-cds__indicator m-cds__indicator--warning"><svg aria-hidden="true"><use href="#i-ask"/></svg>warning</span><span>CPIC 2022-11 · <span class="m-mock">Demo data</span></span></div>
+          <div class="m-cds__body">
+            <p class="m-cds__summary">CYP2C19 poor metaboliser. Clopidogrel likely less effective; prasugrel or ticagrelor are better matched.</p>
+            <dl class="m-cds__pheno"><dt>Genotype</dt><dd class="m-data">CYP2C19 *2/*2</dd><dt>Genetic</dt><dd>Poor metaboliser</dd><dt>Acting like</dt><dd>Poor metaboliser (no shift)</dd></dl>
+            <div class="mini" data-scale="cyp2c19-clin"></div>
+            <blockquote class="m-cds__rec">Avoid standard-dose clopidogrel if possible. Use prasugrel or ticagrelor at standard dose if no contraindication.<cite>CPIC CYP2C19–clopidogrel, 2022 update (Lee et al., Clin Pharmacol Ther 2022). Sample wording: the live card prints the B1 table row.</cite></blockquote>
+            <div class="m-coverage"><div data-comb="cyp2c19"></div><p class="m-coverage__line">Assay covered <strong>9 of 11</strong> defining positions; did not test <span class="m-data">*35</span>. <span class="m-tier"><span class="m-tier__n">T1</span> Saudi frequency published</span></p></div>
+            <div class="m-cds__suggest">
+              <button class="m-btn" type="button"><svg aria-hidden="true"><use href="#i-match"/></svg>Better matched for this patient’s genes: prasugrel</button>
+              <button class="m-btn m-btn--secondary" type="button"><svg aria-hidden="true"><use href="#i-match"/></svg>Better matched: ticagrelor</button>
+              <button class="m-btn m-btn--quiet" type="button"><svg aria-hidden="true"><use href="#i-send"/></svg>Send to pharmacist</button>
+            </div>
+          </div>
+          <div class="m-cds__foot"><span>Advises, does not prescribe</span><a href="https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/" style="color:var(--m-brand)">CPIC guideline</a></div>
+        </article>
+        <article class="m-cds">
+          <div class="m-cds__bar"><span class="m-cds__indicator m-cds__indicator--info"><svg aria-hidden="true"><use href="#i-info"/></svg>info · backward sweep</span><span>demo-002 · <span class="m-mock">Demo data</span></span></div>
+          <div class="m-cds__body">
+            <p class="m-cds__summary">Genetic: Normal metaboliser · Acting like: Poor metaboliser because of paroxetine.</p>
+            <div class="mini" data-scale="cyp2d6-clin"></div>
+            <p style="font-size:var(--m-size-sm)">Review CYP2D6 substrates before ordering codeine. CPIC: avoid codeine in poor metabolisers; use a non-tramadol alternative.</p>
+            <p class="m-coverage__line">Activity score <span class="m-data">2.0 × 0 = 0.0</span>, strong inhibitor (FDA table), method Thomas et al. 2020.</p>
+          </div>
+          <div class="m-cds__foot"><span>Advises, does not prescribe</span><span>CYP2D6 from outside call (mock caller)</span></div>
+        </article>
+        <details class="json"><summary>Same card as CDS Hooks JSON (what the sandbox renders)</summary>
+<pre>{
+  "summary": "CYP2C19 poor metaboliser: clopidogrel likely less effective",
+  "indicator": "warning",
+  "detail": "**Genetic:** Poor metaboliser · **Acting like:** Poor metaboliser\n\n&gt; Avoid standard-dose clopidogrel if possible…\n\nAssay covered 9 of 11 defining positions; did not test *35.\n\n_Advises, does not prescribe. CPIC 2022-11._",
+  "source": { "label": "Meyar (research prototype)" },
+  "suggestions": [
+    { "label": "Better matched for this patient's genes: prasugrel" },
+    { "label": "Better matched for this patient's genes: ticagrelor" }
+  ],
+  "links": [{ "label": "CPIC guideline", "type": "absolute",
+    "url": "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/" }]
+}</pre></details>
+      </aside>
+    </div>
+
+    <div class="sec-head" style="margin-block-start:var(--m-space-6)">
+      
+      <h2>Why the card does not interrupt</h2>
+    </div>
+    <div class="compare">
+      <figure style="margin:0;display:grid;gap:10px">
+        <div class="modal-mock" aria-label="Example of an interruptive alert"><div class="modal-mock__box"><header>⚠ DRUG–GENE ALERT</header><div><span>CYP2C19 result on file. Review before continuing.</span><span>Override reason (required):</span><button type="button">Select reason…</button><button type="button">Override and continue</button></div></div></div>
+        <figcaption class="m-caption">Interruptive modal of the kind others build. It stops the order until dismissed.</figcaption>
+      </figure>
+      <figure style="margin:0;display:grid;gap:10px;align-content:start">
+        <div class="m-panel" style="padding:16px;display:grid;gap:10px">
+          <span class="m-status m-status--ask" style="justify-self:start"><svg aria-hidden="true"><use href="#i-ask"/></svg>Meyar card in the side rail</span>
+          <p style="font-size:var(--m-size-sm)">The order stays signable. The recommendation and its better-matched alternatives sit one click away.</p>
+        </div>
+        <figcaption class="m-caption">University of Florida interruptive alerts — 63% accepted but only 20% of recommendations followed. UK PROGRESS, non-interruptive and pharmacist-mediated — 90% acted on.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section class="band band--instrument" id="dashboard" data-theme="instrument" data-voice="clinician">
+  <div class="in">
+    <div class="dash-top">
+      <div class="sec-head">
+        <span class="sec-ar" lang="ar" dir="rtl">سجل التنبيهات</span>
+        <h2>Alert log</h2>
+        <p>No published national adverse-drug-reaction rate exists for Saudi Arabia. This log is a first measurement instrument: it counts what prescribers did with each card, and never shows an invented rate.</p>
+      </div>
+      <div class="dash-ctl">
+        <div class="dash-date"><span id="hijri" lang="ar" dir="rtl"></span><span id="greg"></span></div>
+        <div class="m-seg" role="group" aria-label="Range"><button type="button" data-range="today" aria-pressed="true">Today</button><button type="button" data-range="week" aria-pressed="false">7 days</button></div>
+        <span class="m-live"><i></i>Live · cds/data/alerts.jsonl</span>
+        <span class="m-mock">Demo log · synthetic sessions</span>
+      </div>
+    </div>
+    <div class="m-dash">
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Cards fired</span><span class="m-tile__meta">order-sign</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-fired">0</span><span class="m-delta" id="d-fired"></span></div><div id="s-fired"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Better match accepted</span><span class="m-tile__meta">suggestion</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-acc">0</span><span class="m-delta" id="d-acc"></span></div><div id="s-acc"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Sent to pharmacist</span><span class="m-tile__meta">action</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-ph">0</span><span class="m-delta" id="d-ph"></span></div><div id="s-ph"></div></div></div>
+      <div class="m-tile m-tile--3"><div class="m-tile__head"><span class="m-tile__title">Backward sweep</span><span class="m-tile__meta">existing orders</span></div>
+        <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-sw">0</span><span class="m-delta" id="d-sw"></span></div><div id="s-sw"></div></div></div>
+
+      <div class="m-tile m-tile--8"><div class="m-tile__head"><span class="m-tile__title">Cards fired over time</span><span class="m-tile__meta" id="area-meta">per hour · hover or use arrow keys</span></div><div class="m-areabox" id="area"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Acted on</span><span class="m-tile__meta">accepted or sent to pharmacist</span></div><div class="m-gaugebox" id="gauge"></div>
+        <p class="m-tile__meta" style="text-align:center">Share of cards in this log. Not a national rate.</p></div>
+
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Cards by drug</span><span class="m-tile__meta">count</span></div><div id="bars"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Response mix</span><span class="m-tile__meta">prescriber action</span></div><div id="rings" style="display:grid;gap:16px"></div></div>
+      <div class="m-tile m-tile--4"><div class="m-tile__head"><span class="m-tile__title">Phenoconversion watch</span><span class="m-tile__meta">A7 · fixtures</span></div><div class="m-watch" id="watch"></div></div>
+
+      <div class="m-tile m-tile--7"><div class="m-tile__head"><span class="m-tile__title">Live feed</span><span class="m-tile__meta">newest first</span></div><div class="m-feed" id="feed" aria-live="polite" tabindex="0" aria-label="Live alert feed"></div></div>
+      <div class="m-tile m-tile--5"><div class="m-tile__head"><span class="m-tile__title">Coverage by patient</span><span class="m-tile__meta">A5 · darker = more positions tested</span></div><div class="m-heat" id="heat"></div>
+        <p class="m-tile__meta">Hatched: CYP2D6 not called from VCF (A8). Shading is demo data.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KIT ================= -->
+<section class="band band--paper" id="kit" data-theme="paper">
+  <div class="in cols">
+    <div class="sec-head">
+      <span class="sec-ar" lang="ar" dir="rtl">سلسلة حفظ العيّنة</span>
+      <h2>Saliva kit timeline</h2>
+      <p>Each event is hash-chained to the one before. The verify button recomputes the chain and paints a broken link in the stop colour, with its shape changing too.</p>
+      <button class="m-btn m-btn--secondary" type="button" id="tamper" style="justify-self:start">Simulate a tampered event</button>
+      <figure class="m-photo" data-img="img-04" style="--ar: 4 / 3"><img alt="Saliva collection tube with a barcode label and a sealed mailer on a stone surface"><div class="m-photo__ph"><b>IMG-04</b><span>Chain-of-custody kit · awaiting render</span></div></figure>
+    </div>
+    <ol class="m-chain" id="chain"></ol>
+  </div>
+</section>
+
+<!-- ================= FOUNDATIONS ================= -->
+<section class="band band--paper" id="foundations" data-theme="paper" style="background:var(--m-surface)">
+  <div class="in">
+    <div class="sec-head"><span class="sec-ar" lang="ar" dir="rtl">الأساسيات</span><h2>Foundations</h2>
+      <p>Contrast ratios below are computed live in your browser from the same tokens the components use. The build script refuses to write tokens.css if any pair drops below its WCAG minimum.</p></div>
+    <h3>Colour</h3>
+    <div class="swatches" id="swatches"></div>
+    <div class="cols cols--3">
+      <div style="display:grid;gap:10px"><h3>Status shapes</h3>
+        <span class="m-status m-status--stop"><svg aria-hidden="true"><use href="#i-stop"/></svg>Do not take without your doctor</span>
+        <span class="m-status m-status--ask"><svg aria-hidden="true"><use href="#i-ask"/></svg>Ask the pharmacist before buying</span>
+        <span class="m-status m-status--none"><svg aria-hidden="true"><use href="#i-none"/></svg>No gene guidance for your profile</span>
+        <span class="m-status m-status--info"><svg aria-hidden="true"><use href="#i-info"/></svg>Information</span>
+        <span class="m-status m-status--better"><svg aria-hidden="true"><use href="#i-match"/></svg>Better matched for your genes</span>
+      </div>
+      <div style="display:grid;gap:10px"><h3>Motion</h3>
+        <svg class="curve" viewBox="0 0 120 80" role="img" aria-label="Settle easing curve: fast start, long gentle stop, no overshoot"><rect width="120" height="80" fill="var(--m-sunken)"/><path d="M10 70 C 34 70, 10 10, 110 10" fill="none" stroke="var(--m-brand)" stroke-width="2.5"/><path d="M10 10H110" stroke="var(--m-line-strong)" stroke-dasharray="2 3"/></svg>
+        <p style="font-size:var(--m-size-sm);color:var(--m-text2)"><b>settle</b> <span class="m-data">cubic-bezier(0.2, 0, 0, 1)</span>. A needle coming to rest. No bounce anywhere. Taps 110 ms, state 220 ms, one 900 ms calibration per screen. Off for reduced motion and elder mode.</p>
+      </div>
+      <div style="display:grid;gap:10px"><h3>Radius by role</h3>
+        <p style="font-size:var(--m-size-sm);color:var(--m-text2)">2 px data marks · 6 px cards · 10 px controls · 22 px sheets and the passport cover · pill only for status. Shadows only on sheets that float.</p>
+        <div style="display:flex;gap:10px;align-items:end"><span style="inline-size:40px;block-size:40px;background:var(--m-brand);border-radius:2px"></span><span style="inline-size:40px;block-size:40px;background:var(--m-brand);border-radius:6px"></span><span style="inline-size:40px;block-size:40px;background:var(--m-brand);border-radius:10px"></span><span style="inline-size:40px;block-size:40px;background:var(--m-brand);border-radius:22px"></span></div>
+      </div>
+    </div>
+    <h3>Type</h3>
+    <div class="type-spec">
+      <div><span class="meta">--m-font-display · Alexandria · headlines, wordmark, cover, big numbers · weights 200 and 800</span><span style="font-family:var(--m-font-display);font-size:var(--m-size-4xl);font-weight:800;line-height:1.1;color:var(--m-brand-strong)" lang="ar" dir="rtl">مِعيار ١٢٨٤</span><span style="font-family:var(--m-font-display);font-size:var(--m-size-2xl);font-weight:200">The right dose, the first time</span></div>
+      <div><span class="meta">--m-font-patient · Readex Pro · Arabic and Latin in one family · body 18 px minimum, line-height 1.75 Arabic</span>
+        <span lang="ar" dir="rtl" style="font-size:var(--m-size-2xl);font-weight:600">الآن جسمك يعمل ببطء مع بعض الأدوية</span>
+        <span lang="ar" dir="rtl" style="font-size:var(--m-size-md);line-height:var(--m-leading-arabic-body)">جيناتك طبيعية. لكنك الآن تعمل ببطء بسبب دواء تتناوله. أخبر طبيبك قبل أي دواء جديد.</span>
+        <span style="font-size:var(--m-size-md)">Your genes: normal. Right now you act like: slow, because of paroxetine.</span></div>
+      <div><span class="meta">--m-font-clinician · IBM Plex Sans Arabic · prescriber card, dashboard, tables</span><span style="font-family:var(--m-font-clinician);font-size:var(--m-size-lg)">Avoid standard-dose clopidogrel if possible · <span lang="ar">تجنّب الجرعة المعتادة من كلوبيدوقريل</span></span></div>
+      <div><span class="meta">--m-font-data · IBM Plex Mono · genotype data only, never prose</span><span class="m-data" style="font-size:var(--m-size-lg)">CYP2C19 *2/*2 · AS 2.0 → 0.0 · LOINC 48002-0</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REFUSED ================= -->
+<section class="band band--paper" id="refused" data-theme="paper">
+  <div class="in">
+    <div class="sec-head"><h2>What we refused, and what we did instead</h2></div>
+    <div class="table-wrap"><table class="ban">
+      <thead><tr><th>Default look</th><th>Meyar instead</th></tr></thead>
+      <tbody>
+        <tr><td>Purple-to-blue gradient hero on white</td><td>Juniper and saffron from Aseer, flat fills, the scale as the hero</td></tr>
+        <tr><td>Inter or system font everywhere</td><td>Readex Pro for patients, Plex Sans Arabic for clinicians (the Saudi government platform face), Alexandria for headlines</td></tr>
+        <tr><td>Three identical icon cards</td><td>One instrument per gene, sized by what it says</td></tr>
+        <tr><td>Glassmorphism, glow, neon on black</td><td>Warm kohl black with flat marks; texture is paper grain and chart-paper grid</td></tr>
+        <tr><td>Thick coloured stripe on one side of a rounded card</td><td>Status as shape + word + colour; indicator as a labelled chip</td></tr>
+        <tr><td>Bouncy springs and fade-up on every block</td><td>One calibration sweep per screen; decelerate, never overshoot</td></tr>
+        <tr><td>Decorative sparklines and round-number “proof”</td><td>Only logged counts, labelled Demo data; sourced numbers only from docs/sources.md</td></tr>
+        <tr><td>Cream paper, serif display, terracotta accent</td><td>Green-tinted security paper, geometric Alexandria, terracotta kept only for the fast end of the scale</td></tr>
+        <tr><td>“Safe ✓” green tick</td><td>Never says safe. Three answers only</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+</main>
+
+<div class="footer-photo"><figure class="m-photo" data-img="img-07" style="--ar: 21 / 7"><img alt="Juniper forest on the Aseer mountains near Abha at dawn, mist in the valleys"><div class="m-photo__ph"><b>IMG-07</b><span>Aseer juniper at dawn · awaiting render</span></div></figure></div>
+<footer class="foot">
+  <div class="in">
+    <span class="m-wordmark" style="color:var(--m-p-saffron-300)"><span class="m-wordmark__ar" lang="ar">مِعيار</span></span>
+    <p>Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used. Every patient-facing Arabic string here is a draft for the C4 native-speaker review. Photographs are illustrative and AI-generated (Gemini); they show no real patients.</p>
+  </div>
+</footer>
+
+<script type="module">
+import { scaleHTML, combHTML, calibrate, initMotion } from '../meyar.js';
+import { gauge, rings, area, bars, minibars, tween } from '../charts.js';
+
+initMotion();
+// Image slots: load design/imagery/<id>.webp when it exists; keep the designed placeholder otherwise.
+document.querySelectorAll('.m-photo[data-img]').forEach((f) => { const img = f.querySelector('img'); f.classList.add('is-empty'); img.addEventListener('load', () => f.classList.remove('is-empty')); img.addEventListener('error', () => f.classList.add('is-empty')); img.src = `../imagery/${f.dataset.img}.webp`; });
+const html = document.documentElement;
+
+// ---- fixtures (mirrors docs/fixtures, mock) ----
+const G = {
+  cyp2d6: { gene: 'CYP2D6', diplotype: '*1/*1', phenotype: 'Normal Metabolizer', effectivePhenotype: 'Poor Metabolizer' },
+  cyp2c19: { gene: 'CYP2C19', diplotype: '*2/*2', phenotype: 'Poor Metabolizer', coverage: { definingPositionsAssayed: 9, definingPositionsTotal: 11, untestedLocalAlleles: ['*35'] } },
+  unassessed: { gene: 'CYP2D6', phenotype: 'Normal Metabolizer', callability: { method: 'not-assessed' } },
+};
+let lang = 'ar';
+function drawScales() {
+  document.getElementById('hero-scale').innerHTML = scaleHTML(G.cyp2d6, 'clinician');
+  document.querySelectorAll('#phones [data-scale]').forEach((el) => { el.innerHTML = scaleHTML(G[el.dataset.scale], lang); });
+  document.querySelectorAll('[data-scale$="-clin"]').forEach((el) => { el.innerHTML = scaleHTML(G[el.dataset.scale.replace('-clin', '')], 'clinician'); });
+  document.querySelectorAll('[data-comb]').forEach((el) => { el.innerHTML = combHTML(G[el.dataset.comb].coverage); });
+  calibrate();
+}
+drawScales();
+document.getElementById('replay').addEventListener('click', () => {
+  const host = document.getElementById('hero-scale');
+  host.innerHTML = scaleHTML(G.cyp2d6, 'clinician'); calibrate(host);
+});
+
+// ---- language + elder for the phone frames ----
+const EN = {
+  proto: 'Research prototype — not for clinical use', demo: 'Demo data', kicker: 'Meyar', passport: 'Medication Passport',
+  coverSub: 'Your gene results for medicines. Works offline.', showDoctor: 'Show a doctor or pharmacist', myMeds: 'My medicines',
+  parox: 'Paroxetine', fromHospital: 'From hospital record', changes: 'Changes how a gene works', addMed: 'Add a medicine you take',
+  addMedSub: 'Saved on your phone only', add: 'Add', tGenes: 'My genes', tMeds: 'Medicines', tCheck: 'Check', tShow: 'Show',
+  read: 'Read to me', g1plain: 'Right now your body is slow with some medicines',
+  g1because: 'Your genes: normal. Right now you act like: slow, because of paroxetine. Tell your doctor before starting codeine.',
+  codeine: 'Codeine', dont: 'Do not take without your doctor', better: 'Better matched for your genes: a pain medicine other than tramadol. Ask your doctor. (CPIC)',
+  g2plain: 'Your body is slow with these medicines', tier0: 'Structural gene', g3plain: 'This gene was not tested yet',
+  g3why: 'This test cannot see gene copy number, so we report no result. This is not a reassurance.',
+  checkTitle: 'Before you buy a medicine', otcLabel: 'Type the medicine name', ansNone: 'No gene guidance for your profile',
+  ansNoneBody: 'There is no gene guideline for this medicine. The usual label advice still applies.', ansAsk: 'Ask the pharmacist before buying',
+  ansAskBody: 'Example of the second answer.', ansStop: 'Do not take without your doctor', ansStopBody: 'Example of the third answer. We never say “safe”.',
+  pinTitle: 'Ask the card holder for the PIN', pinSub: '6 digits. Decrypted on this device only, with no internet.',
+  pinHonest: 'The PIN stops casual reading only. The full record is at the hospital.',
+};
+const EN_HTML = { tier1: '<span class="m-tier__n">1</span> Saudi data published', cov: 'We tested <strong>9 of 11</strong> positions. We did not test <span class="m-data">*35</span>.' };
+const AR = {}, AR_HTML = {};
+document.querySelectorAll('#phones [data-t]').forEach((el) => { AR[el.dataset.t] ??= el.innerHTML; });
+document.querySelectorAll('#phones [data-t-html]').forEach((el) => { AR_HTML[el.dataset.tHtml] ??= el.innerHTML; });
+const otc = document.getElementById('otc');
+function setPhonesLang(l) {
+  lang = l;
+  const ph = document.getElementById('phones');
+  ph.lang = l; ph.dir = l === 'ar' ? 'rtl' : 'ltr';
+  ph.querySelectorAll('[data-t]').forEach((el) => {
+    const k = el.dataset.t;
+    if (l === 'en' && k === 'g1because') { el.innerHTML = 'Your genes: normal. Right now you act like: slow, <b>because of paroxetine</b>. Tell your doctor before starting codeine.'; return; }
+    el.innerHTML = l === 'ar' ? AR[k] : (EN[k] ?? AR[k]);
+  });
+  ph.querySelectorAll('[data-t-html]').forEach((el) => { el.innerHTML = l === 'ar' ? AR_HTML[el.dataset.tHtml] : EN_HTML[el.dataset.tHtml]; });
+  otc.value = l === 'ar' ? 'باراسيتامول' : 'Paracetamol';
+  document.getElementById('lang-ar').setAttribute('aria-pressed', l === 'ar');
+  document.getElementById('lang-en').setAttribute('aria-pressed', l === 'en');
+  drawScales();
+}
+document.getElementById('lang-ar').onclick = () => setPhonesLang('ar');
+document.getElementById('lang-en').onclick = () => setPhonesLang('en');
+document.getElementById('elder').addEventListener('change', (e) => {
+  document.getElementById('phones').dataset.elder = e.target.checked ? 'on' : 'off';
+  html.classList.toggle('m-motion', !e.target.checked && !matchMedia('(prefers-reduced-motion: reduce)').matches);
+});
+
+// ---- PIN pad: both digit forms on every key ----
+const AD = '٠١٢٣٤٥٦٧٨٩';
+document.getElementById('pinpad').innerHTML = [1,2,3,4,5,6,7,8,9,null,0,'⌫'].map((d) =>
+  d === null ? '<span></span>' : d === '⌫'
+    ? '<button type="button" aria-label="Delete"><b>⌫</b></button>'
+    : `<button type="button" aria-label="${d}"><b>${AD[d]}</b><small>${d}</small></button>`).join('');
+
+// ---- Dashboard: deterministic mock alert log (synthetic), counts only ----
+const rnd = (seed) => () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const DRUGS = [['Clopidogrel','CYP2C19'],['Codeine','CYP2D6'],['Simvastatin','SLCO1B1'],['Warfarin','CYP2C9 · VKORC1'],['Ondansetron','CYP2D6'],['Voriconazole','CYP2C19']];
+const RANGES = {
+  today: { buckets: ['08','09','10','11','12','13','14','15','16'], seed: 7, prevSeed: 3, per: [1, 4], meta: 'per hour · hover or use arrow keys', vs: 'vs yesterday' },
+  week: { buckets: ['Sat','Sun','Mon','Tue','Wed','Thu','Fri'], seed: 11, prevSeed: 5, per: [3, 9], meta: 'per day · hover or use arrow keys', vs: 'vs last week' },
+};
+function makeLog(r, seed) {
+  const R = rnd(seed), ev = [];
+  r.buckets.forEach((b, bi) => {
+    const n = r.per[0] + Math.floor(R() * (r.per[1] - r.per[0] + 1));
+    for (let k = 0; k < n; k++) {
+      const [drug, gene] = DRUGS[Math.floor(R() * DRUGS.length)], x = R();
+      ev.push({ b: bi, drug, gene, action: x < .46 ? 'accepted' : x < .76 ? 'pharmacist' : 'dismissed', sweep: R() < .22, pt: 'P' + String(10 + Math.floor(R() * 80)), min: Math.floor(R() * 60) });
+    }
+  });
+  return ev;
+}
+let range = 'today', log = [], prev = [];
+const count = (l, f) => l.filter(f).length;
+const pct = (a, b) => (b ? Math.round(((a - b) / b) * 100) : 0);
+function delta(el, a, b) { const d = pct(a, b); el.textContent = `${d > 0 ? '▲ +' : d < 0 ? '▼ −' : ''}${Math.abs(d)}% ${RANGES[range].vs}`; el.className = 'm-delta' + (d === 0 ? ' m-delta--flat' : d < 0 ? ' m-delta--down' : ''); }
+const ACT = { accepted: ['match', 'Better match accepted', 'info'], pharmacist: ['send', 'Sent to pharmacist', 'ask'], dismissed: ['none', 'Dismissed', 'none'] };
+function feedRow(e, isNew) {
+  const r = RANGES[range], when = range === 'today' ? `${r.buckets[e.b]}:${String(e.min).padStart(2, '0')}` : r.buckets[e.b];
+  return `<div class="m-feed__row${isNew ? ' is-new' : ''}"><span class="m-mono">${e.pt}</span><span class="m-feed__what"><span><b>${e.drug}</b> · <span class="m-data" style="color:var(--m-text2)">${e.gene}</span>${e.sweep ? ' · sweep' : ''}</span><small>${when} · patient ${e.pt} (pseudonym)</small></span><span class="m-status m-status--${ACT[e.action][2]}" style="font-size:12px"><svg aria-hidden="true"><use href="#i-${ACT[e.action][0]}"/></svg>${ACT[e.action][1]}</span></div>`;
+}
+function kpis() {
+  const k = [['fired', () => true], ['acc', (e) => e.action === 'accepted'], ['ph', (e) => e.action === 'pharmacist'], ['sw', (e) => e.sweep]];
+  for (const [id, f] of k) {
+    tween(document.getElementById('k-' + id), count(log, f));
+    delta(document.getElementById('d-' + id), count(log, f), count(prev, f));
+    minibars(document.getElementById('s-' + id), RANGES[range].buckets.map((_, i) => count(log, (e) => e.b === i && f(e))));
+  }
+}
+function drawDash() {
+  const r = RANGES[range];
+  log = makeLog(r, r.seed); prev = makeLog(r, r.prevSeed);
+  kpis();
+  document.getElementById('area-meta').textContent = r.meta;
+  area(document.getElementById('area'), { series: r.buckets.map((x, i) => ({ x, y: count(log, (e) => e.b === i) })), label: 'Cards fired per ' + (range === 'today' ? 'hour' : 'day'), unit: ' cards' });
+  gauge(document.getElementById('gauge'), { value: count(log, (e) => e.action !== 'dismissed'), max: log.length, label: 'Acted on' });
+  bars(document.getElementById('bars'), { data: DRUGS.map(([d]) => ({ x: d.slice(0, 5), y: count(log, (e) => e.drug === d) })), label: 'Cards by drug' });
+  rings(document.getElementById('rings'), { centre: log.length, centreLabel: 'cards', parts: [
+    { label: 'Better match accepted', value: count(log, (e) => e.action === 'accepted'), color: 'var(--m-data)' },
+    { label: 'Sent to pharmacist', value: count(log, (e) => e.action === 'pharmacist'), color: 'var(--m-data2)' },
+    { label: 'Dismissed', value: count(log, (e) => e.action === 'dismissed'), color: 'var(--m-text3)' }] });
+  document.getElementById('feed').innerHTML = log.slice().sort((a, b) => b.b - a.b || b.min - a.min).slice(0, 8).map((e) => feedRow(e, false)).join('');
+}
+// Phenoconversion watch (fixtures only, never a scored non-CYP2D6 gene)
+document.getElementById('watch').innerHTML = [
+  ['demo-002 · CYP2D6 *1/*1', 'paroxetine · strong', G.cyp2d6],
+  ['demo-001 · CYP2C19 *2/*2', 'no current inhibitor', G.cyp2c19],
+  ['demo-004 · CYP2D6 from VCF', 'not assessed (A8)', G.unassessed],
+].map(([a, b, g]) => `<div class="m-watch__row"><header><span class="m-data">${a}</span><span>${b}</span></header>${scaleHTML(g, 'clinician')}</div>`).join('');
+// Coverage heat (demo shading; CYP2D6 hatched because it is never called from VCF)
+const HG = ['CYP2C19', 'CYP2C9', 'VKORC1', 'SLCO1B1', 'DPYD', 'CYP2D6'], HR = rnd(42);
+document.getElementById('heat').innerHTML = `<div class="m-heat__row" style="--n:${HG.length}"><span></span>${HG.map((g) => `<span style="font-size:9.5px;text-align:center">${g}</span>`).join('')}</div>` +
+  ['demo-001','demo-002','demo-003','demo-004','demo-005'].map((p) => `<div class="m-heat__row" style="--n:${HG.length}"><span>${p}</span>${HG.map((g) => g === 'CYP2D6' ? '<span class="m-heat__cell is-na" title="Not called from VCF (A8)">SV</span>' : `<span class="m-heat__cell" style="--v:${(.25 + HR() * .75).toFixed(2)}" title="demo shading"></span>`).join('')}</div>`).join('');
+// Dates: Hijri (Umm al-Qura) and Gregorian
+const now = new Date();
+try { document.getElementById('hijri').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(now); } catch { /* calendar unsupported */ }
+document.getElementById('greg').textContent = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(now);
+document.querySelectorAll('[data-range]').forEach((b) => b.addEventListener('click', () => {
+  range = b.dataset.range;
+  document.querySelectorAll('[data-range]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  drawDash();
+}));
+drawDash();
+// Live: a new synthetic card arrives every few seconds while the page is visible
+const LR = rnd(99); let live = 0;
+setInterval(() => {
+  if (document.hidden || live > 24) return;
+  live++;
+  const [drug, gene] = DRUGS[Math.floor(LR() * DRUGS.length)], x = LR();
+  const e = { b: RANGES[range].buckets.length - 1, drug, gene, action: x < .46 ? 'accepted' : x < .76 ? 'pharmacist' : 'dismissed', sweep: LR() < .22, pt: 'P' + String(10 + Math.floor(LR() * 80)), min: 50 + (live % 10) };
+  log.push(e); kpis();
+  const feed = document.getElementById('feed'); feed.insertAdjacentHTML('afterbegin', feedRow(e, true));
+  while (feed.children.length > 8) feed.lastElementChild.remove();
+}, 4500);
+
+// ---- Kit chain: real SHA-256 hash chain in the browser ----
+const events = [['issued','Kit KKU-0042 issued','Abha · clinic desk'],['collected','Saliva collected','Abha · home'],['sealed','Tube sealed','Abha · home'],['shipped','Shipped','Courier'],['received','Received at lab','Central lab'],['genotyped','Genotyped · germline','Central lab']];
+async function sha(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join(''); }
+let tampered = false;
+async function drawChain() {
+  let prev = '0'.repeat(64); const rows = []; let broken = false;
+  for (const [k, label, place] of events) {
+    const body = JSON.stringify({ k, label, place });
+    const h = await sha(prev + body);
+    const shown = tampered && k === 'shipped' ? await sha(prev + body + 'edited') : h;
+    if (shown !== h) broken = true;
+    rows.push(`<li class="${broken ? 'is-broken' : ''}"><span class="m-chain__node">${broken ? '!' : '✓'}</span><div><b>${label}</b> <span style="color:var(--m-text2);font-size:var(--m-size-sm)">· ${place}</span>${broken ? ' <span class="m-status m-status--stop" style="font-size:12px"><svg aria-hidden="true"><use href="#i-stop"/></svg>Chain broken here</span>' : ''}<div class="m-chain__hash">${shown.slice(0, 32)}…</div></div></li>`);
+    prev = shown;
+  }
+  document.getElementById('chain').innerHTML = rows.join('');
+}
+drawChain();
+document.getElementById('tamper').onclick = (e) => { tampered = !tampered; e.target.textContent = tampered ? 'Restore the event' : 'Simulate a tampered event'; drawChain(); };
+
+// ---- Swatches with live contrast ----
+const lum = (hex) => { const c = hex.match(/\w\w/g).map((x) => parseInt(x, 16) / 255).map((v) => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const cr = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return ((x + .05) / (y + .05)).toFixed(1); };
+const cs = getComputedStyle(document.getElementById('foundations'));
+const v = (n) => cs.getPropertyValue(n).trim();
+const sw = [['--m-brand','Juniper · brand'],['--m-brand-strong','Juniper deep'],['--m-ornament','Saffron · ornament only'],['--m-stop','Stop · madder'],['--m-ask','Ask · amber'],['--m-none','No guidance · ink'],['--m-scale-slow2','Scale · slow end'],['--m-scale-normal','Scale · normal'],['--m-scale-fast2','Scale · fast end'],['--m-text','Ink'],['--m-bg','Security paper'],['--m-surface','Surface']];
+document.getElementById('swatches').innerHTML = sw.map(([n, l]) => `<div class="sw"><div style="background:var(${n})"></div><div><b>${l}</b><code>${n}</code><code>${v(n)} · ${cr(v(n), v('--m-surface'))}:1 on surface</code></div></div>`).join('');
+</script>
+</body>
+</html>

@@ -77,6 +77,7 @@ Audit the whole repository against the build prompts in prompts/ and the context
 15. A8 structural variation: no code path reports a VCF-derived phenotype for any gene in tables/sv_genes.json; a patient with no CYP2D6 outside call shows "not assessed" on the card and in the Passport, never a normal result; every mock outside-call file is marked mock and names its pretend caller; docs/structural-variants.md quotes PharmCAT verbatim and says we do not run a CNV-aware caller.
 16. A5 Saudi data tiers: every frequency row has a tier and a citation with n and table number; Tier 2 genes return a null score with the "no published Saudi frequency" line; no non-Saudi frequency is used inside the score; CYP2D6 has no A5 score; the poster's Saudi-data sentence matches `_coverageStatement`.
 17. Mock data: every mock record has `"mock": true`, the UI shows a "Demo data" label, and no doc treats an unverified regulation as a blocker or as already approved.
+18. Design system: `node design/build-tokens.mjs` passes; passport, cds pages and kit load `design/` (grep for hard-coded hex colours and font-family in passport/, cds/, kit/ outside design/); every phenotype is drawn with the Meyar Scale and every not-assessed gene shows the hatched no-marker state; run axe-core (WCAG 2.2 AA tags) on each page and list violations; score each screen against the `design/ANTI-SLOP.md` checklist and list any screen with two or more ticks.
 </task>
 
 <constraints>
@@ -90,7 +91,7 @@ Write docs/REVIEW.md with:
 1. Verdict in one line: ready / ready with fixes / not ready.
 2. Table: task ID, status (pass / fail / not built / could not check), evidence.
 3. Findings ranked by severity (blocks submission / wrong in front of a judge / minor), each with path:line, what is wrong, and the smallest fix.
-4. Cross-cutting checks 1–17, each pass or fail with evidence.
+4. Cross-cutting checks 1–18, each pass or fail with evidence.
 Then print the verdict and the top five findings in the terminal.
 </output_format>
 
