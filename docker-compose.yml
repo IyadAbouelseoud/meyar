@@ -1,0 +1,22 @@
+services:
+  hapi:
+    image: hapiproject/hapi:v8.12.0-2
+    ports:
+      - "8080:8080"
+    environment:
+      hapi.fhir.fhir_version: R4
+  cds:
+    build: ./cds
+    ports:
+      - "3000:3000"
+    environment:
+      FHIR_BASE: http://hapi:8080/fhir
+    volumes:
+      - ./engine/data/out:/data/contracts:ro
+      - ./tables:/data/tables:ro
+    depends_on:
+      - hapi
+# PharmCAT is not a long-running service. Run it per batch:
+#   docker run --rm -v $PWD/engine/data:/pharmcat/data pgkb/pharmcat:3.4.0 pharmcat_pipeline /pharmcat/data/in/<patient>.vcf
+# Passport runs outside compose: cd passport && npm run dev  (port 5173)
+# CDS Hooks sandbox: https://sandbox.cds-hooks.org pointed at http://localhost:3000/cds-services, or a local sandbox on 8081.

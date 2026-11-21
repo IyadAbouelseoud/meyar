@@ -1,0 +1,23 @@
+{
+  "patientId": "demo-001",
+  "sampleOrigin": "germline",
+  "genes": [
+    {
+      "gene": "CYP2C19",
+      "diplotype": "*2/*2",
+      "phenotype": "Poor Metabolizer",
+      "candidates": [
+        "*2/*2"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 9,
+        "definingPositionsTotal": 11,
+        "untestedLocalAlleles": [
+          "*35"
+        ],
+        "uninformativeNormalRisk": 0.04
+      },
+      "guidelineVersion": "CPIC 2022-11"
+    }
+  ]
+}

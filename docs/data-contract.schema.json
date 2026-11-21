@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Meyar data contract",
+  "type": "object",
+  "required": [
+    "patientId",
+    "sampleOrigin",
+    "genes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "patientId": {
+      "type": "string"
+    },
+    "sampleOrigin": {
+      "const": "germline"
+    },
+    "genes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gene",
+          "diplotype",
+          "phenotype",
+          "candidates",
+          "coverage",
+          "guidelineVersion"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "gene": {
+            "type": "string"
+          },
+          "diplotype": {
+            "type": "string"
+          },
+          "phenotype": {
+            "type": "string"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "coverage": {
+            "type": "object",
+            "required": [
+              "definingPositionsAssayed",
+              "definingPositionsTotal",
+              "untestedLocalAlleles",
+              "uninformativeNormalRisk"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "definingPositionsAssayed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "definingPositionsTotal": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "untestedLocalAlleles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "uninformativeNormalRisk": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "guidelineVersion": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
