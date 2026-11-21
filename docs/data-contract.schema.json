@@ -70,9 +70,23 @@
                 }
               },
               "uninformativeNormalRisk": {
-                "type": "number",
+                "type": [
+                  "number",
+                  "null"
+                ],
                 "minimum": 0,
                 "maximum": 1
+              },
+              "saudiDataTier": {
+                "type": "integer",
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              "saudiDataNote": {
+                "type": "string"
               }
             }
           },
