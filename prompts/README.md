@@ -12,8 +12,9 @@ How to use: open the `meyar` repo in Antigravity, start a new agent session, pas
 | [A2](A2.md) | Run PharmCAT 3.4.0 end to end | A | 2 | A1 |
 | [A3](A3.md) | Validate against GeT-RM reference samples | A | 3 | A2 |
 | [A4](A4.md) | Phenotype store in FHIR | A | 3 | A2 |
-| [A5](A5.md) | Coverage and interpretability flag (the differentiator) | A | 3 | A4 |
+| [A5](A5.md) | Coverage and interpretability flag (the differentiator) | A | 4 | A4 |
 | [A6](A6.md) | Germline-only guard | A | 1.5 | A4 |
+| [A8](A8.md) | Structural-variant gate and outside-call path (CYP2D6) | A | 4 | A2, A4, A5 |
 | [B1](B1.md) | CPIC/DPWG recommendation table | B | 4 | none |
 | [B2](B2.md) | CDS Hooks order-sign service | B | 4 | A4 |
 | [B3](B3.md) | Non-interruptive prescriber card | B | 3 | B2 |
