@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Meyar CPIC recommendations table",
+  "type": "object",
+  "required": ["_owner", "rows"],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "drug", "rxnorm", "gene", "phenotype", "population", "recommendation", "classification", "alternatives", "guideline", "source", "verification", "mock"],
+        "properties": {
+          "key": {"type": "string"},
+          "drug": {"type": "string"},
+          "rxnorm": {"type": "string"},
+          "gene": {"type": "string"},
+          "phenotype": {"type": "string"},
+          "activityScore": {"type": ["string", "null"]},
+          "population": {"type": "string"},
+          "implication": {"type": ["string", "null"]},
+          "recommendation": {"type": "string", "minLength": 1},
+          "classification": {"type": "string"},
+          "comments": {"type": ["string", "null"]},
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["drug", "drugClass", "rxnorm", "condition", "quotedFrom"],
+              "properties": {"drug": {"type": ["string", "null"]}, "drugClass": {"type": ["string", "null"]}, "rxnorm": {"type": ["string", "null"]}, "condition": {"type": "string"}, "quotedFrom": {"type": "string"}}
+            }
+          },
+          "guideline": {"type": "object", "required": ["cpicGuidelineId", "name", "pub", "pmid", "doi", "url"]},
+          "source": {"type": "object", "required": ["cpicRecommendationId", "api", "accessed"]},
+          "verification": {"type": "object", "required": ["vsCpicDatabase", "humanSignOff"]},
+          "mock": {"const": false}
+        }
+      }
+    }
+  }
+}

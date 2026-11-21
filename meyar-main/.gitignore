@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+.venv/
+*.pyc
+engine/data/in/*.vcf
+engine/data/out/*
+!engine/data/out/.gitkeep
+.DS_Store
+*.blend1
+design/showcase/*.standalone.html
+design/imagery/raw/*
+!design/imagery/raw/.gitkeep

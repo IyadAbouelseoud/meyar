@@ -1,0 +1,7 @@
+data/in/*.vcf
+data/in/*.vcf.gz
+data/in/*.vcf.bgz
+data/in/*.csi
+data/in/*.tbi
+data/out/*
+!data/out/.gitkeep

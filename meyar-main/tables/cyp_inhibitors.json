@@ -1,0 +1,5 @@
+{
+  "_owner": "A7",
+  "_note": "Only the owner edits this file. Every row needs a source. Rows copied from the FDA Table of Substrates, Inhibitors and Inducers (cite URL + access date per row). Fields: drug, enzyme, strength (strong|moderate|weak), source.",
+  "rows": []
+}

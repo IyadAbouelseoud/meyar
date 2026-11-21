@@ -1,0 +1,40 @@
+{
+  "patientId": "demo-002",
+  "sampleOrigin": "germline",
+  "currentMedications": [
+    {
+      "name": "paroxetine",
+      "source": "hospital-record",
+      "mock": true
+    }
+  ],
+  "genes": [
+    {
+      "gene": "CYP2D6",
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "candidates": [
+        "*1/*1"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 0,
+        "definingPositionsTotal": 0,
+        "untestedLocalAlleles": [],
+        "uninformativeNormalRisk": 0
+      },
+      "guidelineVersion": "CPIC (fill from B1 row)",
+      "effectivePhenotype": "Poor Metabolizer",
+      "phenoconversion": {
+        "applied": true,
+        "cause": [
+          "paroxetine"
+        ],
+        "inhibitorStrength": "strong",
+        "geneticActivityScore": 2.0,
+        "adjustedActivityScore": 0.0,
+        "method": "Thomas et al. 2020"
+      }
+    }
+  ],
+  "_note": "MOCK fixture for A7/B6/C9 demo. Coverage numbers are placeholders for A5 to fill; inhibitor strength must match tables/cyp_inhibitors.json."
+}
