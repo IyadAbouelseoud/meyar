@@ -43,3 +43,9 @@ Files: `engine/load_fhir.py`, `handoff/A4.md`, plus generated `engine/data/out/d
 Notes: Reads PharmCAT 3.4.0 `.phenotype.json` (and optional `.match.json` + `.origin.json` germline check), idempotently `PUT`s pseudonymous `Patient/<patientId>` and one HL7 Genomics Reporting IG `Observation/<patientId>-<gene>` per gene (23 genes/patient, including `LOINC 48002-0` = `LA6683-2` germline, `LOINC 48018-6`, `LOINC 53037-8`, and guideline version) to local HAPI FHIR (`hapiproject/hapi:v8.12.0-2` on `http://localhost:8080/fhir`), and writes `engine/data/out/<patientId>.contract.json` validated against `docs/data-contract.schema.json` (with neutral pre-A5 `coverage` placeholders).
 Run: `docker compose up -d hapi && python engine/load_fhir.py --all`.
 Data contract unchanged. No new runtime dependency.
+
+## A6 — Germline-only guard (22 Nov 2026)
+Files: `engine/origin_guard.py`, `engine/tests/test_origin.py`, `handoff/A6.md`.
+Notes: Enforces that `engine/data/in/<patientId>.origin.json` exists and has `sampleOrigin == "germline"` before any FHIR write or contract emission (`NonGermlineSampleError`, zero FHIR writes on rejection), tags/verifies top-level `sampleOrigin: "germline"` on `contract.json`, and sets/verifies `LOINC 48002-0` (`LA6683-2`, `germline`) on FHIR `Observation` resources. Rationale: CPIC/DPWG guidelines are for inherited genotypes; a tumour VCF can show loss of heterozygosity and look like a different diplotype.
+Run: `python -m unittest discover -s engine/tests -p "test_origin.py" -v` and `python engine/origin_guard.py --all --check-contracts`.
+Data contract unchanged. No new runtime dependency.
