@@ -1,0 +1,11 @@
+{
+  "name": "meyar-kit",
+  "private": true,
+  "type": "module",
+  "description": "Meyar F3 chain-of-custody saliva kit software (research prototype, not for clinical use)",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test \"test/*.test.mjs\""
+  }
+}
