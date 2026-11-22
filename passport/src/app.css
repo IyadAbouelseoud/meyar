@@ -536,3 +536,14 @@ body {
   display: grid;
   gap: var(--m-space-2);
 }
+
+/* C8: the pad fills its column (the panel centres its children, which shrank keys under the
+   48px target). design/meyar.css caps it at 340px. */
+.m-scan-pin-panel .m-pin {
+  inline-size: 100%;
+}
+
+.m-scan-pin-panel .m-holder {
+  inline-size: 100%;
+  text-align: start;
+}

@@ -310,3 +310,16 @@ window.addEventListener('keydown', (e) => {
 
 initMotion();
 update();
+
+// C8: an envelope may arrive in the URL fragment (#e=<base64url of the QR text>).
+// Fragments are never sent to a server; the hash is cleared once read.
+if (location.hash.startsWith('#e=')) {
+  try {
+    const b64 = location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/');
+    const text = new TextDecoder().decode(Uint8Array.from(atob(b64), (ch) => ch.charCodeAt(0)));
+    history.replaceState(null, '', location.pathname + location.search);
+    handleScannedText(text);
+  } catch {
+    // Ignore a malformed fragment; the scanner stays on the scan step.
+  }
+}
