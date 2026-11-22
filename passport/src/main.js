@@ -126,4 +126,7 @@ root.addEventListener('click', async (e) => {
 });
 
 initMotion();
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 loadPatient(state.patientId);

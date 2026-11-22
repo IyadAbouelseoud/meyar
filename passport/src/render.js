@@ -238,6 +238,9 @@ function renderQrCard(state, t) {
           <svg aria-hidden="true"><use href="#i-qr"/></svg>
           <span>${esc(t.qrVerifyBtn)}</span>
         </button>
+        <a class="m-btn m-btn--secondary" href="/scan.html">
+          <span>${esc(t.openScannerBtn)}</span>
+        </a>
         ${state.devMode ? `
           <button type="button" class="m-btn m-btn--secondary" data-action="toggle-plaintext" aria-pressed="${state.qrPlaintext}">
             ${esc(t.qrPlaintextToggle)}

@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   server: {
@@ -7,6 +10,14 @@ export default defineConfig({
     strictPort: true,
     fs: {
       allow: ['..'],
+    },
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        scan: resolve(__dirname, 'scan.html'),
+      },
     },
   },
   resolve: {

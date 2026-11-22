@@ -378,3 +378,117 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* Scan-side reader (C3) */
+.m-scan-panel {
+  padding: var(--m-space-5);
+  display: grid;
+  gap: var(--m-space-4);
+}
+
+.m-scan-panel__head {
+  display: grid;
+  gap: var(--m-space-1);
+}
+
+.m-scan-viewport {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  max-block-size: 340px;
+  background: var(--m-sunken);
+  border: 1.5px dashed var(--m-line-strong);
+  border-radius: var(--m-radius-control);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.m-scan-viewport[data-active="true"] {
+  border-style: solid;
+  border-color: var(--m-brand);
+}
+
+.m-scan-viewport video {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.m-scan-placeholder {
+  display: grid;
+  justify-items: center;
+  gap: var(--m-space-2);
+  padding: var(--m-space-4);
+  text-align: center;
+  color: var(--m-text2);
+  font-size: var(--m-size-sm);
+}
+
+.m-scan-placeholder svg {
+  inline-size: 36px;
+  block-size: 36px;
+  color: var(--m-brand);
+}
+
+.m-scan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--m-space-3);
+}
+
+.m-scan-upload {
+  cursor: pointer;
+}
+
+.m-scan-paste {
+  border-block-start: 1px solid var(--m-line);
+  padding-block-start: var(--m-space-3);
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
+}
+
+.m-scan-paste summary {
+  cursor: pointer;
+  min-block-size: var(--m-target);
+  display: flex;
+  align-items: center;
+}
+
+.m-scan-paste__body {
+  display: grid;
+  gap: var(--m-space-2);
+  padding-block-start: var(--m-space-2);
+}
+
+.m-scan-textarea {
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--m-space-2);
+  border: 1px solid var(--m-line-strong);
+  border-radius: var(--m-radius-control);
+  background: var(--m-surface);
+  color: var(--m-text);
+  font-size: var(--m-size-xs);
+  resize: vertical;
+}
+
+.m-scan-pin-panel {
+  justify-items: center;
+  text-align: center;
+}
+
+.m-scan-meta {
+  padding: var(--m-space-4);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--m-space-3);
+}
+
+.m-scan-meta .m-doctor-meta {
+  border-block: 0;
+  padding-block: 0;
+}

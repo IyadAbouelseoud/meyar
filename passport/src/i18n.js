@@ -141,6 +141,7 @@ export const COPY = {
     qrEncryptedBadge: 'مشفّر (C8)',
     qrPlainBadge: 'نص صريح (تطوير)',
     qrGenerating: 'جارٍ توليد الرمز…',
+    openScannerBtn: 'فتح قارئ البطاقة (للطاقم الطبي)',
   },
   en: {
     brand: 'Meyar',
@@ -207,5 +208,6 @@ export const COPY = {
     qrEncryptedBadge: 'Encrypted (C8)',
     qrPlainBadge: 'Plaintext (dev)',
     qrGenerating: 'Generating QR…',
+    openScannerBtn: 'Open scan-side reader',
   },
 };

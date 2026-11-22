@@ -1,0 +1,48 @@
+{
+  "patientId": "demo-001",
+  "sampleOrigin": "germline",
+  "genes": [
+    {
+      "gene": "CYP2C19",
+      "diplotype": "*2/*2",
+      "phenotype": "Poor Metabolizer",
+      "candidates": [
+        "*2/*2"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 9,
+        "definingPositionsTotal": 11,
+        "untestedLocalAlleles": [
+          "*35"
+        ],
+        "uninformativeNormalRisk": 0.04
+      },
+      "guidelineVersion": "CPIC 2022-11",
+      "callability": {
+        "method": "vcf",
+        "svAssessed": false
+      }
+    },
+    {
+      "gene": "CYP2D6",
+      "diplotype": null,
+      "phenotype": null,
+      "candidates": [],
+      "coverage": {
+        "definingPositionsAssayed": 0,
+        "definingPositionsTotal": 0,
+        "untestedLocalAlleles": [],
+        "uninformativeNormalRisk": null,
+        "saudiDataTier": 0,
+        "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called."
+      },
+      "guidelineVersion": "CPIC PharmCAT 3.4.0",
+      "callability": {
+        "method": "not-assessed",
+        "svAssessed": false,
+        "reason": "PharmCAT documentation: 'we do NOT recommend calling CYP2D6 from VCF' because of 'the large influence of structural variation (SV) and copy number variation (CNV) on inferring CYP2D6 phenotype'; 'CYP2D6 UMs cannot be called using only SNPs and INDELs in a VCF file'; and 'missing the copy number of a normal or decreased function allele can misrepresent a normal metabolizer (NM)'.",
+        "requiredInput": "WGS BAM/CRAM with a CNV-aware caller, or a lab report"
+      }
+    }
+  ]
+}

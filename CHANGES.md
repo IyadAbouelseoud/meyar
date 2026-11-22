@@ -140,3 +140,15 @@ Files: `cds/lib/alertLog.js`, `cds/lib/dashboard.js`, `cds/server.js`, `cds/test
 Notes: Logs every CDS Hooks card fired (`POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`) and every prescriber response (`POST /alerts/action` for `accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl` (append-only JSONL, no database server). Serves `GET /dashboard` (`<html data-theme="instrument" data-voice="clinician">`) and `GET /dashboard/data?range=today|week` built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`, `charts.js`) with Hijri (Umm al-Qura) and Gregorian dates, EN/AR RTL toggle, Today / 7 days switch, 4 KPI tiles, `area()`, `gauge()`, `bars()`, `rings()`, fixture-only `.m-watch`, `.m-feed`, and `.m-heat` (CYP2D6 hatched per A8). Explicitly states no published national ADR rate exists for Saudi Arabia and labels all counts as `Demo log`.
 Run: `cd cds && npm start`, fire hooks, and open `http://localhost:3000/dashboard`; test with `node --test cds/test/cds.test.js` (`31 pass, 0 fail`).
 Data contract unchanged. No new runtime dependency.
+
+## C3 — Scan-side reader (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/scan.html`, `passport/src/scan.js`, `passport/src/scan-render.js`, `passport/src/scan-lookup.js`, `passport/public/sw.js`
+  - `passport/vite.config.js`, `passport/src/render.js`, `passport/src/i18n.js`, `passport/src/main.js`, `passport/src/app.css`
+  - `passport/package.json`, `passport/package-lock.json`, `passport/test/scan.test.mjs`
+  - `handoff/C3.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `cd passport && node --test test/qr.test.mjs test/scan.test.mjs` (5/5 pass)
+  - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run preview` (open `http://localhost:5173/scan.html`; works offline via `/sw.js`)
+- **Notes:** Clinician-voice chart-paper scanner (`data-theme="paper" data-voice="clinician"`) using `getUserMedia` + `BarcodeDetector` / `jsqr` fallback (plus image upload & test paste), `.m-pin` + `.m-pin-dots` keypad with both digit forms and honesty line, local C8 decryption (`decodeQrEnvelope`), and `.m-cds` recommendation cards with `scaleHTML(..., 'clinician')` and verbatim CPIC lookup from `tables/cpic_recommendations.json`. Added `jsqr` (`^1.4.0`). Data contract unchanged.
