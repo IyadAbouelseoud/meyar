@@ -21,12 +21,17 @@ import {
 } from './lib/cpic.js';
 import {
   resolvePatientProfile,
+  resolveCurrentMedications,
   resolveFhirBase,
   resolveContractsDir,
   resolveFixturesDir,
   NonGermlineSampleError,
 } from './lib/phenotypes.js';
-import { buildCpicCard, buildNotAssessedSvCard } from './lib/cards.js';
+import {
+  buildCpicCard,
+  buildNotAssessedSvCard,
+  selectIndicator,
+} from './lib/cards.js';
 
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
 const DEPRECATED_HOOK = 'medication-prescribe';
@@ -83,7 +88,8 @@ function corsHeaders() {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Expose-Headers': 'X-Meyar-Latency-Ms, X-Meyar-Phenotype-Source',
+    'Access-Control-Expose-Headers':
+      'X-Meyar-Latency-Ms, X-Meyar-Phenotype-Source, X-Meyar-Backward-Sweep',
   };
 }
 
@@ -173,6 +179,87 @@ function serveStaticDesign(reqPath, res, designDir) {
   res.end(data);
 }
 
+function evaluateMedications(meds, geneMap, deps, seenCardKeys, { isBackwardSweep = false } = {}) {
+  const cards = [];
+
+  for (const med of meds) {
+    const drug = matchDrugInTable(med, deps.tables);
+    if (!drug) continue;
+
+    const genesForDrug = deps.tables.drugGenes.get(drug);
+    if (!genesForDrug) continue;
+
+    for (const geneSymbol of genesForDrug) {
+      const dedupeKey = `${drug}|${geneSymbol}`;
+      if (seenCardKeys.has(dedupeKey)) continue;
+
+      const geneRecord = geneMap.get(geneSymbol);
+      const svRow = deps.tables.svGenes.get(geneSymbol);
+
+      // A8 structural-variation gate: never report a VCF-derived or Normal phenotype
+      // for an unassessed SV gene.
+      if (
+        svRow &&
+        (!geneRecord ||
+          geneRecord.callability?.method === 'not-assessed' ||
+          geneRecord.phenotype === null ||
+          String(geneRecord.phenotype || '').toLowerCase() === 'no result')
+      ) {
+        if (isBackwardSweep) continue;
+        seenCardKeys.add(dedupeKey);
+        cards.push(
+          buildNotAssessedSvCard({
+            geneRecord,
+            svRow,
+            drugDisplay: med.display,
+          })
+        );
+        continue;
+      }
+
+      if (!geneRecord || !geneRecord.phenotype) continue;
+
+      const phenoApplied = Boolean(geneRecord.phenoconversion?.applied);
+      const lookupPhenotype =
+        phenoApplied && geneRecord.effectivePhenotype
+          ? geneRecord.effectivePhenotype
+          : geneRecord.phenotype;
+
+      const activityScore = phenoApplied
+        ? geneRecord.phenoconversion?.adjustedActivityScore ?? null
+        : geneRecord.phenoconversion?.geneticActivityScore ?? null;
+
+      const row = lookupCpicRow(deps.tables, {
+        drug,
+        gene: geneSymbol,
+        phenotype: lookupPhenotype,
+        activityScore,
+        reasonText: med.reasonText,
+      });
+
+      if (!row) continue;
+
+      // Backward sweep returns cards only for affected drugs the patient already takes.
+      if (isBackwardSweep) {
+        const indicator = selectIndicator(row, lookupPhenotype);
+        if (indicator !== 'warning' && !phenoApplied) continue;
+      }
+
+      seenCardKeys.add(dedupeKey);
+      cards.push(
+        buildCpicCard({
+          geneRecord,
+          row,
+          drugDisplay: med.display,
+          isBackwardSweep,
+        })
+      );
+    }
+  }
+
+  return cards;
+}
+
 /**
  * Evaluate a CDS Hooks 2.0.1 request against stored patient phenotypes and CPIC tables.
  */
@@ -232,10 +319,17 @@ export async function handleHookRequest(serviceId, body, deps) {
     fetchImpl: deps.fetchImpl,
   });
 
-  if (!profile || draftMeds.length === 0) {
+  const shouldRunBackwardSweep =
+    expectedHook === 'order-sign' &&
+    Boolean(profile) &&
+    deps.sweptPatients &&
+    !deps.sweptPatients.has(patientId);
+
+  if (!profile || (draftMeds.length === 0 && !shouldRunBackwardSweep)) {
     return {
       cards: [],
       phenotypeSource: profile?.source || 'none',
+      backwardSweepRan: false,
     };
   }
 
@@ -244,79 +338,34 @@ export async function handleHookRequest(serviceId, body, deps) {
     if (g?.gene) geneMap.set(String(g.gene).toUpperCase(), g);
   }
 
-  const cards = [];
   const seenCardKeys = new Set();
+  const cards = evaluateMedications(draftMeds, geneMap, deps, seenCardKeys, {
+    isBackwardSweep: false,
+  });
 
-  for (const med of draftMeds) {
-    const drug = matchDrugInTable(med, deps.tables);
-    if (!drug) continue;
-
-    const genesForDrug = deps.tables.drugGenes.get(drug);
-    if (!genesForDrug) continue;
-
-    for (const geneSymbol of genesForDrug) {
-      const dedupeKey = `${drug}|${geneSymbol}`;
-      if (seenCardKeys.has(dedupeKey)) continue;
-
-      const geneRecord = geneMap.get(geneSymbol);
-      const svRow = deps.tables.svGenes.get(geneSymbol);
-
-      // A8 structural-variation gate: never report a VCF-derived or Normal phenotype
-      // for an unassessed SV gene.
-      if (
-        svRow &&
-        (!geneRecord ||
-          geneRecord.callability?.method === 'not-assessed' ||
-          geneRecord.phenotype === null ||
-          String(geneRecord.phenotype || '').toLowerCase() === 'no result')
-      ) {
-        seenCardKeys.add(dedupeKey);
-        cards.push(
-          buildNotAssessedSvCard({
-            geneRecord,
-            svRow,
-            drugDisplay: med.display,
-          })
-        );
-        continue;
-      }
-
-      if (!geneRecord || !geneRecord.phenotype) continue;
-
-      const phenoApplied = Boolean(geneRecord.phenoconversion?.applied);
-      const lookupPhenotype =
-        phenoApplied && geneRecord.effectivePhenotype
-          ? geneRecord.effectivePhenotype
-          : geneRecord.phenotype;
-
-      const activityScore = phenoApplied
-        ? geneRecord.phenoconversion?.adjustedActivityScore ?? null
-        : geneRecord.phenoconversion?.geneticActivityScore ?? null;
-
-      const row = lookupCpicRow(deps.tables, {
-        drug,
-        gene: geneSymbol,
-        phenotype: lookupPhenotype,
-        activityScore,
-        reasonText: med.reasonText,
-      });
-
-      if (!row) continue;
-
-      seenCardKeys.add(dedupeKey);
-      cards.push(
-        buildCpicCard({
-          geneRecord,
-          row,
-          drugDisplay: med.display,
-        })
-      );
-    }
+  if (shouldRunBackwardSweep) {
+    deps.sweptPatients.add(patientId);
+    const currentMedsResult = await resolveCurrentMedications(patientId, {
+      prefetch: body.prefetch || null,
+      fhirBase: deps.fhirBase,
+      fhirTimeoutMs: deps.fhirTimeoutMs,
+      contractCurrentMedications: profile.currentMedications || [],
+      fetchImpl: deps.fetchImpl,
+    });
+    const sweepCards = evaluateMedications(
+      currentMedsResult.medications,
+      geneMap,
+      deps,
+      seenCardKeys,
+      { isBackwardSweep: true }
+    );
+    cards.push(...sweepCards);
   }
 
   return {
     cards,
     phenotypeSource: profile.source,
+    backwardSweepRan: shouldRunBackwardSweep,
   };
 }
 
@@ -339,6 +388,7 @@ export function createCdsServer(options = {}) {
     fixturesDir,
     fhirTimeoutMs,
     fetchImpl,
+    sweptPatients: new Set(),
   };
 
   return http.createServer(async (req, res) => {
@@ -384,6 +434,7 @@ export function createCdsServer(options = {}) {
           {
             'X-Meyar-Latency-Ms': elapsedMs.toFixed(2),
             'X-Meyar-Phenotype-Source': result.phenotypeSource,
+            'X-Meyar-Backward-Sweep': String(Boolean(result.backwardSweepRan)),
           }
         );
       } catch (err) {

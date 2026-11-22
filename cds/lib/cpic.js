@@ -100,16 +100,35 @@ export function matchDrugInTable(medInfo, tables) {
   return null;
 }
 
-/**
- * Extract medication details from a FHIR R4 MedicationRequest resource.
- */
-export function extractMedicationFromRequest(medReq) {
-  if (!medReq || medReq.resourceType !== 'MedicationRequest') return null;
+const ONCOLOGY_DRUGS = new Set([
+  'fluorouracil',
+  'capecitabine',
+  'tegafur',
+  'irinotecan',
+  'mercaptopurine',
+  'thioguanine',
+  'azathioprine',
+  'tamoxifen',
+  'cisplatin',
+  'daunorubicin',
+  'doxorubicin',
+]);
 
-  let concept = medReq.medicationCodeableConcept;
-  if (!concept && medReq.medicationReference?.reference && Array.isArray(medReq.contained)) {
-    const refId = medReq.medicationReference.reference.replace(/^#/, '');
-    const contained = medReq.contained.find(
+/**
+ * Return true when a drug (or gene) belongs to oncology PGx guidance,
+ * which must print "Germline result — tumour profiling is separate."
+ */
+export function isOncologyDrug(drugName, geneSymbol) {
+  const drug = String(drugName || '').trim().toLowerCase();
+  const gene = String(geneSymbol || '').trim().toUpperCase();
+  return ONCOLOGY_DRUGS.has(drug) || gene === 'DPYD';
+}
+
+function resolveConceptFromResource(resource) {
+  let concept = resource.medicationCodeableConcept;
+  if (!concept && resource.medicationReference?.reference && Array.isArray(resource.contained)) {
+    const refId = resource.medicationReference.reference.replace(/^#/, '');
+    const contained = resource.contained.find(
       (r) => r && r.resourceType === 'Medication' && r.id === refId
     );
     if (contained?.code) concept = contained.code;
@@ -136,6 +155,17 @@ export function extractMedicationFromRequest(medReq) {
     }
   }
 
+  return { rxnormCodes, texts, display };
+}
+
+/**
+ * Extract medication details from a FHIR R4 MedicationRequest resource.
+ */
+export function extractMedicationFromRequest(medReq) {
+  if (!medReq || medReq.resourceType !== 'MedicationRequest') return null;
+
+  const { rxnormCodes, texts, display } = resolveConceptFromResource(medReq);
+
   const reasonTexts = [];
   for (const rc of medReq.reasonCode || []) {
     if (rc?.text) reasonTexts.push(String(rc.text));
@@ -152,6 +182,53 @@ export function extractMedicationFromRequest(medReq) {
     texts,
     reasonText: reasonTexts.join(' ').toLowerCase(),
   };
+}
+
+const INACTIVE_STATEMENT_STATUSES = new Set([
+  'stopped',
+  'entered-in-error',
+  'completed',
+  'not-taken',
+]);
+
+/**
+ * Extract medication details from a FHIR R4 MedicationStatement resource.
+ */
+export function extractMedicationFromStatement(medStmt) {
+  if (!medStmt || medStmt.resourceType !== 'MedicationStatement') return null;
+  const status = String(medStmt.status || 'active').trim().toLowerCase();
+  if (INACTIVE_STATEMENT_STATUSES.has(status)) return null;
+
+  const { rxnormCodes, texts, display } = resolveConceptFromResource(medStmt);
+  if (!display && rxnormCodes.length === 0) return null;
+
+  return {
+    statementId: medStmt.id || null,
+    display: display || rxnormCodes[0] || 'Unknown medication',
+    rxnormCodes,
+    texts,
+    reasonText: '',
+  };
+}
+
+/**
+ * Extract active MedicationStatement entries from a FHIR Bundle (or single resource).
+ */
+export function extractCurrentMedicationsFromBundle(bundle) {
+  if (!bundle || typeof bundle !== 'object') return [];
+  const resources =
+    bundle.resourceType === 'Bundle' && Array.isArray(bundle.entry)
+      ? bundle.entry.map((e) => e?.resource).filter(Boolean)
+      : bundle.resourceType === 'MedicationStatement'
+        ? [bundle]
+        : [];
+
+  const meds = [];
+  for (const res of resources) {
+    const parsed = extractMedicationFromStatement(res);
+    if (parsed) meds.push(parsed);
+  }
+  return meds;
 }
 
 /**

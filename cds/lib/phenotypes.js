@@ -4,6 +4,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { extractCurrentMedicationsFromBundle } from './cpic.js';
 
 const LOINC_GENE = '48018-6';
 const LOINC_GENOMIC_SOURCE_CLASS = '48002-0';
@@ -389,4 +390,84 @@ export async function resolvePatientProfile(
   }
 
   return null;
+}
+
+/**
+ * Fetch active MedicationStatements for `patientId` from local HAPI FHIR.
+ */
+async function fetchCurrentMedicationsFromHapi(
+  patientId,
+  { fhirBase, fhirTimeoutMs = 400, fetchImpl = fetch } = {}
+) {
+  const base = resolveFhirBase(fhirBase);
+  if (!base || isForbiddenPublicFhir(base)) return null;
+
+  const url = `${base}/MedicationStatement?subject=Patient/${encodeURIComponent(patientId)}&status=active&_count=100`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), fhirTimeoutMs);
+
+  try {
+    const resp = await fetchImpl(url, {
+      method: 'GET',
+      headers: { Accept: 'application/fhir+json, application/json' },
+      signal: controller.signal,
+    });
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Resolve active current medications for backward sweep in priority order:
+ * 1. CDS Hooks `prefetch.currentMedications` (FHIR MedicationStatement Bundle)
+ * 2. Local HAPI FHIR (`MedicationStatement?subject=Patient/<id>&status=active`)
+ * 3. Contract `currentMedications[]`
+ */
+export async function resolveCurrentMedications(
+  patientId,
+  {
+    prefetch = null,
+    fhirBase,
+    fhirTimeoutMs = 400,
+    contractCurrentMedications = [],
+    fetchImpl = fetch,
+  } = {}
+) {
+  if (prefetch?.currentMedications) {
+    const prefetchMeds = extractCurrentMedicationsFromBundle(prefetch.currentMedications);
+    if (prefetchMeds.length > 0) {
+      return { medications: prefetchMeds, source: 'prefetch' };
+    }
+  }
+
+  const hapiBundle = await fetchCurrentMedicationsFromHapi(patientId, {
+    fhirBase,
+    fhirTimeoutMs,
+    fetchImpl,
+  });
+  if (hapiBundle) {
+    const hapiMeds = extractCurrentMedicationsFromBundle(hapiBundle);
+    if (hapiMeds.length > 0) {
+      return { medications: hapiMeds, source: 'hapi' };
+    }
+  }
+
+  const fallbackMeds = (Array.isArray(contractCurrentMedications) ? contractCurrentMedications : [])
+    .filter((m) => m && (m.name || m.rxnorm))
+    .map((m) => ({
+      statementId: null,
+      display: String(m.name || m.rxnorm),
+      rxnormCodes: m.rxnorm ? [String(m.rxnorm)] : [],
+      texts: m.name ? [String(m.name)] : [],
+      reasonText: '',
+    }));
+
+  return {
+    medications: fallbackMeds,
+    source: fallbackMeds.length > 0 ? 'contract' : 'none',
+  };
 }

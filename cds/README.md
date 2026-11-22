@@ -25,6 +25,8 @@ Clinical safety rules enforced on every request:
 - **A8 structural-variation gate:** genes in `tables/sv_genes.json` (`CYP2D6`) with `not-assessed` / no outside call never return a Normal phenotype; they return `"copy number not assessed by this test — no result reported"`.
 - **A7 phenoconversion:** lookups use `effectivePhenotype` when `phenoconversion.applied === true`, while always displaying both genetic and effective phenotypes.
 - **Lookup only (B1):** every recommendation and alternative comes verbatim from `tables/cpic_recommendations.json`.
+- **Backward sweep (B3):** on the first `order-sign` for a patient, active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) are checked for affected drugs already taken (e.g., statins with `SLCO1B1` Decreased Function).
+- **One-tap pharmacist escalation & oncology note (B3):** actionable cards include a `Send to pharmacist` FHIR `Task` suggestion, and oncology PGx cards print `Germline result — tumour profiling is separate.`
 
 ## Run locally (Node 22 LTS)
 
