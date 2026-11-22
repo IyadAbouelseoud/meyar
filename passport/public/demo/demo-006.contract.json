@@ -1,0 +1,110 @@
+{
+  "patientId": "demo-006",
+  "sampleOrigin": "germline",
+  "genes": [
+    {
+      "gene": "CYP2C19",
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "candidates": [
+        "*1/*1"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 32,
+        "definingPositionsTotal": 35,
+        "untestedLocalAlleles": [
+          "*3",
+          "*4A"
+        ],
+        "uninformativeNormalRisk": 0.001,
+        "saudiDataTier": 1,
+        "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137); <0.1% allele(s) not summed numerically: *4A"
+      },
+      "guidelineVersion": "CPIC PharmCAT 3.4.0",
+      "callability": {
+        "method": "vcf",
+        "svAssessed": false
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": false,
+        "cause": [],
+        "inhibitorStrength": null,
+        "geneticActivityScore": null,
+        "adjustedActivityScore": null
+      }
+    },
+    {
+      "gene": "CYP2C9",
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "candidates": [
+        "*1/*1"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 86,
+        "definingPositionsTotal": 88,
+        "untestedLocalAlleles": [
+          "*2",
+          "*3"
+        ],
+        "uninformativeNormalRisk": 0.187,
+        "saudiDataTier": 1,
+        "saudiDataNote": "Tier 1: Goljan et al. 2022 Table 1 (n=11,889, doi:10.1371/journal.pone.0263137)"
+      },
+      "guidelineVersion": "CPIC PharmCAT 3.4.0",
+      "callability": {
+        "method": "vcf",
+        "svAssessed": false
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": false,
+        "cause": [],
+        "inhibitorStrength": null,
+        "geneticActivityScore": null,
+        "adjustedActivityScore": null
+      }
+    },
+    {
+      "gene": "CYP2D6",
+      "diplotype": "*1/*2x2",
+      "phenotype": "Ultrarapid Metabolizer",
+      "candidates": [
+        "*1/*2x2"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 0,
+        "definingPositionsTotal": 0,
+        "untestedLocalAlleles": [],
+        "uninformativeNormalRisk": null,
+        "saudiDataTier": 0,
+        "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called."
+      },
+      "guidelineVersion": "CPIC PharmCAT 3.4.0",
+      "callability": {
+        "method": "outside-call",
+        "svAssessed": true,
+        "source": "Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype)"
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": true,
+        "cause": [
+          "duloxetine"
+        ],
+        "inhibitorStrength": "moderate",
+        "geneticActivityScore": 3.0,
+        "adjustedActivityScore": 1.5,
+        "method": "Thomas et al. 2020"
+      }
+    }
+  ],
+  "currentMedications": [
+    {
+      "name": "duloxetine",
+      "source": "patient-entered",
+      "mock": true
+    }
+  ]
+}

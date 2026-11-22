@@ -104,3 +104,16 @@ Files: `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/serv
 Notes: Enforces `design/README.md` §7 card JSON grammar (`summary` < 140 chars, `indicator` `warning` | `info`, `**Genetic:**` / `**Acting like:**`, verbatim CPIC quote, guaranteed A5 coverage line, `_Advises, does not prescribe. <guidelineVersion>._`, `source.label` `"Meyar (research prototype)"`). Adds one-tap `Send to pharmacist` FHIR `Task` suggestion, oncology `"Germline result — tumour profiling is separate."` notice, and first-`order-sign` backward sweep over active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) returning cards for affected current drugs (e.g. `SLCO1B1` Decreased Function on `simvastatin`).
 Run: `node design/build-tokens.mjs` (62/62 contrast pairs pass), `cd cds && node --test test/cds.test.js` (18/18 pass), `docker compose up -d --build hapi cds`.
 Data contract unchanged. No new runtime dependency.
+
+
+## C1 — Arabic-first patient screen (Medication Passport)
+- **Files added/changed:**
+  - `passport/package.json`, `passport/vite.config.js`, `passport/index.html`
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/lookup.js`, `passport/src/i18n.js`, `passport/src/app.css`
+  - `passport/public/demo/demo-001.contract.json`, `demo-002.contract.json`, `demo-006.contract.json`
+  - `handoff/C1.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs`
+  - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
+  - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.
+- **Notes:** Built strictly from `design/` (`@design` Vite alias); reads `tables/cpic_recommendations.json` and `tables/saudi_frequencies.json` read-only. Data contract unchanged. No new runtime dependency (`vite` devDependency only).
