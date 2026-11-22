@@ -443,3 +443,111 @@ export function buildCpicCard({
 
   return card;
 }
+
+/**
+ * One non-interruptive `info` backward-sweep card emitted when a signed order is a
+ * strong inhibitor from `tables/cyp_inhibitors.json` and shifts the recommendation
+ * for one or more of the patient's existing active medications (B6 / A7).
+ */
+export function buildInhibitorBackwardSweepCard({
+  inhibitorDisplay,
+  inhibitorDrug,
+  enzyme,
+  strength,
+  geneRecord,
+  simulation,
+  affectedSubstrates,
+}) {
+  const diplotype = geneRecord.diplotype || 'unknown';
+  const affectedNames = affectedSubstrates.map((s) => s.drug).join(', ');
+  const summary = truncateSummary(
+    simulation.scored
+      ? `Backward sweep — ${enzyme} ${simulation.geneticPhenotype}, acting like ${simulation.newPhenotype} (${inhibitorDrug}): affects ${affectedNames}`
+      : `Backward sweep — ${enzyme} may be affected by ${inhibitorDrug}: review ${affectedNames}`
+  );
+
+  const detailParts = [
+    `**Order (${strength} ${enzyme} inhibitor):** ${inhibitorDisplay || inhibitorDrug}`,
+  ];
+
+  if (simulation.scored) {
+    detailParts.push(
+      `**Genetic:** ${enzyme} ${diplotype} (${simulation.geneticPhenotype}) · **Acting like:** ${simulation.newPhenotype} because of ${inhibitorDrug}`
+    );
+    detailParts.push(
+      `Activity score: ${simulation.geneticActivityScore.toFixed(1)} × ${simulation.factor} = ${simulation.adjustedActivityScore.toFixed(1)} (${strength} inhibitor, FDA table; ${simulation.method}).`
+    );
+  } else {
+    detailParts.push(
+      `**Genetic:** ${enzyme} ${diplotype} (${simulation.geneticPhenotype}) · **Note:** may be affected by ${inhibitorDrug} (${strength} ${enzyme} inhibitor, FDA table)`
+    );
+  }
+
+  if (geneRecord.callability?.method === 'outside-call' && geneRecord.callability?.source) {
+    detailParts.push(`${enzyme} result from outside call: ${geneRecord.callability.source}.`);
+  }
+
+  const linksByUrl = new Map();
+  let firstGuideline = null;
+
+  for (const sub of affectedSubstrates) {
+    const row = sub.afterMatch.row;
+    const label =
+      sub.drugDisplay && sub.drugDisplay.toLowerCase() !== sub.drug.toLowerCase()
+        ? `${sub.drug} (${sub.drugDisplay})`
+        : sub.drugDisplay || sub.drug;
+    detailParts.push(`**Existing medication (backward sweep):** ${label}`);
+    detailParts.push(quote(row.recommendation));
+
+    if (isOncologyDrug(row.drug, enzyme)) {
+      detailParts.push('Germline result — tumour profiling is separate.');
+    }
+
+    const alts = selectAlternatives(row, sub.afterMatch);
+    const ownCount = Array.isArray(row.alternatives) ? row.alternatives.length : 0;
+    const altText = formatAlternativesText(alts, alts.length < ownCount);
+    if (altText) detailParts.push(altText);
+
+    if (row.guideline?.url && !linksByUrl.has(row.guideline.url)) {
+      const gLabel = row.guideline?.pub
+        ? `CPIC: ${row.guideline.name} (${row.guideline.pub})`
+        : 'CPIC guideline';
+      linksByUrl.set(row.guideline.url, { label: gLabel, url: row.guideline.url, type: 'absolute' });
+      if (!firstGuideline) firstGuideline = row.guideline;
+    }
+  }
+
+  const coverageLine =
+    formatCoverageLine(geneRecord.coverage) || 'Assay coverage metadata not provided in prefetch.';
+  detailParts.push(coverageLine);
+
+  const guidelineVersion =
+    geneRecord.guidelineVersion ||
+    (firstGuideline?.pub ? `CPIC: ${firstGuideline.name} (${firstGuideline.pub})` : 'CPIC guideline');
+  detailParts.push(footer(guidelineVersion));
+
+  const links = [...linksByUrl.values()];
+  const card = {
+    uuid: crypto.randomUUID(),
+    summary,
+    indicator: 'info',
+    detail: detailParts.join('\n\n'),
+    source: {
+      label: 'Meyar (research prototype)',
+      ...(links[0]?.url ? { url: links[0].url } : {}),
+    },
+    ...(links.length > 0 ? { links } : {}),
+    suggestions: [
+      buildPharmacistSuggestion({
+        gene: enzyme,
+        effectivePhenotype: simulation.newPhenotype,
+        drugName: `${affectedNames} (with ${inhibitorDrug})`,
+        guidelineName: firstGuideline?.name,
+        guidelineVersion,
+      }),
+    ],
+    selectionBehavior: 'at-most-one',
+  };
+
+  return card;
+}
