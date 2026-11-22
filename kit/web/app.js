@@ -189,10 +189,11 @@ function renderVerify() {
 }
 
 function renderScan() {
-  const next = state.next;
+  const failed = state.gates?.qc?.result === 'fail'; // F6: a rejected tube takes no more scans
+  const next = failed ? null : state.next;
   const nextLabel = next ? EVENT_LABELS[next][lang] : null;
-  document.getElementById('next').innerHTML = next ? t('nextIs')(esc(nextLabel)) : esc(t('complete'));
-  document.getElementById('record-label').textContent = next ? t('record')(nextLabel) : t('complete');
+  document.getElementById('next').innerHTML = failed ? esc(t('gRecollect')) : next ? t('nextIs')(esc(nextLabel)) : esc(t('complete'));
+  document.getElementById('record-label').textContent = next ? t('record')(nextLabel) : (failed ? t('gRecollect') : t('complete'));
   document.getElementById('record').disabled = !next;
   document.getElementById('scan-form').hidden = !next;
   const d = state.nextDefaults;

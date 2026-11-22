@@ -15,7 +15,7 @@
 //   POST /api/kits/:id/release          F6 result may now reach the Passport
 //   GET  /api/kits/:id/status           F6 patient tracker status (no genotype, no drug)
 //   POST /api/urgent/card               F6 T3 roadmap screen: same order-sign call to the CDS service
-//   GET  /tracker · /urgent · /reader/  F6 patient tracker, T3 screen, offline second-device reader
+//   GET  /tracker · /urgent · /card · /reader/  F6 patient tracker, T3 screen, interim print card, offline reader
 //
 // Research prototype — not for clinical use. Demo data only.
 
@@ -200,6 +200,7 @@ export function createKitServer({ ledger = new Ledger(), gateStore = new GateSto
       if (url.pathname === '/' || url.pathname === '/index.html') return sendFile(res, path.join(KIT_DIR, 'web', 'index.html'));
       if (url.pathname === '/tracker') return sendFile(res, path.join(KIT_DIR, 'web', 'tracker.html'));
       if (url.pathname === '/urgent') return sendFile(res, path.join(KIT_DIR, 'web', 'urgent.html'));
+      if (url.pathname === '/card') return sendFile(res, path.join(KIT_DIR, 'web', 'card.html'));
       if (url.pathname === '/reader') { res.writeHead(301, { Location: '/reader/' }); return res.end(); }
       if (url.pathname === '/reader/') return sendFile(res, path.join(DEMO_DIR, 'reader', 'index.html'));
       // The reader's service worker must sit at /reader/ to control that scope.
@@ -208,7 +209,8 @@ export function createKitServer({ ledger = new Ledger(), gateStore = new GateSto
       if (url.pathname === '/health') return sendJSON(res, 200, { ok: true });
       // F6: the reader reuses passport/src read-only (decrypt + PIN rules); nothing in passport/ is changed.
       const roots = [['/design/', DESIGN_DIR], ['/web/', path.join(KIT_DIR, 'web')], ['/lib/', path.join(KIT_DIR, 'lib')],
-        ['/reader/', path.join(DEMO_DIR, 'reader')], ['/demo-out/', path.join(DEMO_DIR, 'out')], ['/passport-src/', path.join(REPO_ROOT, 'passport', 'src')]];
+        ['/reader/', path.join(DEMO_DIR, 'reader')], ['/demo-out/', path.join(DEMO_DIR, 'out')], ['/passport-src/', path.join(REPO_ROOT, 'passport', 'src')],
+        ['/renders/', path.join(REPO_ROOT, 'hardware', 'blender', 'renders')]];
       for (const [prefix, root] of roots) {
         if (url.pathname.startsWith(prefix)) {
           const file = path.resolve(root, '.' + decodeURIComponent(url.pathname.slice(prefix.length - 1)));

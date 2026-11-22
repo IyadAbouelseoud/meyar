@@ -1,0 +1,71 @@
+/* F6 pages (tracker, urgent T3, printed card). Layout only; every colour, font and radius is a design token. */
+.f6-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 16px clamp(16px, 4vw, 40px); border-block-end: 1px solid var(--m-line); background: var(--m-surface); }
+.f6-bar__title { flex: 1 1 220px; display: grid; gap: 2px; }
+.f6-bar__title h1 { font-family: var(--m-font-display); font-weight: 800; font-size: var(--m-size-xl); }
+[lang="en"] .f6-bar__title h1 { font-weight: 300; }
+.f6-bar__end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.f6-proto { padding: 8px clamp(16px, 4vw, 40px); border-block-end: 1px solid var(--m-line); }
+.f6-main { display: grid; gap: 24px; align-items: start; padding: 24px clamp(16px, 4vw, 40px) 40px; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); max-inline-size: 1440px; margin-inline: auto; }
+.f6-main--narrow { grid-template-columns: minmax(0, 1fr); max-inline-size: 880px; }
+@media (max-width: 960px) { .f6-main { grid-template-columns: minmax(0, 1fr); } }
+.f6-sheet { background-color: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-sheet); padding: clamp(16px, 3vw, 32px); display: grid; gap: 18px; }
+.f6-sheet h2 { font-size: var(--m-size-lg); font-weight: 600; }
+.f6-note { font-size: var(--m-size-xs); color: var(--m-text2); max-inline-size: 70ch; }
+.f6-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.f6-actions .m-btn { text-decoration: none; }
+.f6-foot { padding: 0 0 32px; border-block-start: 1px solid var(--m-line); display: grid; gap: 16px; }
+.f6-foot .m-proto { padding-inline: clamp(16px, 4vw, 40px); }
+
+/* Patient tracker strip: numbered nodes (no tick on the patient side), word + shape + colour per state. */
+.f6-kit { font-size: var(--m-size-sm); color: var(--m-text2); }
+.f6-lead { font-family: var(--m-font-display); font-size: var(--m-size-2xl) !important; font-weight: 700 !important; }
+.f6-strip { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.f6-step { display: grid; gap: 6px; justify-items: start; padding-block-start: 10px; border-block-start: 4px solid var(--m-line); }
+.f6-step__node { display: inline-grid; place-items: center; inline-size: 36px; block-size: 36px; border-radius: 50%; font-weight: 700; box-shadow: inset 0 0 0 2px var(--m-line-strong); color: var(--m-text3); }
+.f6-step__node svg { inline-size: 22px; block-size: 22px; }
+.f6-step__label { font-weight: 600; font-size: var(--m-size-sm); }
+.f6-step__state { font-size: var(--m-size-xs); color: var(--m-text2); }
+.f6-step.is-done { border-color: var(--m-brand); }
+.f6-step.is-done .f6-step__node { background: var(--m-brand); color: var(--m-on-brand, var(--m-surface)); box-shadow: none; }
+.f6-step.is-current { border-color: var(--m-brand); border-block-start-style: dashed; }
+.f6-step.is-current .f6-step__node { box-shadow: inset 0 0 0 3px var(--m-brand); color: var(--m-brand); }
+.f6-step.is-current .f6-step__state { color: var(--m-text); font-weight: 700; }
+.f6-step.is-stopped { border-color: var(--m-stop); }
+.f6-step.is-stopped .f6-step__node { color: var(--m-stop); background: var(--m-stop-tint); box-shadow: none; }
+.f6-step.is-stopped .f6-step__state { color: var(--m-stop); font-weight: 700; }
+.f6-step.is-todo .f6-step__label { color: var(--m-text3); }
+@media (max-width: 640px) {
+  .f6-strip { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .f6-step { grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; border-block-start: 0; border-inline-start: 4px solid var(--m-line); padding: 10px 12px; }
+  .f6-step.is-done, .f6-step.is-current { border-inline-start-color: var(--m-brand); }
+  .f6-step.is-stopped { border-inline-start-color: var(--m-stop); }
+}
+.f6-now { font-size: var(--m-size-md); max-inline-size: 60ch; }
+.f6-answer { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.f6-answer > svg { inline-size: 28px; block-size: 28px; }
+.f6-answer p { color: inherit; }
+
+/* T3 urgent screen. */
+.f6-roadmap { justify-self: start; display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border-radius: 999px; border: 2px dashed var(--m-none); color: var(--m-none); background: var(--m-none-tint); font-weight: 700; font-size: var(--m-size-sm); }
+.f6-roadmap svg { inline-size: 18px; block-size: 18px; }
+.f6-render { margin: 0; display: grid; gap: 8px; }
+.f6-render img { inline-size: 100%; max-block-size: 380px; object-fit: contain; border-radius: var(--m-radius-card); background: var(--m-sunken); filter: grayscale(0.35); }
+.f6-render figcaption { font-size: var(--m-size-xs); color: var(--m-text2); }
+.f6-path { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.f6-path li { padding: 8px 12px; border-inline-start: 3px solid var(--m-brand); background: var(--m-sunken); font-size: var(--m-size-sm); }
+.f6-path li.is-roadmap { border-inline-start: 3px dashed var(--m-none); color: var(--m-text2); }
+.f6-rail { display: grid; gap: 16px; }
+.f6-order { background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); padding: 20px; display: grid; gap: 10px; }
+.f6-order h2 { font-size: var(--m-size-lg); font-weight: 600; }
+.f6-detail { display: grid; gap: 8px; font-size: var(--m-size-sm); }
+.f6-detail blockquote { margin: 0; padding-inline-start: 12px; border-inline-start: 3px solid var(--m-line-strong); }
+
+/* Printed card (interim, until C7). */
+.f6-cardwrap { display: grid; place-items: center; padding: 16px 0; overflow-x: auto; max-inline-size: 100%; }
+.f6-id1-sub { font-size: 3.4mm; font-weight: 600; color: var(--m-p-juniper-700); }
+.f6-id1-en { font-weight: 400; font-size: 2.5mm; }
+@media print {
+  .f6-bar, .f6-proto, .f6-noprint, .f6-note, .f6-sheet > h2 { display: none !important; }
+  .f6-sheet { border: 0; padding: 0; background: none; }
+  .m-body { background: #fff; }
+}
