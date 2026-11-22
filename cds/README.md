@@ -13,6 +13,9 @@ Node 22 LTS (stdlib only, zero external runtime dependencies) CDS Hooks 2.0.1 se
 | `POST` | `/cds-services/meyar-pgx-select` | Evaluates `order-select` selected draft orders. |
 | `GET` | `/health` | Health and loaded table summary. |
 | `GET` | `/design/*` | Read-only static serving of `design/` (for B4/B5 surfaces). |
+| `GET` | `/dashboard` | Live clinician alert log and counts dashboard (`data-theme="instrument"`). |
+| `GET` | `/dashboard/data` | JSON summary of `cds/data/alerts.jsonl` (`?range=today|week`). |
+| `POST` | `/alerts/action` | Logs prescriber response (`accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl`. |
 
 ## Phenotype resolution order
 
@@ -70,5 +73,10 @@ http://localhost:3000/cds-services
 ```
 
 CORS headers (`Access-Control-Allow-Origin: *`, `GET, POST, OPTIONS`) are enabled on all endpoints.
+
+## UI Routes
+
+- `GET /dashboard` — Instrument-theme alert log and counts dashboard (`?lang=ar` for Arabic RTL).
+- `GET /compare` — Side-by-side alert comparison screen on chart-paper ground (`?lang=ar` for Arabic RTL), comparing a generic interruptive modal against Meyar's `.m-cds` card.
 
 Future deployment step (not a blocker for the mock-data demo): CDS Hooks JWT authentication of the calling EHR, and any SFDA / PDPL / NPHIES requirements, are not implemented in this prototype.

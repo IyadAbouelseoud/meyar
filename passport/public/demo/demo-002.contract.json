@@ -1,0 +1,46 @@
+{
+  "patientId": "demo-002",
+  "sampleOrigin": "germline",
+  "currentMedications": [
+    {
+      "name": "paroxetine",
+      "source": "hospital-record",
+      "mock": true
+    }
+  ],
+  "genes": [
+    {
+      "gene": "CYP2D6",
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "candidates": [
+        "*1/*1"
+      ],
+      "coverage": {
+        "definingPositionsAssayed": 0,
+        "definingPositionsTotal": 0,
+        "untestedLocalAlleles": [],
+        "uninformativeNormalRisk": null,
+        "saudiDataTier": 0,
+        "saudiDataNote": "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called."
+      },
+      "guidelineVersion": "CPIC 2021",
+      "callability": {
+        "method": "outside-call",
+        "svAssessed": true,
+        "source": "Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype)"
+      },
+      "effectivePhenotype": "Poor Metabolizer",
+      "phenoconversion": {
+        "applied": true,
+        "cause": [
+          "paroxetine"
+        ],
+        "inhibitorStrength": "strong",
+        "geneticActivityScore": 2.0,
+        "adjustedActivityScore": 0.0,
+        "method": "Thomas et al. 2020"
+      }
+    }
+  ]
+}

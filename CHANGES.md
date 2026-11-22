@@ -123,3 +123,91 @@ Notes: A 15 s clip (1920 × 1080, 30 fps, H.264, 2.8 MB). The kit acts out each 
 ## F3 video v2 — paced chain-of-custody demo (23 Nov 2026)
 Files: `hardware/blender/build_f3_video2.py`, `encode_f3_video2.py`, `art/make_f3_video2_art.py`, `art/out/f3w_*.png`, `anim/f3v2_anchors.json`, `meyar_f3_video2.blend`, `renders/meyar-f3-kit-chain-of-custody.mp4`, `renders/meyar-f3-video2-contact-sheet.jpg`, `README.md`.
 Notes: A 57 s cut (1920 × 1080, 30 fps, H.264), rebuilt after BUNYAN's feedback on the 15 s version. It has phone close-ups, a hollow mailer with a hinged lid, and real packing (tube into the bag on its pad, bag into the mailer, lid closed). Arrow callouts are pinned to 3D anchors, with Arabic first. A live phone inset shows the real kit/web captures. Labelled "Kit design — software working" throughout. T1 only.
+
+## F4
+- Arabic RTL versions: `docs/poster/f4-tier-panel-{poster,slide}-ar.{svg,png}` (Arabic strings are drafts for C4 review).
+- Added `docs/poster/build_f4.py`, `docs/poster/render_png.cjs`, `docs/poster/f4-tier-panel-poster.{svg,png}` (1600x2000, PNG @2x) and `docs/poster/f4-tier-panel-slide.{svg,png}` (1920x1080).
+- Added 7 rows to `docs/sources.md`; new `prompts/F6.md` (end-to-end staircase demo) listed in `prompts/README.md`.
+- Run: `python3 docs/poster/build_f4.py && node docs/poster/render_png.cjs` (uses the pre-installed Playwright).
+
+## C1 — Arabic-first patient screen (Medication Passport)
+- **Files added/changed:**
+  - `passport/package.json`, `passport/vite.config.js`, `passport/index.html`
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/lookup.js`, `passport/src/i18n.js`, `passport/src/app.css`
+  - `passport/public/demo/demo-001.contract.json`, `demo-002.contract.json`, `demo-006.contract.json`
+  - `handoff/C1.md` (`Status: DONE`)
+- **How to run:**
+
+## C5 — Elder accessibility mode (23 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/speech.js` (new), `passport/test/c5.test.mjs` (new)
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/scan.js`, `passport/src/scan-render.js`, `passport/src/app.css`
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`
+  - `passport/dist/` (rebuilt production bundle)
+  - `handoff/C5.md` (`Status: DONE`)
+- **How to run:**
+  - `cd passport && npm run dev` (serves on `http://localhost:5173`; supports `?elder=on`, `?mode=caregiver`, `?lang=ar|en`)
+  - `node --test passport/test/*.test.mjs` (8/8 pass)
+  - `npm --prefix passport run build`
+- **Notes:** Elder mode uses `.m-switch` (`data-elder="on"` on `<html>`, persisted in `localStorage`). Read-aloud checks `speechSynthesis` for an `ar-SA` voice and hides the button with an explanatory tooltip when unavailable. Caregiver view (`?mode=caregiver`) provides a read-only family view locking profile switching and PIN/dev edits. Verified with `axe-core` WCAG 2.2 AA (0 violations) and 200% text resize at 375 px and 1440 px. No new runtime dependencies; data contract unchanged.
+  - `node design/build-tokens.mjs`
+  - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
+  - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.
+- **Notes:** Built strictly from `design/` (`@design` Vite alias); reads `tables/cpic_recommendations.json` and `tables/saudi_frequencies.json` read-only. Data contract unchanged. No new runtime dependency (`vite` devDependency only).
+
+## C2 — Offline QR encoder (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/qr.js`, `passport/test/qr.test.mjs`
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/i18n.js`, `passport/src/app.css`
+  - `passport/package.json`, `passport/package-lock.json`, `passport/README.md`
+  - `handoff/C2.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `cd passport && node --test test/qr.test.mjs` (3/3 pass)
+  - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run dev` (port 5173; append `?tab=doctor&dev=1` to inspect dev byte-size metrics and plaintext toggle)
+- **Notes:** Encodes a compact phenotype + CPIC recommendation-key payload (`deflate-raw` + `base64url`, Error Correction `M`, SVG `shape-rendering="crispEdges"`, `#14201B` on `#FFFFFF`, 4-module quiet zone) wrapped in the C8 WebCrypto envelope (`PBKDF2-SHA256` 600,000 iterations + `AES-GCM-256`) by default. Added `qrcode` dependency (`^1.5.4`). Data contract unchanged.
+
+## B4 — Alert log and counts dashboard (22 Nov 2026)
+Files: `cds/lib/alertLog.js`, `cds/lib/dashboard.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B4.md`.
+Notes: Logs every CDS Hooks card fired (`POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`) and every prescriber response (`POST /alerts/action` for `accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl` (append-only JSONL, no database server). Serves `GET /dashboard` (`<html data-theme="instrument" data-voice="clinician">`) and `GET /dashboard/data?range=today|week` built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`, `charts.js`) with Hijri (Umm al-Qura) and Gregorian dates, EN/AR RTL toggle, Today / 7 days switch, 4 KPI tiles, `area()`, `gauge()`, `bars()`, `rings()`, fixture-only `.m-watch`, `.m-feed`, and `.m-heat` (CYP2D6 hatched per A8). Explicitly states no published national ADR rate exists for Saudi Arabia and labels all counts as `Demo log`.
+Run: `cd cds && npm start`, fire hooks, and open `http://localhost:3000/dashboard`; test with `node --test cds/test/cds.test.js` (`31 pass, 0 fail`).
+Data contract unchanged. No new runtime dependency.
+
+## C3 — Scan-side reader (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/scan.html`, `passport/src/scan.js`, `passport/src/scan-render.js`, `passport/src/scan-lookup.js`, `passport/public/sw.js`
+  - `passport/vite.config.js`, `passport/src/render.js`, `passport/src/i18n.js`, `passport/src/main.js`, `passport/src/app.css`
+  - `passport/package.json`, `passport/package-lock.json`, `passport/test/scan.test.mjs`
+  - `handoff/C3.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `cd passport && node --test test/qr.test.mjs test/scan.test.mjs` (5/5 pass)
+  - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run preview` (open `http://localhost:5173/scan.html`; works offline via `/sw.js`)
+- **Notes:** Clinician-voice chart-paper scanner (`data-theme="paper" data-voice="clinician"`) using `getUserMedia` + `BarcodeDetector` / `jsqr` fallback (plus image upload & test paste), `.m-pin` + `.m-pin-dots` keypad with both digit forms and honesty line, local C8 decryption (`decodeQrEnvelope`), and `.m-cds` recommendation cards with `scaleHTML(..., 'clinician')` and verbatim CPIC lookup from `tables/cpic_recommendations.json`. Added `jsqr` (`^1.4.0`). Data contract unchanged.
+
+
+## C4 — Elderly-legible card text (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`, `passport/src/i18n/index.js`
+  - `passport/src/i18n.js`, `passport/src/render.js`, `passport/src/scan-render.js` (wired with user approval)
+  - `handoff/C4.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `node --test passport/test/*.test.mjs` (5/5 pass)
+  - `cd passport; npm.cmd run build` and `npm.cmd run preview` (port 5173)
+- **Notes:** Moved all patient, doctor-view, and scan-side UI strings into `passport/src/i18n/ar.json` and `en.json` with short, jargon-free Arabic sentences, no "safe"/tick on the patient side, and 5-stop Meyar Scale labels passed via `scaleHTML(gene, lang, getScaleLabels(gene, lang))`. Includes `_meta` header for native-speaker team review (`BUNYAN / Renad / Dua`). Data contract unchanged. No new dependency.
+## C8 — PIN-protected QR payload (22 Nov 2026)
+
+Builds on C2's WebCrypto envelope and C3's scanner; hardens both to the C8 spec.
+
+- **Files changed:** `passport/src/qr.js` (PIN exactly 6 digits, no default PIN, patient ID removed from the payload, strict v1 envelope validation, optional patient-chosen emergency line `e` bound as AES-GCM additional data, plaintext `v:0` decodes only with `allowPlaintext`, `holderView()`), `passport/src/pinguard.js` (new: PIN rules, Arabic-digit normalising, cosmetic wrong-PIN limiter), `passport/src/scan.js` + `scan-render.js` (holder line before the PIN, emergency line, 6-digit gate, lockout countdown, plaintext only with `?dev=1`, `#e=` fragment entry, no patient ID in result), `passport/src/main.js` + `render.js` + `i18n.js` (patient chooses PIN twice, emergency switch off by default, "Make a new card" reissue with the no-revocation note, brute-force honesty line), `passport/src/app.css` (holder view, PIN pad fills its column: keys were under the 48px target), `passport/test/envelope.test.mjs` (new, 11 tests), `passport/test/qr.test.mjs` (payload has no ID; plaintext needs dev flag), `passport/test/register-alias.mjs` + `alias-hooks.mjs` (resolve `@design`/`@tables` for node tests), `passport/package.json` (`npm test`), `passport/README.md`, `docs/qr-envelope.md`, `passport/dist/` (rebuilt).
+- **Run:** `cd passport && npm install && npm test` (16/16 pass) · `npm run dev` → `http://localhost:5173/?tab=doctor` (make a card) and `/scan.html` (scan, PIN).
+- **Honest limits (in UI, README and spec):** a 6-digit PIN can be brute-forced offline from a copied QR; this stops casual scanning only. The payload holds phenotypes, never the genome, and no identity. Old cards cannot be revoked. The rate limit is cosmetic.
+- No new dependency, no contract change, no table edited, no DANGEROUS PharmCAT flag, no model-generated dosing. Only sourced number: 600,000 iterations (OWASP row in `docs/sources.md`).
+- **Rebased on C4 (22 Nov 2026):** C8 strings moved into `passport/src/i18n/ar.json` + `en.json` (`copy.qr*`, `scan.holderLine`, `scan.holderNote`, `scan.emergencyLabel`, `scan.pinLocked`, `scan.patientNoId`; `scan.patientLabel` and `copy.qrPinLabel` reworded); `pinLocked` templated in `src/i18n/index.js`. **Fixes a crash on main:** C4 removed `AR_DIGITS` but the scanner PIN pad still used it (`ReferenceError` on the PIN step); the pad now uses `formatNum()`. Test hook loads bare JSON imports like Vite does.
+
+## B5 — Side-by-side alert comparison screen (22 Nov 2026)
+Files: `cds/lib/compare.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B5.md`.
+Notes: Serves `GET /compare` (`?lang=ar` for Arabic RTL) on the chart-paper ground (`data-theme="paper" data-voice="clinician"`, `.m-chartpaper`), built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`). Left pane shows a deliberately generic grey interruptive modal counter-example; right pane shows Meyar's `.m-cds` card from the showcase Prescriber section (`scaleHTML` + `combHTML`), captioned verbatim with the University of Florida (63% accepted, 20% followed) and UK PROGRESS (90% acted on) figures and no other numbers added. Verified at 1440 px and 375 px in English and Arabic with zero horizontal overflow.
+Run: `cd cds && npm start`, then open `http://localhost:3000/compare` (or `http://localhost:3000/compare?lang=ar`); test with `node --test cds/test/cds.test.js` (`32 pass, 0 fail`).
+Data contract unchanged. No new runtime dependency.

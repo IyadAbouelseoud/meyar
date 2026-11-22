@@ -259,6 +259,7 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
       fhirBase: 'http://127.0.0.1:1',
       fhirTimeoutMs: 150,
       contractsDir: tmpContractsDir,
+      alertsLogPath: path.join(tmpContractsDir, 'alerts.jsonl'),
     });
     cdsBaseUrl = await startServer(cdsServer);
   });
@@ -472,6 +473,7 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
     const hapiCds = createCdsServer({
       fhirBase: `${hapiUrl}/fhir`,
       contractsDir: tmpContractsDir,
+      alertsLogPath: path.join(tmpContractsDir, 'alerts.jsonl'),
     });
     const hapiCdsUrl = await startServer(hapiCds);
 
@@ -949,6 +951,7 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
     const hapiCds = createCdsServer({
       fhirBase: `${hapiUrl}/fhir`,
       contractsDir: tmpContractsDir,
+      alertsLogPath: path.join(tmpContractsDir, 'alerts.jsonl'),
     });
     const hapiCdsUrl = await startServer(hapiCds);
 
@@ -975,5 +978,194 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
       await stopServer(hapiCds);
       await stopServer(mockHapi);
     }
+  });
+});
+
+describe('Meyar alert log and counts dashboard (B4)', () => {
+  let tmpDir;
+  let logPath;
+  let server;
+  let baseUrl;
+
+  before(async () => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meyar-b4-test-'));
+    logPath = path.join(tmpDir, 'alerts.jsonl');
+    server = createCdsServer({
+      fhirBase: 'http://127.0.0.1:1',
+      fhirTimeoutMs: 100,
+      contractsDir: tmpDir,
+      alertsLogPath: logPath,
+    });
+    baseUrl = await startServer(server);
+  });
+
+  after(async () => {
+    await stopServer(server);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('firing three hooks writes three log lines to alerts.jsonl and /dashboard shows them', async () => {
+    // 1. demo-001 clopidogrel (CYP2C19 Poor Metabolizer)
+    const r1 = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'demo-001',
+          drugCode: '32968',
+          drugDisplay: 'Clopidogrel 75 MG Oral Tablet',
+          reasonText: 'Acute coronary syndrome',
+        })
+      ),
+    });
+    assert.equal(r1.status, 200);
+    const d1 = await r1.json();
+    assert.equal(d1.cards.length, 1);
+
+    // 2. demo-002 codeine (CYP2D6 phenoconversion Normal -> Poor because of paroxetine)
+    const r2 = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'demo-002',
+          drugCode: '2670',
+          drugDisplay: 'Codeine 30 MG Oral Tablet',
+        })
+      ),
+    });
+    assert.equal(r2.status, 200);
+    const d2 = await r2.json();
+    assert.equal(d2.cards.length, 1);
+
+    // 3. demo-006 codeine (CYP2D6 phenoconversion Ultrarapid -> Normal because of duloxetine)
+    const r3 = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'demo-006',
+          drugCode: '2670',
+          drugDisplay: 'Codeine 30 MG Oral Tablet',
+        })
+      ),
+    });
+    assert.equal(r3.status, 200);
+    const d3 = await r3.json();
+    assert.equal(d3.cards.length, 1);
+
+    // Verify 3 JSONL lines written
+    const lines = fs
+      .readFileSync(logPath, 'utf8')
+      .trim()
+      .split(/\r?\n/)
+      .map((l) => JSON.parse(l));
+    assert.equal(lines.length, 3);
+    for (const line of lines) {
+      assert.ok(line.time);
+      assert.ok(line.patientPseudonym);
+      assert.ok(line.drug);
+      assert.ok(line.gene);
+      assert.ok(line.phenotype);
+      assert.ok(line.cardId);
+      assert.equal(line.action, 'fired');
+      assert.equal(line.mock, true);
+    }
+
+    // Record prescriber responses via POST /alerts/action
+    const a1 = await fetch(`${baseUrl}/alerts/action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cardId: d1.cards[0].uuid,
+        patientPseudonym: 'demo-001',
+        drug: 'clopidogrel',
+        gene: 'CYP2C19',
+        phenotype: 'Poor Metabolizer',
+        action: 'accepted',
+      }),
+    });
+    assert.equal(a1.status, 201);
+
+    const a2 = await fetch(`${baseUrl}/alerts/action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cardId: d2.cards[0].uuid,
+        patientPseudonym: 'demo-002',
+        drug: 'codeine',
+        gene: 'CYP2D6',
+        phenotype: 'Poor Metabolizer',
+        action: 'pharmacist',
+      }),
+    });
+    assert.equal(a2.status, 201);
+
+    const bad = await fetch(`${baseUrl}/alerts/action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cardId: 'x', action: 'invalid-action' }),
+    });
+    assert.equal(bad.status, 400);
+
+    // Verify /dashboard/data counts by drug and by action
+    const dataResp = await fetch(`${baseUrl}/dashboard/data?range=today`);
+    assert.equal(dataResp.status, 200);
+    const summary = await dataResp.json();
+    assert.equal(summary.counts.fired, 3);
+    assert.equal(summary.counts.accepted, 1);
+    assert.equal(summary.counts.pharmacist, 1);
+    assert.equal(summary.counts.phenoconversion, 2);
+    assert.equal(summary.actedOn.value, 2);
+    assert.equal(summary.actedOn.max, 3);
+
+    const drugMap = new Map(summary.byDrug.map((d) => [d.drug, d.count]));
+    assert.equal(drugMap.get('codeine'), 2);
+    assert.equal(drugMap.get('clopidogrel'), 1);
+
+    // Verify GET /dashboard HTML uses design system and instrument theme
+    const htmlResp = await fetch(`${baseUrl}/dashboard`);
+    assert.equal(htmlResp.status, 200);
+    assert.match(htmlResp.headers.get('content-type') || '', /text\/html/);
+    const html = await htmlResp.text();
+    assert.match(html, /data-theme="instrument"/);
+    assert.match(html, /data-voice="clinician"/);
+    assert.match(html, /\/design\/fonts\/fonts\.css/);
+    assert.match(html, /\/design\/tokens\.css/);
+    assert.match(html, /\/design\/meyar\.css/);
+    assert.match(html, /\/design\/meyar\.js/);
+    assert.match(html, /\/design\/charts\.js/);
+    assert.match(html, /Not a national rate/i);
+    assert.match(html, /clopidogrel/i);
+    assert.match(html, /codeine/i);
+  });
+
+  it('B5: GET /compare renders both panes on chart-paper ground with exact UF and UK PROGRESS caption', async () => {
+    const resp = await fetch(`${baseUrl}/compare`);
+    assert.equal(resp.status, 200);
+    assert.match(resp.headers.get('content-type') || '', /text\/html/);
+    const html = await resp.text();
+    assert.match(html, /data-theme="paper"/);
+    assert.match(html, /data-voice="clinician"/);
+    assert.match(html, /class="m-body m-chartpaper"/);
+    assert.match(html, /\/design\/fonts\/fonts\.css/);
+    assert.match(html, /\/design\/tokens\.css/);
+    assert.match(html, /\/design\/meyar\.css/);
+    assert.match(html, /\/design\/meyar\.js/);
+    assert.match(html, /class="cmp-modal"/);
+    assert.match(html, /class="m-cds"/);
+    assert.match(html, /class="m-caption"/);
+    assert.ok(
+      html.includes(
+        'University of Florida interruptive alerts — 63% accepted but only 20% of recommendations followed. UK PROGRESS, non-interruptive and pharmacist-mediated — 90% acted on.'
+      ),
+      'Exact UF and UK PROGRESS caption must appear'
+    );
+
+    const arResp = await fetch(`${baseUrl}/compare?lang=ar`);
+    assert.equal(arResp.status, 200);
+    const arHtml = await arResp.text();
+    assert.match(arHtml, /lang="ar" dir="rtl"/);
+    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && arHtml.includes('90%'));
   });
 });

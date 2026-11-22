@@ -46,6 +46,7 @@ How to use: open the `meyar` repo in Antigravity, start a new agent session, pas
 | [F3](F3.md) | Chain-of-custody saliva kit software | F | 6 | A4 |
 | [F4](F4.md) | Hardware tier panel | F | 1.5 | F1 |
 | [F5](F5.md) | Cath-lab roadmap note | F | 0.5 | F1 |
+| [F6](F6.md) | End-to-end staircase demo (custody, alert, offline Passport scan, patient tracking) | F | 6 | F3, B2, B3, C1, C8 |
 | [REVIEW](REVIEW-opus-5.5.md) | Full review on Opus 5.5 | all | — | everything |
 
 Agentic warning: these prompts are for agents with real system access. Check the scope lock and stop conditions in each before pasting.
