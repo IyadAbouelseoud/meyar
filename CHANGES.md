@@ -109,3 +109,15 @@ Data contract unchanged. No new runtime dependency.
 - Added `docs/poster/build_f4.py`, `docs/poster/render_png.cjs`, `docs/poster/f4-tier-panel-poster.{svg,png}` (1600x2000, PNG @2x) and `docs/poster/f4-tier-panel-slide.{svg,png}` (1920x1080).
 - Added 7 rows to `docs/sources.md`; new `prompts/F6.md` (end-to-end staircase demo) listed in `prompts/README.md`.
 - Run: `python3 docs/poster/build_f4.py && node docs/poster/render_png.cjs` (uses the pre-installed Playwright).
+
+## C1 — Arabic-first patient screen (Medication Passport)
+- **Files added/changed:**
+  - `passport/package.json`, `passport/vite.config.js`, `passport/index.html`
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/lookup.js`, `passport/src/i18n.js`, `passport/src/app.css`
+  - `passport/public/demo/demo-001.contract.json`, `demo-002.contract.json`, `demo-006.contract.json`
+  - `handoff/C1.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs`
+  - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
+  - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.
+- **Notes:** Built strictly from `design/` (`@design` Vite alias); reads `tables/cpic_recommendations.json` and `tables/saudi_frequencies.json` read-only. Data contract unchanged. No new runtime dependency (`vite` devDependency only).
