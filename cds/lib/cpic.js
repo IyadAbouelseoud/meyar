@@ -75,13 +75,16 @@ function escapeRegExp(str) {
 }
 
 /**
- * Match a MedicationRequest (or medication text/codings) to a drug name in
- * `tables/cpic_recommendations.json`.
+ * Match a MedicationRequest (or medication text/codings) to every drug name in
+ * `tables/cpic_recommendations.json` it contains. A combination product
+ * (e.g. "acetaminophen and codeine") can name more than one table drug.
  */
-export function matchDrugInTable(medInfo, tables) {
+export function matchDrugsInTable(medInfo, tables) {
+  const hits = new Set();
+
   for (const code of medInfo.rxnormCodes || []) {
     const hit = tables.rxnormToDrug.get(String(code).trim());
-    if (hit) return hit;
+    if (hit) hits.add(hit);
   }
 
   const haystack = [medInfo.display, ...(medInfo.texts || [])]
@@ -89,15 +92,18 @@ export function matchDrugInTable(medInfo, tables) {
     .join(' ')
     .toLowerCase();
 
-  if (!haystack) return null;
-
-  for (const drug of tables.knownDrugs) {
-    const pattern = new RegExp(`\\b${escapeRegExp(drug)}\\b`, 'i');
-    if (pattern.test(haystack)) {
-      return drug;
+  if (haystack) {
+    for (const drug of tables.knownDrugs) {
+      const pattern = new RegExp(`\\b${escapeRegExp(drug)}\\b`, 'i');
+      if (pattern.test(haystack)) hits.add(drug);
     }
   }
-  return null;
+  return [...hits];
+}
+
+/** First table drug named by the order, or null (kept for callers that need one). */
+export function matchDrugInTable(medInfo, tables) {
+  return matchDrugsInTable(medInfo, tables)[0] ?? null;
 }
 
 /**
@@ -129,8 +135,10 @@ export function extractMedicationFromRequest(medReq) {
         texts.push(String(coding.display));
         if (!display) display = String(coding.display);
       }
+      // Only codes that declare the RxNorm system are treated as RxCUIs; a bare
+      // local code must never be mistaken for one.
       const sys = String(coding.system || '').toLowerCase();
-      if (coding.code && (sys.includes('rxnorm') || sys === '')) {
+      if (coding.code && sys.includes('rxnorm')) {
         rxnormCodes.push(String(coding.code));
       }
     }
@@ -188,30 +196,51 @@ export function extractDraftMedications(context) {
   return meds;
 }
 
+// Indication keywords for CPIC's indication-stratified clopidogrel rows
+// (Lee et al. 2022: CVI ACS/PCI, CVI non-ACS non-PCI, NVI). Neurovascular is
+// tested first because "carotid stenting" must not read as a coronary stent, and
+// non-ACS before ACS because "non-ACS" contains "ACS". A bare "ischemic" is NOT a
+// neurovascular keyword: "ischemic heart disease" is cardiovascular.
+const INDICATION_PATTERNS = [
+  [
+    'NVI',
+    /\b(stroke|tia|transient ischa?emic attack|neurovascular|cerebrovascular|carotid|intracranial|nvi)\b/,
+  ],
+  [
+    'CVI non-ACS non-PCI',
+    /\b(non[- ]acs|non[- ]pci|peripheral arter(y|ial) disease|pad|stable coronary|stable angina|stable cad)\b/,
+  ],
+  [
+    'CVI ACS PCI',
+    /\b(acs|acute coronary syndrome|pci|percutaneous coronary intervention|coronary stent|stemi|nstemi|myocardial infarction)\b/,
+  ],
+];
+
+// Row shown when a stratified drug's order states no indication: CPIC's
+// primary (ACS/PCI) table. The card marks it as assumed and lists the others.
+const DEFAULT_STRATIFIED_POPULATION = 'CVI ACS PCI';
+
 /**
- * Infer CPIC population when a drug has indication-stratified rows (e.g. clopidogrel).
+ * Infer the CPIC population from the order's reason text.
+ * Returns `{ population, inferred }`; `inferred` is false when the drug is
+ * indication-stratified and the order did not say which indication applies.
  */
-function choosePopulation(candidates, reasonText = '') {
-  const populations = [...new Set(candidates.map((r) => r.population))];
-  if (populations.length <= 1) return populations[0] || 'general';
+export function resolvePopulation(populations, reasonText = '') {
+  const unique = [...new Set(populations)];
+  if (unique.length <= 1) return { population: unique[0] || 'general', inferred: true };
 
   const r = String(reasonText || '').toLowerCase();
-  if (populations.includes('NVI') && /\b(stroke|tia|neurovascular|ischemic|carotid|nvi)\b/.test(r)) {
-    return 'NVI';
+  for (const [population, pattern] of INDICATION_PATTERNS) {
+    if (unique.includes(population) && pattern.test(r)) {
+      return { population, inferred: true };
+    }
   }
-  if (
-    populations.includes('CVI non-ACS non-PCI') &&
-    /\b(non-acs|non-pci|pad|peripheral arterial|stable coronary)\b/.test(r)
-  ) {
-    return 'CVI non-ACS non-PCI';
+
+  if (unique.includes(DEFAULT_STRATIFIED_POPULATION)) {
+    return { population: DEFAULT_STRATIFIED_POPULATION, inferred: false };
   }
-  if (populations.includes('CVI ACS PCI')) {
-    return 'CVI ACS PCI';
-  }
-  if (populations.includes('general')) {
-    return 'general';
-  }
-  return populations[0];
+  if (unique.includes('general')) return { population: 'general', inferred: true };
+  return { population: unique[0], inferred: false };
 }
 
 function normalizeScore(score) {
@@ -223,39 +252,18 @@ function normalizeScore(score) {
 }
 
 /**
- * Look up the matching CPIC recommendation row for (drug, gene, phenotype).
- * Returns null if no exact CPIC row exists. Never invents recommendations.
+ * Within one phenotype + population, pick the row for an activity score
+ * (e.g. CYP2D6 phenoconversion adjustedActivityScore). Rows in a pool share a
+ * phenotype, so a nearest-score pick never crosses a phenotype boundary.
  */
-export function lookupCpicRow(tables, { drug, gene, phenotype, activityScore = null, reasonText = '' }) {
-  if (!drug || !gene || !phenotype) return null;
+function pickByActivityScore(pool, activityScore) {
+  if (pool.length <= 1) return pool[0] ?? null;
 
-  const drugRows = tables.byDrug.get(String(drug).toLowerCase());
-  if (!drugRows || drugRows.length === 0) return null;
-
-  const targetGene = String(gene).toUpperCase();
-  const targetPheno = String(phenotype).trim().toLowerCase();
-
-  const matching = drugRows.filter(
-    (r) =>
-      String(r.gene).toUpperCase() === targetGene &&
-      String(r.phenotype).trim().toLowerCase() === targetPheno
-  );
-
-  if (matching.length === 0) return null;
-
-  const pop = choosePopulation(matching, reasonText);
-  const popRows = matching.filter((r) => r.population === pop);
-  const pool = popRows.length > 0 ? popRows : matching;
-
-  if (pool.length === 1) return pool[0];
-
-  // Match activity score when available (e.g., CYP2D6 phenoconversion adjustedActivityScore).
   const targetScore = normalizeScore(activityScore);
   if (targetScore !== null) {
     const exactScore = pool.find((r) => normalizeScore(r.activityScore) === targetScore);
     if (exactScore) return exactScore;
 
-    // Nearest numeric score within the same phenotype bucket (e.g. >=3.0 mapped to 3.0).
     let best = null;
     let bestDiff = Infinity;
     for (const r of pool) {
@@ -269,6 +277,73 @@ export function lookupCpicRow(tables, { drug, gene, phenotype, activityScore = n
     }
     if (best) return best;
   }
-
   return pool[0];
+}
+
+function rowsFor(tables, drug, gene, phenotype) {
+  const drugRows = tables.byDrug.get(String(drug).toLowerCase()) || [];
+  const targetGene = String(gene).toUpperCase();
+  const targetPheno = String(phenotype).trim().toLowerCase();
+  return drugRows.filter(
+    (r) =>
+      String(r.gene).toUpperCase() === targetGene &&
+      String(r.phenotype).trim().toLowerCase() === targetPheno
+  );
+}
+
+/**
+ * Look up the CPIC row for (drug, gene, phenotype) and the context the card needs.
+ * Returns null if no CPIC row exists. Never invents recommendations.
+ *
+ * `{ row, indicationInferred, otherPopulationRows, normalRecommendation }`:
+ * - `indicationInferred` false: the drug is indication-stratified and the order
+ *   did not state the indication, so `row` is the default population's row.
+ * - `otherPopulationRows`: this phenotype's row in every other population, so an
+ *   assumed indication is never shown without the alternatives' wording.
+ * - `normalRecommendation`: the Normal-phenotype row's text for the same drug,
+ *   gene and population (used to tell "same as normal" from "act on this").
+ */
+export function lookupCpic(tables, { drug, gene, phenotype, activityScore = null, reasonText = '' }) {
+  if (!drug || !gene || !phenotype) return null;
+
+  const matching = rowsFor(tables, drug, gene, phenotype);
+  if (matching.length === 0) return null;
+
+  const { population, inferred } = resolvePopulation(
+    matching.map((r) => r.population),
+    reasonText
+  );
+  const popRows = matching.filter((r) => r.population === population);
+  const row = pickByActivityScore(popRows.length > 0 ? popRows : matching, activityScore);
+
+  const otherPopulations = [...new Set(matching.map((r) => r.population))].filter(
+    (p) => p !== row.population
+  );
+  const otherPopulationRows = otherPopulations.map((p) =>
+    pickByActivityScore(
+      matching.filter((r) => r.population === p),
+      activityScore
+    )
+  );
+
+  const normalRows = (tables.byDrug.get(String(drug).toLowerCase()) || []).filter(
+    (r) =>
+      String(r.gene).toUpperCase() === String(gene).toUpperCase() &&
+      r.population === row.population &&
+      /^normal (metabolizer|function)$/i.test(String(r.phenotype).trim())
+  );
+
+  return {
+    row,
+    indicationInferred: inferred,
+    otherPopulationRows,
+    normalRecommendation: normalRows.length > 0 ? normalRows[0].recommendation : null,
+  };
+}
+
+/**
+ * Back-compatible single-row lookup.
+ */
+export function lookupCpicRow(tables, query) {
+  return lookupCpic(tables, query)?.row ?? null;
 }

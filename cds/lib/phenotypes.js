@@ -12,6 +12,11 @@ const LOINC_GERMLINE_CODE = 'LA6683-2';
 
 const SAFE_PATIENT_ID = /^[A-Za-z0-9._-]+$/;
 
+// FHIR search for Meyar genotype Observations (LOINC 84413-4 "Genotype display
+// name", as written by engine/load_fhir.py). Filtering by code keeps unrelated
+// Observations (vitals, labs) from crowding PGx results out of the first page.
+export const PGX_OBSERVATION_QUERY = 'code=http://loinc.org%7C84413-4&_count=100';
+
 export class NonGermlineSampleError extends Error {
   constructor(message) {
     super(message);
@@ -30,6 +35,7 @@ export function resolveContractsDir(overrideDir) {
 export function resolveFixturesDir(overrideDir) {
   if (overrideDir) return overrideDir;
   if (process.env.FIXTURES_DIR) return process.env.FIXTURES_DIR;
+  if (fs.existsSync('/data/fixtures')) return '/data/fixtures';
   return path.resolve(import.meta.dirname, '..', '..', 'docs', 'fixtures');
 }
 
@@ -136,6 +142,10 @@ export function parseFhirObservation(observation, svGenes = new Map()) {
   const svRow = svGenes.get(geneUpper);
 
   // A8 structural-variation safety: never treat an unassessed SV gene as callable from VCF.
+  // PharmCAT 3.4.0 does not call CYP2D6 from a VCF (engine/run_pharmcat.sh passes no
+  // research flag), so an SV-gene phenotype in the FHIR store can only have come from
+  // an outside-call file (-po). When a contract exists, mergeWithContract() lets the
+  // A8 contract record win, including its named (mock) caller.
   if (
     svRow &&
     (!rawPhenotype ||
@@ -301,7 +311,7 @@ async function fetchFromHapi(patientId, { fhirBase, fhirTimeoutMs = 400, fetchIm
   const base = resolveFhirBase(fhirBase);
   if (!base || isForbiddenPublicFhir(base)) return null;
 
-  const url = `${base}/Observation?subject=Patient/${encodeURIComponent(patientId)}&_count=100`;
+  const url = `${base}/Observation?subject=Patient/${encodeURIComponent(patientId)}&${PGX_OBSERVATION_QUERY}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), fhirTimeoutMs);
 
