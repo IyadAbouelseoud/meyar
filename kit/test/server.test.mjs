@@ -10,7 +10,11 @@ import { Ledger } from '../lib/store.js';
 import { verifyChain } from '../lib/chain.js';
 import { fhirAvailable, readChain, deleteKit } from '../lib/fhir-client.js';
 import { REPO_ROOT } from '../lib/handoff.js';
-import { DEMO_KIT_ID } from '../lib/demo.js';
+import { DEMO_KIT_ID as DEMO } from '../lib/demo.js';
+
+// Tests use their own kit ID so they never touch the demo kit MYR-DEMO-0001 in HAPI.
+const DEMO_KIT_ID = 'MYR-TEST-0001';
+const KITS = { [DEMO_KIT_ID]: { kitId: DEMO_KIT_ID, patientId: 'demo-001' } };
 
 function tmp(prefix) { return fs.mkdtempSync(path.join(os.tmpdir(), prefix)); }
 
@@ -37,15 +41,15 @@ async function scanAll(api) {
 }
 
 test('scanned code: tube Code 128 text and mailer QR text both resolve to the kit ID', () => {
-  assert.equal(parseScannedCode('MYR-DEMO-0001'), 'MYR-DEMO-0001');
-  assert.equal(parseScannedCode(' MEYAR-KIT:MYR-DEMO-0001\n'), 'MYR-DEMO-0001');
+  assert.equal(parseScannedCode(DEMO), DEMO);
+  assert.equal(parseScannedCode(` MEYAR-KIT:${DEMO}\n`), DEMO);
 });
 
 test('API: six scans, verify, tamper fails verify, restore passes, hand-off written (ledger only)', async (t) => {
   const handoff = tmp('meyar-handoff-');
   process.env.ENGINE_IN_DIR = handoff;
   t.after(() => { delete process.env.ENGINE_IN_DIR; });
-  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false });
+  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false, kits: KITS });
   t.after(() => server.close());
 
   const wrong = await api('POST', `/api/kits/${DEMO_KIT_ID}/scan`, { code: 'MYR-DEMO-9999' });
@@ -78,7 +82,7 @@ test('API: six scans, verify, tamper fails verify, restore passes, hand-off writ
 });
 
 test('static: timeline page and design files are served; no path escape', async (t) => {
-  const { server, base } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false });
+  const { server, base } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false, kits: KITS });
   t.after(() => server.close());
   assert.equal((await fetch(base + '/')).status, 200);
   assert.equal((await fetch(base + '/design/tokens.css')).status, 200);
@@ -90,7 +94,7 @@ test('engine accepts the hand-off: engine/origin_guard.py require_germline_origi
   const handoff = tmp('meyar-handoff-');
   process.env.ENGINE_IN_DIR = handoff;
   t.after(() => { delete process.env.ENGINE_IN_DIR; });
-  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false });
+  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: false, kits: KITS });
   t.after(() => server.close());
   await scanAll(api);
   const code = `import sys; sys.path.insert(0, r'${path.join(REPO_ROOT, 'engine')}'); from pathlib import Path; import origin_guard as g; print(g.require_germline_origin('demo-001', Path(r'${handoff}')))`;
@@ -101,12 +105,12 @@ test('engine accepts the hand-off: engine/origin_guard.py require_germline_origi
   assert.match(r.stdout.trim(), /germline/);
 });
 
-test('HAPI integration: six Provenance on Specimen/MYR-DEMO-0001, verify from FHIR, FHIR edit caught', async (t) => {
+test('HAPI integration: six Provenance on the kit Specimen, verify from FHIR, FHIR edit caught', async (t) => {
   if (!(await fhirAvailable())) { t.skip('NOT A FULL PASS: local HAPI is not running (docker compose up -d hapi).'); return; }
   process.env.ENGINE_IN_DIR = tmp('meyar-handoff-');
   t.after(() => { delete process.env.ENGINE_IN_DIR; });
   await deleteKit(DEMO_KIT_ID);
-  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: true });
+  const { server, api } = await start({ ledger: new Ledger(tmp('meyar-ledger-')), useFhir: true, kits: KITS });
   t.after(async () => { server.close(); await deleteKit(DEMO_KIT_ID); });
 
   await scanAll(api);

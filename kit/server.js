@@ -30,7 +30,7 @@ const DESIGN_DIR = path.join(REPO_ROOT, 'design');
 const MAX_BODY_BYTES = 64 * 1024; // engineering limit, not a clinical number
 
 // Registered kits. The demo has one; a real deployment would issue these from a kit register.
-const KITS = { [DEMO_KIT_ID]: { kitId: DEMO_KIT_ID, patientId: DEMO_PATIENT_ID } };
+const DEMO_KITS = { [DEMO_KIT_ID]: { kitId: DEMO_KIT_ID, patientId: DEMO_PATIENT_ID } };
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
@@ -45,7 +45,8 @@ export function parseScannedCode(code) {
   return m ? m[1] : s;
 }
 
-export function createKitServer({ ledger = new Ledger(), useFhir = true } = {}) {
+export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = DEMO_KITS } = {}) {
+  const KITS = kits;
   const backups = new Map();
 
   async function fhirUp() { return useFhir && fhirAvailable(); }
@@ -71,7 +72,7 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true } = {}) 
       nextDefaults,
       fhir: { available: fhir, base: fhir ? fhirBase() : null },
       tampered: backups.has(kit.kitId),
-      handoff: fs.existsSync(manifest) ? JSON.parse(fs.readFileSync(manifest, 'utf8')) : null,
+      handoff: readHandoff(manifest),
       mock: true,
     };
   }
@@ -171,6 +172,12 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true } = {}) 
   });
 }
 
+function readHandoff(manifest) {
+  if (!fs.existsSync(manifest)) return null;
+  const h = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  return { ...h, vcfPresent: fs.existsSync(path.resolve(REPO_ROOT, h.vcfPath)) }; // checked now, not at hand-off time
+}
+
 function httpError(status, message) { return Object.assign(new Error(message), { status }); }
 
 function sendJSON(res, status, body) {
@@ -195,7 +202,15 @@ function readBody(req) {
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const port = Number(process.env.KIT_PORT) || 5174;
-  createKitServer().listen(port, () => {
+  const ledger = new Ledger();
+  // Bring HAPI in line with the local ledger on start (HAPI may have been restarted or cleared).
+  if (await fhirAvailable()) {
+    for (const kit of Object.values(DEMO_KITS)) {
+      const chain = ledger.read(kit.kitId);
+      if (chain.length) await syncChain(chain, kit).catch((e) => console.error(e.message));
+    }
+  }
+  createKitServer({ ledger }).listen(port, () => {
     console.log(`Meyar kit (F3, research prototype) on http://localhost:${port}  FHIR ${fhirBase()}  hand-off ${handoffDir()}`);
   });
 }

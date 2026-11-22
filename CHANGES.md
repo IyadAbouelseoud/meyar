@@ -98,3 +98,9 @@ Review fixes (`prompts/REVIEW-opus-5.5.md` applied to B2, 22 Nov 2026), files `c
 - 26/26 tests pass (Node 22.23.3 in the compose image; Node 24 on host).
 - Request for a `/data/fixtures` compose mount logged in `docs/requests.md`.
 Data contract unchanged. No new runtime dependency.
+
+## F3 — Chain-of-custody saliva kit software (22 Nov 2026)
+Files: `kit/` (`server.js`, `package.json`, `.gitignore`, `README.md`, `lib/chain.js`, `lib/events.js`, `lib/demo.js`, `lib/fhir.js`, `lib/fhir-client.js`, `lib/store.js`, `lib/handoff.js`, `web/index.html`, `web/app.js`, `web/kit.css`, `web/barcode128.js`, `web/qr.js`, `tools/export_codes.mjs`, `tools/decode_check.py`, `test/*.test.mjs`, `docs/screenshots/*.png`), `handoff/F3.md`.
+Notes: Kit `MYR-DEMO-0001` goes through six scan events (issued, collected, sealed, shipped, received, genotyped). Each event is stored as a FHIR Provenance on the kit's Specimen in the local HAPI. Every event is SHA-256 hash-chained to the one before. Verify reads the chain back from FHIR and flags the first broken link. The tube label (Code 128) and the mailer QR are drawn in the browser; both decode correctly with zbar and OpenCV. On "genotyped", the kit writes the germline `origin.json` (accepted by `engine/origin_guard.py`) and the VCF path. The timeline screen is Arabic first and built from `design/`. New port 5174 for the kit; pinned ports are untouched. No new dependency. Tamper-evident, not tamper-proof (said on screen). No specimen stability numbers.
+Run: `docker compose up -d hapi`, then `cd kit && npm start` (http://localhost:5174). Tests: `cd kit && npm test`.
+Data contract unchanged.
