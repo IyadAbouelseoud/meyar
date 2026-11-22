@@ -192,3 +192,8 @@ Files: `cds/lib/compare.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/READM
 Notes: Serves `GET /compare` (`?lang=ar` for Arabic RTL) on the chart-paper ground (`data-theme="paper" data-voice="clinician"`, `.m-chartpaper`), built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`). Left pane shows a deliberately generic grey interruptive modal counter-example; right pane shows Meyar's `.m-cds` card from the showcase Prescriber section (`scaleHTML` + `combHTML`), captioned verbatim with the University of Florida (63% accepted, 20% followed) and UK PROGRESS (90% acted on) figures and no other numbers added. Verified at 1440 px and 375 px in English and Arabic with zero horizontal overflow.
 Run: `cd cds && npm start`, then open `http://localhost:3000/compare` (or `http://localhost:3000/compare?lang=ar`); test with `node --test cds/test/cds.test.js` (`32 pass, 0 fail`).
 Data contract unchanged. No new runtime dependency.
+
+## F5 — Cath-lab roadmap note (22 Nov 2026)
+- **Files:** `docs/roadmap-cathlab.md` (new), `handoff/F5.md`.
+- **Run:** open `docs/roadmap-cathlab.md` (renders the F1 T3 concept image from `hardware/blender/renders/`).
+- **Notes:** one paragraph on T3: feasibility from K220026 and RAPID GENE (Roberts, Lancet 2012), TAILOR-PCI (JAMA 2020) primary endpoint not significant, no outcome benefit claimed, label "Concept render — not built". No new number, no dependency, no contract change.
