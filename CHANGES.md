@@ -117,3 +117,15 @@ Data contract unchanged. No new runtime dependency.
   - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
   - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.
 - **Notes:** Built strictly from `design/` (`@design` Vite alias); reads `tables/cpic_recommendations.json` and `tables/saudi_frequencies.json` read-only. Data contract unchanged. No new runtime dependency (`vite` devDependency only).
+
+## C2 — Offline QR encoder (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/qr.js`, `passport/test/qr.test.mjs`
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/i18n.js`, `passport/src/app.css`
+  - `passport/package.json`, `passport/package-lock.json`, `passport/README.md`
+  - `handoff/C2.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `cd passport && node --test test/qr.test.mjs` (3/3 pass)
+  - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run dev` (port 5173; append `?tab=doctor&dev=1` to inspect dev byte-size metrics and plaintext toggle)
+- **Notes:** Encodes a compact phenotype + CPIC recommendation-key payload (`deflate-raw` + `base64url`, Error Correction `M`, SVG `shape-rendering="crispEdges"`, `#14201B` on `#FFFFFF`, 4-module quiet zone) wrapped in the C8 WebCrypto envelope (`PBKDF2-SHA256` 600,000 iterations + `AES-GCM-256`) by default. Added `qrcode` dependency (`^1.5.4`). Data contract unchanged.

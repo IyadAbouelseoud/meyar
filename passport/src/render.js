@@ -211,7 +211,55 @@ function renderMedsView(contract, lang, t) {
   `;
 }
 
-function renderDoctorView(contract, lang, t) {
+function renderQrCard(state, t) {
+  const qr = state.qrResult;
+  const isPlain = Boolean(state.devMode && state.qrPlaintext);
+  return `
+    <section class="m-qr-card" aria-labelledby="qr-heading">
+      <div class="m-qr-card__head">
+        <div>
+          <h3 class="m-qr-card__title" id="qr-heading">${esc(t.qrTitle)}</h3>
+          <p class="m-sec-sub">${esc(t.qrSub)}</p>
+        </div>
+        <span class="m-status m-status--info">
+          <svg aria-hidden="true"><use href="#i-lock"/></svg>
+          <span>${esc(isPlain ? t.qrPlainBadge : t.qrEncryptedBadge)}</span>
+        </span>
+      </div>
+      <div class="m-qr-box" data-testid="qr-svg-box">
+        ${qr ? qr.svg : `<p class="m-sec-sub">${esc(t.qrGenerating)}</p>`}
+      </div>
+      <div class="m-qr-controls">
+        <div class="m-qr-pin-field">
+          <label for="qr-pin-input">${esc(t.qrPinLabel)}</label>
+          <input id="qr-pin-input" class="m-qr-pin-input m-data" type="text" inputmode="numeric" maxlength="6" value="${esc(state.qrPin)}" data-action="qr-pin">
+        </div>
+        <button type="button" class="m-btn" data-action="decode-qr" ${qr ? '' : 'disabled'}>
+          <svg aria-hidden="true"><use href="#i-qr"/></svg>
+          <span>${esc(t.qrVerifyBtn)}</span>
+        </button>
+        ${state.devMode ? `
+          <button type="button" class="m-btn m-btn--secondary" data-action="toggle-plaintext" aria-pressed="${state.qrPlaintext}">
+            ${esc(t.qrPlaintextToggle)}
+          </button>
+        ` : ''}
+      </div>
+      ${state.devMode && qr ? `
+        <p class="m-data m-qr-honesty" data-testid="qr-metrics">raw ${qr.rawBytes} B → deflate ${qr.compressedBytes} B → envelope ${qr.envelopeBytes} B · ${qr.modules}×${qr.modules} · EC ${qr.errorCorrectionLevel}</p>
+      ` : ''}
+      <p class="m-qr-honesty">${esc(t.qrPinHonesty)}</p>
+      ${state.qrDecodeError ? `<div class="m-status m-status--stop"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(t.qrDecodedFail)}</span></div>` : ''}
+      ${state.qrDecoded ? `
+        <div class="m-qr-decoded" data-testid="qr-decoded-output">
+          <strong>${esc(t.qrDecodedOk)}</strong>
+          <pre class="m-data">${esc(JSON.stringify(state.qrDecoded, null, 2))}</pre>
+        </div>
+      ` : ''}
+    </section>
+  `;
+}
+
+function renderDoctorView(contract, lang, t, state) {
   const genes = contract.genes || [];
   const meds = contract.currentMedications || [];
   return `
@@ -220,6 +268,7 @@ function renderDoctorView(contract, lang, t) {
         <h2 class="m-sec-title" id="doc-heading">${esc(t.doctorTitle)}</h2>
         <p class="m-sec-sub">${esc(t.doctorSub)}</p>
       </div>
+      ${renderQrCard(state, t)}
       <div class="m-doctor-sheet m-chartpaper">
         <div class="m-doctor-meta">
           <div class="m-doctor-meta__item">
@@ -308,7 +357,7 @@ export function renderApp(root, state) {
   } else if (state.tab === 'meds') {
     body = renderMedsView(state.contract, state.lang, t);
   } else if (state.tab === 'doctor') {
-    body = renderDoctorView(state.contract, state.lang, t);
+    body = renderDoctorView(state.contract, state.lang, t, state);
   } else {
     body = renderGenesView(state.contract, state.lang, t);
   }

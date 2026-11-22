@@ -276,6 +276,103 @@ body {
   font-size: var(--m-size-sm);
 }
 
+.m-qr-card {
+  background: var(--m-surface);
+  border: 1px solid var(--m-line);
+  border-radius: var(--m-radius-card);
+  padding: var(--m-space-5);
+  display: grid;
+  gap: var(--m-space-4);
+}
+
+.m-qr-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--m-space-2);
+}
+
+.m-qr-card__title {
+  font-family: var(--m-font-display);
+  font-weight: 700;
+  font-size: var(--m-size-lg);
+  margin: 0;
+  color: var(--m-text);
+}
+
+.m-qr-box {
+  justify-self: center;
+  inline-size: min(260px, 100%);
+  padding: var(--m-space-3);
+  background: var(--m-surface);
+  border: 1px solid var(--m-line);
+  border-radius: var(--m-radius-control);
+}
+
+.m-qr-box svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.m-qr-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--m-space-3);
+}
+
+.m-qr-pin-field {
+  display: grid;
+  gap: var(--m-space-1);
+}
+
+.m-qr-pin-field label {
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
+}
+
+.m-qr-pin-input {
+  inline-size: 132px;
+  min-block-size: var(--m-target);
+  padding-inline: var(--m-space-3);
+  border: 1.5px solid var(--m-line-strong);
+  border-radius: var(--m-radius-control);
+  background: var(--m-surface);
+  color: var(--m-text);
+  font-family: var(--m-font-data);
+  font-size: var(--m-size-md);
+  direction: ltr;
+  text-align: center;
+}
+
+.m-qr-honesty {
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
+  margin: 0;
+}
+
+.m-qr-decoded {
+  padding: var(--m-space-3);
+  background: var(--m-sunken);
+  border: 1px solid var(--m-line);
+  border-radius: var(--m-radius-control);
+  font-size: var(--m-size-xs);
+  display: grid;
+  gap: var(--m-space-2);
+}
+
+.m-qr-decoded pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--m-font-data);
+  font-size: var(--m-size-xs);
+  direction: ltr;
+  text-align: left;
+}
+
 @media (min-width: 760px) {
   .m-doctor-row__grid {
     grid-template-columns: repeat(3, 1fr);
