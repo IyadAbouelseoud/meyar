@@ -1,5 +1,5 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
-import { formatNum } from './i18n.js';
+import { formatNum, SCAN_COPY } from './i18n.js';
 
 function esc(str) {
   return String(str ?? '')
@@ -8,105 +8,6 @@ function esc(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
-
-const AR_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-
-const SCAN_COPY = {
-  ar: {
-    proto: 'نموذج بحثي — ليس للاستخدام السريري',
-    demo: 'بيانات تجريبية',
-    langToggle: 'English',
-    elderOn: 'خط مكبّر: يعمل',
-    elderOff: 'خط مكبّر',
-    backToPassport: 'جواز المريض',
-    title: 'قارئ بطاقة مِعيار (دون إنترنت)',
-    subtitle: 'امسح رمز الاستجابة السريعة من بطاقة المريض، ثم أدخل الرقم السري لفك التشفير محلياً.',
-    startCam: 'بدء المسح بالكاميرا',
-    stopCam: 'إيقاف الكاميرا',
-    uploadImg: 'مسح صورة رمز QR',
-    pasteSummary: 'إدخال نص الرمز يدوياً (للاختبار)',
-    pasteLabel: 'نص مغلّف QR (JSON)',
-    pasteBtn: 'متابعة',
-    camReady: 'وجّه الكاميرا نحو رمز QR الخاص بالمريض.',
-    camError: 'تعذّر فتح الكاميرا — يمكنك مسح صورة أو لصق نص الرمز أدناه.',
-    qrInvalid: 'الرمز المقروء ليس بصيغة مِعيار (JSON).',
-    pinTitle: 'أدخل الرقم السري للمريض',
-    pinSub: 'تتم عملية فك التشفير محلياً على هذا الجهاز دون أي اتصال بالشبكة.',
-    pinHonesty: 'يمنع الرقم السري المسح العابر فقط؛ يمكن تجربة التخمين إذا نُسخ الرمز.',
-    decryptBtn: 'فك التشفير وعرض التوصية',
-    decryptBusy: 'جارٍ فك التشفير محلياً…',
-    pinError: 'تعذّر فك التشفير — تحقق من الرقم السري وحاول مرة أخرى.',
-    rescanBtn: 'مسح بطاقة أخرى',
-    patientLabel: 'المعرّف التجريبي',
-    originLabel: 'نوع العيّنة',
-    medsLabel: 'الأدوية الحالية',
-    noMeds: 'لا توجد أدوية مسجلة',
-    genotype: 'النمط الجيني',
-    genetic: 'النتيجة الجينية',
-    actingLike: 'الحالة الفعلية (A7)',
-    noShift: 'لا يوجد تحوّل دوائي',
-    betterMatch: 'أنسب لجينات هذا المريض:',
-    sendPharm: 'إرسال للصيدلي',
-    advisesFoot: 'ينصح ولا يصف الدواء',
-    cpicLink: 'دليل CPIC',
-    outsideCallFoot: 'نتيجة محاكاة خارجية (تجريبية) لتقدير عدد النسخ',
-    notAssessedFoot: 'عدد النسخ غير مفحوص — لا توجد نتيجة معروضة',
-    covAssayed: (a, t, u) => {
-      const base = `فحصنا <strong>${formatNum(a, 'ar')} من ${formatNum(t, 'ar')}</strong> موضعاً تعريفياً.`;
-      if (!u || u.length === 0) return base;
-      return `${base} لم نفحص ${u.map((x) => `<span class="m-data">${esc(x)}</span>`).join('، ')}.`;
-    },
-    clearKey: 'مسح',
-    backKey: 'حذف',
-  },
-  en: {
-    proto: 'Research prototype — not for clinical use',
-    demo: 'Demo data',
-    langToggle: 'العربية',
-    elderOn: 'Elder mode: On',
-    elderOff: 'Elder mode',
-    backToPassport: 'Patient passport',
-    title: 'Meyar scan-side reader (offline)',
-    subtitle: 'Scan the patient QR card with the camera, then enter their PIN to decrypt locally.',
-    startCam: 'Start camera scan',
-    stopCam: 'Stop camera',
-    uploadImg: 'Scan QR from image',
-    pasteSummary: 'Paste QR payload (offline test)',
-    pasteLabel: 'QR envelope JSON',
-    pasteBtn: 'Load QR payload',
-    camReady: 'Point the camera at the patient QR card.',
-    camError: 'Camera unavailable — scan an image file or paste the QR payload below.',
-    qrInvalid: 'Scanned text is not a valid Meyar QR envelope.',
-    pinTitle: 'Enter patient PIN',
-    pinSub: 'Decryption runs locally on this device with zero network calls.',
-    pinHonesty: 'The PIN stops casual scanning only; a copied QR can be brute-forced offline.',
-    decryptBtn: 'Decrypt card',
-    decryptBusy: 'Decrypting locally…',
-    pinError: 'Could not decrypt with this PIN — ask the patient and try again.',
-    rescanBtn: 'Scan another card',
-    patientLabel: 'Demo ID',
-    originLabel: 'Sample origin',
-    medsLabel: 'Current medicines',
-    noMeds: 'None recorded',
-    genotype: 'Genotype',
-    genetic: 'Genetic',
-    actingLike: 'Acting like',
-    noShift: 'no shift',
-    betterMatch: "Better matched for this patient's genes:",
-    sendPharm: 'Send to pharmacist',
-    advisesFoot: 'Advises, does not prescribe',
-    cpicLink: 'CPIC guideline',
-    outsideCallFoot: 'CYP2D6 from outside call (mock caller)',
-    notAssessedFoot: 'Copy number not assessed — no result reported',
-    covAssayed: (a, t, u) => {
-      const base = `Assay covered <strong>${a} of ${t}</strong> defining positions.`;
-      if (!u || u.length === 0) return base;
-      return `${base} Did not test ${u.map((x) => `<span class="m-data">${esc(x)}</span>`).join(', ')}.`;
-    },
-    clearKey: 'Clear',
-    backKey: 'Del',
-  },
-};
 
 function renderTopbar(state, t) {
   return `

@@ -1,5 +1,5 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
-import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum } from './i18n.js';
+import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
 import { getDrugsForGene, getTierInfo, isMedCausingShift } from './lookup.js';
 
 function esc(str) {
@@ -87,7 +87,7 @@ function renderGeneCard(gene, index, lang, t) {
           ${tierBadge}
         </div>
         <p class="m-gene__plain" id="${headingId}">${esc(t.notAssessedTitle)}</p>
-        ${scaleHTML(gene, lang)}
+        ${scaleHTML(gene, lang, getScaleLabels(gene, lang))}
         <p class="m-coverage__line">${esc(t.notAssessedBody)}</p>
       </article>
     `;

@@ -152,3 +152,15 @@ Data contract unchanged. No new runtime dependency.
   - `cd passport && node --test test/qr.test.mjs test/scan.test.mjs` (5/5 pass)
   - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run preview` (open `http://localhost:5173/scan.html`; works offline via `/sw.js`)
 - **Notes:** Clinician-voice chart-paper scanner (`data-theme="paper" data-voice="clinician"`) using `getUserMedia` + `BarcodeDetector` / `jsqr` fallback (plus image upload & test paste), `.m-pin` + `.m-pin-dots` keypad with both digit forms and honesty line, local C8 decryption (`decodeQrEnvelope`), and `.m-cds` recommendation cards with `scaleHTML(..., 'clinician')` and verbatim CPIC lookup from `tables/cpic_recommendations.json`. Added `jsqr` (`^1.4.0`). Data contract unchanged.
+
+
+## C4 — Elderly-legible card text (22 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`, `passport/src/i18n/index.js`
+  - `passport/src/i18n.js`, `passport/src/render.js`, `passport/src/scan-render.js` (wired with user approval)
+  - `handoff/C4.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `node --test passport/test/*.test.mjs` (5/5 pass)
+  - `cd passport; npm.cmd run build` and `npm.cmd run preview` (port 5173)
+- **Notes:** Moved all patient, doctor-view, and scan-side UI strings into `passport/src/i18n/ar.json` and `en.json` with short, jargon-free Arabic sentences, no "safe"/tick on the patient side, and 5-stop Meyar Scale labels passed via `scaleHTML(gene, lang, getScaleLabels(gene, lang))`. Includes `_meta` header for native-speaker team review (`BUNYAN / Renad / Dua`). Data contract unchanged. No new dependency.
