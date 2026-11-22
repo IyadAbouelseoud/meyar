@@ -83,3 +83,18 @@ Notes: Closes findings 3–5 of `docs/REVIEW.md` (findings 1–2 were fixed in P
 - (5, A1/tests) `gen_vcf.py` no longer overwrites a committed `*.outside.tsv` (A8-owned) and its seed matches A8's header (`v0.1-demo`). `engine/run_pipeline.sh` runs the whole chain in order. Tests that need gitignored outputs report SKIPPED under a "NOT A FULL PASS" banner instead of a bare `FileNotFoundError`.
 Run: `bash engine/run_pipeline.sh && python -m pytest engine/tests`.
 Data contract unchanged. No new runtime dependency.
+
+## B2 — CDS Hooks order-sign service (22 Nov 2026)
+Files: `cds/server.js`, `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/test/cds.test.js`, `cds/package.json`, `cds/README.md`, `handoff/B2.md`.
+Notes: Zero-dependency Node 22 LTS CDS Hooks 2.0.1 service on port `3000` exposing `GET /cds-services` (`meyar-pgx` on `order-sign`, `meyar-pgx-select` on `order-select`; rejects deprecated `medication-prescribe`), `POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`, `GET /health`, `OPTIONS` CORS for `sandbox.cds-hooks.org` / local `8081`, and read-only `/design/*`. Resolves phenotypes in priority order: CDS Hooks `prefetch.pgxObservations` → local HAPI FHIR (`FHIR_BASE`, bounded timeout, never public `hapi.fhir.org`) → `engine/data/out/*.contract.json` (and `docs/fixtures/*.contract.json` fallback), enforcing A6 germline-only guard, A8 SV-gene not-assessed safety, A7 phenoconversion dual-phenotype display, and strict verbatim CPIC lookup from `tables/cpic_recommendations.json`.
+Run: `docker compose up -d --build hapi cds` (or `cd cds && node server.js`), test with `cd cds && node --test test/*.test.js`, verify `curl http://localhost:3000/cds-services` and `POST http://localhost:3000/cds-services/meyar-pgx` (`demo-001` clopidogrel returns a `CYP2C19 Poor Metabolizer` card via HAPI in about 0.1 s, and via contract fallback with HAPI stopped in about 0.42 s).
+Review fixes (`prompts/REVIEW-opus-5.5.md` applied to B2, 22 Nov 2026), files `cds/lib/cards.js`, `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `docs/requests.md`, `handoff/B2.md`:
+- Clopidogrel with no indication on the order no longer silently uses the ACS/PCI row and offers prasugrel (contraindicated after stroke/TIA, per the table's own CPIC comment). The row is marked assumed, the other indications' rows are listed verbatim, and only alternatives valid under every indication are offered. "Ischemic heart disease" no longer maps to the neurovascular row.
+- Cards with suggestions now carry `selectionBehavior: "at-most-one"` (CDS Hooks 2.0 MUST). Suggestions carry `subject`. Drug-class alternatives are text only, not fake `create` orders.
+- `indicator` is derived from the table (CYP2C9 Poor Metabolizer celecoxib/ibuprofen was `info`; it is now `warning`).
+- A7: the genetic-phenotype row is also quoted ("applies if <drug> is stopped"), so demo-006's duloxetine-masked Ultrarapid result is not hidden.
+- A5 Tier 1/2 `saudiDataNote` is always printed. Outside-call cards name the (mock) caller. Every card carries a "Demo data" label. Gene with `No Result` → explicit not-checked card.
+- A malformed `%` URI no longer crashes the process (unhandled rejection). Oversized bodies get a clean 413. Codes without the RxNorm system are not read as RxCUIs. Combination products check every table drug. Prefetch is limited to code-filtered genotype Observations.
+- 26/26 tests pass (Node 22.23.3 in the compose image; Node 24 on host).
+- Request for a `/data/fixtures` compose mount logged in `docs/requests.md`.
+Data contract unchanged. No new runtime dependency.
