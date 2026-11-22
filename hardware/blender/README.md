@@ -67,3 +67,23 @@ EEVEE renders about 9 s a frame on an Intel Arc laptop GPU, so both shots take a
 - T3's internals are illustrative shapes, not a design: the reader module callout says "chemistry not chosen", and the caption says "Internals are illustrative". No size, time, price or accuracy appears.
 - The callouts state only design intent from `DESIGN-PLAN.md` (built-in screen, keyed cartridge, wristband-to-cartridge scanner, sealed button and shell). None claims a clinical benefit.
 - The T1 label "Kit design — software working" is the label the F1 prompt set (the chain-of-custody software is F3); the physical kit itself is a design. Callout Arabic is a draft for the C4 review.
+
+## F3 render — the chain-of-custody software on the T1 kit
+
+| Render | What the phone shows | Label on the image |
+|---|---|---|
+| `renders/meyar-f3-intact-kit-software.png` | Kit `MYR-DEMO-0001`, events 4–6 and "Chain intact … (FHIR)" | Kit design — software working |
+| `renders/meyar-f3-tampered-kit-software.png` | The same kit after event 4 was edited without re-sealing: "Chain broken here" | Kit design — software working |
+
+The phone screen is a **real capture of the running F3 software** (`kit/`), with Verify reading the chain back from the local HAPI. It is not a drawing. The phone and the stand are generic, unbranded props, and the physical kit is a design. Only T1 appears; nothing is placed on T3 or T4. The kit ID on the phone is the same one printed on the mailer barcode.
+
+### Rebuild (Windows, from the repo root)
+
+```powershell
+docker compose up -d hapi
+cd kit; npm start                                    # leave running; kit MYR-DEMO-0001 must have its six events
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_art.py   # captures + captions (needs Edge)
+foreach ($v in "intact","tampered") { & "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_render.py -- --variant $v --samples 128 }
+```
+
+`make_f3_art.py` uses the kit's own demo control to edit event 4 for the tampered capture, then restores it and checks that the chain verifies again. `build_f3_render.py` reuses `build_t1()` from `build_renders.py`, adds the phone and stand, renders in Cycles at 3000 × 2000, and bakes on the caption strip.
