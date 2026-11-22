@@ -74,4 +74,9 @@ http://localhost:3000/cds-services
 
 CORS headers (`Access-Control-Allow-Origin: *`, `GET, POST, OPTIONS`) are enabled on all endpoints.
 
+## UI Routes
+
+- `GET /dashboard` — Instrument-theme alert log and counts dashboard (`?lang=ar` for Arabic RTL).
+- `GET /compare` — Side-by-side alert comparison screen on chart-paper ground (`?lang=ar` for Arabic RTL), comparing a generic interruptive modal against Meyar's `.m-cds` card.
+
 Future deployment step (not a blocker for the mock-data demo): CDS Hooks JWT authentication of the calling EHR, and any SFDA / PDPL / NPHIES requirements, are not implemented in this prototype.

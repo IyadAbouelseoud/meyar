@@ -1139,4 +1139,33 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /clopidogrel/i);
     assert.match(html, /codeine/i);
   });
+
+  it('B5: GET /compare renders both panes on chart-paper ground with exact UF and UK PROGRESS caption', async () => {
+    const resp = await fetch(`${baseUrl}/compare`);
+    assert.equal(resp.status, 200);
+    assert.match(resp.headers.get('content-type') || '', /text\/html/);
+    const html = await resp.text();
+    assert.match(html, /data-theme="paper"/);
+    assert.match(html, /data-voice="clinician"/);
+    assert.match(html, /class="m-body m-chartpaper"/);
+    assert.match(html, /\/design\/fonts\/fonts\.css/);
+    assert.match(html, /\/design\/tokens\.css/);
+    assert.match(html, /\/design\/meyar\.css/);
+    assert.match(html, /\/design\/meyar\.js/);
+    assert.match(html, /class="cmp-modal"/);
+    assert.match(html, /class="m-cds"/);
+    assert.match(html, /class="m-caption"/);
+    assert.ok(
+      html.includes(
+        'University of Florida interruptive alerts — 63% accepted but only 20% of recommendations followed. UK PROGRESS, non-interruptive and pharmacist-mediated — 90% acted on.'
+      ),
+      'Exact UF and UK PROGRESS caption must appear'
+    );
+
+    const arResp = await fetch(`${baseUrl}/compare?lang=ar`);
+    assert.equal(arResp.status, 200);
+    const arHtml = await arResp.text();
+    assert.match(arHtml, /lang="ar" dir="rtl"/);
+    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && arHtml.includes('90%'));
+  });
 });

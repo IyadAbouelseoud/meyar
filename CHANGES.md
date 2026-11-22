@@ -164,3 +164,9 @@ Data contract unchanged. No new runtime dependency.
   - `node --test passport/test/*.test.mjs` (5/5 pass)
   - `cd passport; npm.cmd run build` and `npm.cmd run preview` (port 5173)
 - **Notes:** Moved all patient, doctor-view, and scan-side UI strings into `passport/src/i18n/ar.json` and `en.json` with short, jargon-free Arabic sentences, no "safe"/tick on the patient side, and 5-stop Meyar Scale labels passed via `scaleHTML(gene, lang, getScaleLabels(gene, lang))`. Includes `_meta` header for native-speaker team review (`BUNYAN / Renad / Dua`). Data contract unchanged. No new dependency.
+
+## B5 — Side-by-side alert comparison screen (22 Nov 2026)
+Files: `cds/lib/compare.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B5.md`.
+Notes: Serves `GET /compare` (`?lang=ar` for Arabic RTL) on the chart-paper ground (`data-theme="paper" data-voice="clinician"`, `.m-chartpaper`), built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`). Left pane shows a deliberately generic grey interruptive modal counter-example; right pane shows Meyar's `.m-cds` card from the showcase Prescriber section (`scaleHTML` + `combHTML`), captioned verbatim with the University of Florida (63% accepted, 20% followed) and UK PROGRESS (90% acted on) figures and no other numbers added. Verified at 1440 px and 375 px in English and Arabic with zero horizontal overflow.
+Run: `cd cds && npm start`, then open `http://localhost:3000/compare` (or `http://localhost:3000/compare?lang=ar`); test with `node --test cds/test/cds.test.js` (`32 pass, 0 fail`).
+Data contract unchanged. No new runtime dependency.
