@@ -560,13 +560,24 @@ export async function handleHookRequest(serviceId, body, deps) {
       if (!sim || (!sim.changed && !sim.flagged)) continue;
 
       const affectedSubstrates = [];
-      for (const med of currentMedsResult.medications) {
+      // Existing medications, plus substrates co-signed in this same order set: their
+      // draft card was built from the pre-inhibitor phenotype, so they must be re-checked.
+      const sweepCandidates = [
+        ...currentMedsResult.medications.map((med) => ({ med, coSigned: false })),
+        ...draftMeds
+          .filter((med) => med.display !== inh.medDisplay)
+          .map((med) => ({ med, coSigned: true })),
+      ];
+      const listedHere = new Set();
+      for (const { med, coSigned } of sweepCandidates) {
         for (const drug of matchDrugsInTable(med, deps.tables)) {
+          if (drug === inh.drug) continue;
           const genesForDrug = deps.tables.drugGenes.get(drug);
           if (!genesForDrug || !genesForDrug.has(inh.enzyme)) continue;
 
           const dedupeKey = `${drug}|${inh.enzyme}`;
-          if (seenCardKeys.has(dedupeKey)) continue;
+          if (listedHere.has(dedupeKey)) continue;
+          if (!coSigned && seenCardKeys.has(dedupeKey)) continue;
 
           const beforeMatch = lookupCpic(deps.tables, {
             drug,
@@ -592,9 +603,11 @@ export async function handleHookRequest(serviceId, body, deps) {
 
           if (!recChanged) continue;
           seenCardKeys.add(dedupeKey);
+          listedHere.add(dedupeKey);
           affectedSubstrates.push({
             drug,
             drugDisplay: med.display,
+            coSigned,
             beforeMatch,
             afterMatch,
           });

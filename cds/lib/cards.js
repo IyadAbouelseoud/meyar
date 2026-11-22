@@ -444,6 +444,12 @@ export function buildCpicCard({
   return card;
 }
 
+// CPIC CYP2D6 activity values step in quarters (0.25), so never round to one decimal:
+// print the exact value (1.25 stays "1.25", 0.625 stays "0.625").
+function formatActivityScore(score) {
+  return String(Math.round(Number(score) * 1e6) / 1e6);
+}
+
 /**
  * One non-interruptive `info` backward-sweep card emitted when a signed order is a
  * strong inhibitor from `tables/cyp_inhibitors.json` and shifts the recommendation
@@ -475,7 +481,7 @@ export function buildInhibitorBackwardSweepCard({
       `**Genetic:** ${enzyme} ${diplotype} (${simulation.geneticPhenotype}) · **Acting like:** ${simulation.newPhenotype} because of ${inhibitorDrug}`
     );
     detailParts.push(
-      `Activity score: ${simulation.geneticActivityScore.toFixed(1)} × ${simulation.factor} = ${simulation.adjustedActivityScore.toFixed(1)} (${strength} inhibitor, FDA table; ${simulation.method}).`
+      `Activity score: ${formatActivityScore(simulation.geneticActivityScore)} × ${simulation.factor} = ${formatActivityScore(simulation.adjustedActivityScore)} (${strength} inhibitor, FDA table; ${simulation.method}).`
     );
   } else {
     detailParts.push(
@@ -483,8 +489,12 @@ export function buildInhibitorBackwardSweepCard({
     );
   }
 
-  if (geneRecord.callability?.method === 'outside-call' && geneRecord.callability?.source) {
-    detailParts.push(`${enzyme} result from outside call: ${geneRecord.callability.source}.`);
+  if (geneRecord.callability?.method === 'outside-call') {
+    detailParts.push(
+      geneRecord.callability.source
+        ? `${enzyme} result from outside call: ${geneRecord.callability.source}.`
+        : `${enzyme} result from outside call (caller not named in the record sent).`
+    );
   }
 
   const linksByUrl = new Map();
@@ -496,7 +506,11 @@ export function buildInhibitorBackwardSweepCard({
       sub.drugDisplay && sub.drugDisplay.toLowerCase() !== sub.drug.toLowerCase()
         ? `${sub.drug} (${sub.drugDisplay})`
         : sub.drugDisplay || sub.drug;
-    detailParts.push(`**Existing medication (backward sweep):** ${label}`);
+    detailParts.push(
+      sub.coSigned
+        ? `**Co-signed in this order (re-checked with ${inhibitorDrug}):** ${label}`
+        : `**Existing medication (backward sweep):** ${label}`
+    );
     detailParts.push(quote(row.recommendation));
 
     if (isOncologyDrug(row.drug, enzyme)) {

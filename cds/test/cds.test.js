@@ -1178,6 +1178,37 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
   before(async () => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meyar-b6-test-'));
 
+    // Patient on no current medicines, CYP2D6 *1/*41 (activity score 1.25, Normal Metabolizer).
+    fs.writeFileSync(
+      path.join(tmpDir, 'b6-cosign-001.contract.json'),
+      JSON.stringify({
+        patientId: 'b6-cosign-001',
+        sampleOrigin: 'germline',
+        currentMedications: [],
+        genes: [
+          {
+            gene: 'CYP2D6',
+            diplotype: '*1/*41',
+            phenotype: 'Normal Metabolizer',
+            candidates: ['*1/*41'],
+            coverage: {
+              definingPositionsAssayed: 0,
+              definingPositionsTotal: 0,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: null,
+              saudiDataTier: 0,
+            },
+            guidelineVersion: 'CPIC 2021',
+            callability: {
+              method: 'outside-call',
+              svAssessed: true,
+              source: 'Mock CNV-aware caller v0.1-demo',
+            },
+          },
+        ],
+      })
+    );
+
     // Patient on codeine + tramadol with assessed CYP2D6 *1/*1 Normal Metabolizer (not yet on paroxetine).
     fs.writeFileSync(
       path.join(tmpDir, 'b6-opioid-001.contract.json'),
@@ -1312,7 +1343,7 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
       card.detail,
       /\*\*Genetic:\*\* CYP2D6 \*1\/\*1 \(Normal Metabolizer\) · \*\*Acting like:\*\* Poor Metabolizer because of paroxetine/
     );
-    assert.match(card.detail, /Activity score: 2\.0 × 0 = 0\.0/);
+    assert.match(card.detail, /Activity score: 2 × 0 = 0 /);
     assert.match(card.detail, /\*\*Existing medication \(backward sweep\):\*\* codeine/);
     assert.match(card.detail, /\*\*Existing medication \(backward sweep\):\*\* tramadol/);
     assert.match(card.detail, /Avoid codeine use because of possibility of diminished analgesia/);
@@ -1320,6 +1351,48 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
     assert.ok(Array.isArray(card.links) && card.links[0].url.includes('clinpgx.org'));
     assert.equal(card.selectionBehavior, 'at-most-one');
     assert.ok(card.suggestions.some((s) => s.label === 'Send to pharmacist'));
+  });
+
+  it('co-signing codeine with paroxetine in one order re-checks codeine and prints the exact 1.25 activity score', async () => {
+    const body = makeOrderSignBody({
+      patientId: 'b6-cosign-001',
+      drugCode: '2670',
+      drugDisplay: 'Codeine 30 MG Oral Tablet',
+    });
+    const parox = structuredClone(body.context.draftOrders.entry[0]);
+    parox.resource.id = 'medrx-2';
+    parox.resource.medicationCodeableConcept = {
+      coding: [{ system: 'http://www.nlm.nih.gov/research/umls/rxnorm', code: '32937', display: 'Paroxetine 20 MG Oral Tablet' }],
+      text: 'Paroxetine 20 MG Oral Tablet',
+    };
+    body.context.draftOrders.entry.push(parox);
+
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    const sweep = data.cards.find((c) => /Backward sweep/.test(c.summary));
+    assert.ok(sweep, 'co-signed strong inhibitor must re-check the co-signed codeine order');
+    assert.equal(sweep.indicator, 'info');
+    assert.match(sweep.detail, /\*\*Co-signed in this order \(re-checked with paroxetine\):\*\* codeine/);
+    assert.match(sweep.detail, /Acting like:\*\* Poor Metabolizer because of paroxetine/);
+    assert.match(sweep.detail, /Activity score: 1\.25 × 0 = 0 /);
+    assert.doesNotMatch(sweep.detail, /1\.3/);
+  });
+
+  it('CDS CYP2D6 activity table mirrors engine/phenoconvert.py exactly', async () => {
+    const { parseCyp2d6AlleleScore } = await import('../lib/phenoconvert.js');
+    const py = fs.readFileSync(new URL('../../engine/phenoconvert.py', import.meta.url), 'utf8');
+    const block = py.slice(py.indexOf('CYP2D6_ALLELE_ACTIVITY_VALUES'));
+    const body = block.slice(block.indexOf('{') + 1, block.indexOf('}'));
+    const pairs = [...body.matchAll(/"([^"]+)"\s*:\s*([0-9.]+)/g)];
+    assert.ok(pairs.length > 50, 'engine table parsed');
+    for (const [, allele, value] of pairs) {
+      assert.equal(parseCyp2d6AlleleScore(allele), Number(value), `CYP2D6 ${allele}`);
+    }
   });
 
   it('ordering paroxetine never fabricates phenoconversion when CYP2D6 is not-assessed (A8)', async () => {

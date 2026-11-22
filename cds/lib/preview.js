@@ -43,7 +43,7 @@ const COPY = {
     actionPharm: 'Sent advisory to pharmacist for review.',
     sc1Label: '1. demo-001 · Clopidogrel (ACS/PCI)',
     sc2Label: '2. demo-002 · Codeine (on paroxetine)',
-    sc3Label: '3. Paroxetine order · Patient on codeine',
+    sc3Label: '3. Paroxetine order · Patient on codeine (effect after signing)',
     sc4Label: '4. Pantoprazole · No CPIC alternative',
   },
   ar: {
@@ -83,7 +83,7 @@ const COPY = {
     actionPharm: 'تم إرسال التنبيه إلى الصيدلي للمراجعة.',
     sc1Label: '١. demo-001 · كلوبيدوقريل (ACS/PCI)',
     sc2Label: '٢. demo-002 · كودايين (مع باروكسيتين)',
-    sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين',
+    sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين (الأثر بعد التوقيع)',
     sc4Label: '٤. بانتوبرازول · دون بديل في CPIC',
   },
 };
