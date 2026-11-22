@@ -10,6 +10,12 @@
 //   POST /api/kits/:id/tamper           {seq} demo only: edit one stored event, keep its hash
 //   POST /api/kits/:id/restore          demo only: undo the edit
 //   POST /api/kits/:id/reset            demo only: clear the kit (ledger, FHIR, hand-off)
+//   POST /api/kits/:id/qc               F6 {result:"pass"|"fail", reason?} lab QC after "received"
+//   POST /api/kits/:id/review           F6 pharmacist (mock) marks the result reviewed
+//   POST /api/kits/:id/release          F6 result may now reach the Passport
+//   GET  /api/kits/:id/status           F6 patient tracker status (no genotype, no drug)
+//   POST /api/urgent/card               F6 T3 roadmap screen: same order-sign call to the CDS service
+//   GET  /tracker · /urgent · /reader/  F6 patient tracker, T3 screen, offline second-device reader
 //
 // Research prototype — not for clinical use. Demo data only.
 
@@ -24,18 +30,26 @@ import { DEMO_KIT_ID, DEMO_PATIENT_ID, DEMO_SCANS, toEvent } from './lib/demo.js
 import { Ledger } from './lib/store.js';
 import { fhirAvailable, syncChain, readChain, putProvenance, deleteKit, fhirBase } from './lib/fhir-client.js';
 import { writeEngineHandoff, handoffDir, REPO_ROOT } from './lib/handoff.js';
+import { GateStore, recordQc, recordReview, recordRelease, assertMayGenotype, patientStatus, mayReachPassport } from './lib/gates.js';
 
 const KIT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DESIGN_DIR = path.join(REPO_ROOT, 'design');
 const MAX_BODY_BYTES = 64 * 1024; // engineering limit, not a clinical number
 
 // Registered kits. The demo has one; a real deployment would issue these from a kit register.
-const DEMO_KITS = { [DEMO_KIT_ID]: { kitId: DEMO_KIT_ID, patientId: DEMO_PATIENT_ID } };
+// F6: MYR-DEMO-0002 is the same patient's first tube, which the lab rejects at QC (failed-QC branch).
+export const FAILED_QC_KIT_ID = 'MYR-DEMO-0002';
+const DEMO_KITS = {
+  [DEMO_KIT_ID]: { kitId: DEMO_KIT_ID, patientId: DEMO_PATIENT_ID },
+  [FAILED_QC_KIT_ID]: { kitId: FAILED_QC_KIT_ID, patientId: DEMO_PATIENT_ID },
+};
+const DEMO_DIR = path.join(REPO_ROOT, 'docs', 'demo');
+const CDS_URL = process.env.CDS_URL || 'http://localhost:3000';
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml',
-  '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png',
+  '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png', '.txt': 'text/plain; charset=utf-8',
 };
 
 /** Accepts the tube's Code 128 text or the mailer QR text. */
@@ -45,7 +59,7 @@ export function parseScannedCode(code) {
   return m ? m[1] : s;
 }
 
-export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = DEMO_KITS } = {}) {
+export function createKitServer({ ledger = new Ledger(), gateStore = new GateStore(ledger.dir), useFhir = true, kits = DEMO_KITS } = {}) {
   const KITS = kits;
   const backups = new Map();
 
@@ -72,7 +86,9 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = 
       nextDefaults,
       fhir: { available: fhir, base: fhir ? fhirBase() : null },
       tampered: backups.has(kit.kitId),
-      handoff: readHandoff(manifest),
+      handoff: readHandoff(manifest, kit.kitId),
+      gates: gateStore.read(kit.kitId),
+      passportReleased: await mayReachPassport(chain, gateStore.read(kit.kitId)),
       mock: true,
     };
   }
@@ -84,6 +100,7 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = 
     const type = nextEventType(chain);
     if (!type) throw httpError(409, 'All six events are already recorded for this kit.');
     if (body.type && body.type !== type) throw httpError(409, `Next event must be "${type}", got "${body.type}".`);
+    if (type === 'genotyped') assertMayGenotype(gateStore.read(kit.kitId)); // F6: failed-QC tube never gets a result
     const defaults = DEMO_SCANS[EVENT_TYPES.indexOf(type)];
     const event = toEvent(kit.kitId, kit.patientId, {
       ...defaults,
@@ -122,19 +139,41 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = 
     return { restored: true };
   }
 
+  async function qc(kit, body) {
+    const gates = await recordQc(ledger.read(kit.kitId), gateStore.read(kit.kitId), body);
+    gateStore.write(kit.kitId, gates);
+    return { qc: gates.qc };
+  }
+  async function review(kit, body) {
+    const gates = await recordReview(ledger.read(kit.kitId), gateStore.read(kit.kitId), body);
+    gateStore.write(kit.kitId, gates);
+    return { review: gates.review };
+  }
+  async function release(kit, body) {
+    const gates = await recordRelease(ledger.read(kit.kitId), gateStore.read(kit.kitId), body);
+    gateStore.write(kit.kitId, gates);
+    return { release: gates.release };
+  }
+
   async function reset(kit) {
+    gateStore.remove(kit.kitId);
     ledger.remove(kit.kitId);
     backups.delete(kit.kitId);
     if (await fhirUp()) await deleteKit(kit.kitId);
-    for (const f of [`${kit.patientId}.kit-handoff.json`]) fs.rmSync(path.join(handoffDir(), f), { force: true });
-    // origin.json is removed only from the kit's own hand-off folder, never from engine/data/in.
-    if (!process.env.ENGINE_IN_DIR) fs.rmSync(path.join(handoffDir(), `${kit.patientId}.origin.json`), { force: true });
+    // Two kits can share a patient (F6 recollection): only remove a hand-off this kit wrote.
+    const manifest = path.join(handoffDir(), `${kit.patientId}.kit-handoff.json`);
+    if (readHandoff(manifest, kit.kitId)) {
+      fs.rmSync(manifest, { force: true });
+      // origin.json is removed only from the kit's own hand-off folder, never from engine/data/in.
+      if (!process.env.ENGINE_IN_DIR) fs.rmSync(path.join(handoffDir(), `${kit.patientId}.origin.json`), { force: true });
+    }
     return { reset: true };
   }
 
   return http.createServer(async (req, res) => {
     try {
       const url = new URL(req.url, 'http://localhost');
+      if (req.method === 'POST' && url.pathname === '/api/urgent/card') return sendJSON(res, 200, await urgentCard());
       const m = /^\/api\/kits\/([^/]+)(?:\/([a-z]+))?$/.exec(url.pathname);
       if (m) {
         const kit = KITS[decodeURIComponent(m[1])];
@@ -143,21 +182,33 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = 
         const source = url.searchParams.get('source') || undefined;
         if (req.method === 'GET' && action === '') return sendJSON(res, 200, await kitState(kit));
         if (req.method === 'GET' && action === 'chain') return sendJSON(res, 200, await loadChain(kit.kitId, source));
+        if (req.method === 'GET' && action === 'status') {
+          return sendJSON(res, 200, { kitId: kit.kitId, ...(await patientStatus(ledger.read(kit.kitId), gateStore.read(kit.kitId))) });
+        }
         if (req.method === 'GET' && action === 'verify') {
           const { source: used, chain } = await loadChain(kit.kitId, source);
           return sendJSON(res, 200, { source: used, ...(await verifyChain(chain)) });
         }
         if (req.method === 'POST') {
           const body = await readBody(req);
-          const handlers = { scan, tamper, restore, reset };
+          const handlers = { scan, tamper, restore, reset, qc, review, release };
           if (handlers[action]) return sendJSON(res, 200, await handlers[action](kit, body));
         }
         return sendJSON(res, 405, { error: 'Method not allowed.' });
       }
       if (req.method !== 'GET' && req.method !== 'HEAD') return sendJSON(res, 405, { error: 'Method not allowed.' });
       if (url.pathname === '/' || url.pathname === '/index.html') return sendFile(res, path.join(KIT_DIR, 'web', 'index.html'));
+      if (url.pathname === '/tracker') return sendFile(res, path.join(KIT_DIR, 'web', 'tracker.html'));
+      if (url.pathname === '/urgent') return sendFile(res, path.join(KIT_DIR, 'web', 'urgent.html'));
+      if (url.pathname === '/reader') { res.writeHead(301, { Location: '/reader/' }); return res.end(); }
+      if (url.pathname === '/reader/') return sendFile(res, path.join(DEMO_DIR, 'reader', 'index.html'));
+      // The reader's service worker must sit at /reader/ to control that scope.
+      if (url.pathname === '/reader/sw.js') return sendFile(res, path.join(DEMO_DIR, 'reader', 'sw.js'), { 'Service-Worker-Allowed': '/' });
+      if (url.pathname === '/vendor/jsQR.js') return sendFile(res, path.join(REPO_ROOT, 'passport', 'node_modules', 'jsqr', 'dist', 'jsQR.js'));
       if (url.pathname === '/health') return sendJSON(res, 200, { ok: true });
-      const roots = [['/design/', DESIGN_DIR], ['/web/', path.join(KIT_DIR, 'web')], ['/lib/', path.join(KIT_DIR, 'lib')]];
+      // F6: the reader reuses passport/src read-only (decrypt + PIN rules); nothing in passport/ is changed.
+      const roots = [['/design/', DESIGN_DIR], ['/web/', path.join(KIT_DIR, 'web')], ['/lib/', path.join(KIT_DIR, 'lib')],
+        ['/reader/', path.join(DEMO_DIR, 'reader')], ['/demo-out/', path.join(DEMO_DIR, 'out')], ['/passport-src/', path.join(REPO_ROOT, 'passport', 'src')]];
       for (const [prefix, root] of roots) {
         if (url.pathname.startsWith(prefix)) {
           const file = path.resolve(root, '.' + decodeURIComponent(url.pathname.slice(prefix.length - 1)));
@@ -172,9 +223,39 @@ export function createKitServer({ ledger = new Ledger(), useFhir = true, kits = 
   });
 }
 
-function readHandoff(manifest) {
+// T3 roadmap screen: post the same clopidogrel order-sign the T1/T2 path uses to the CDS service
+// (B2/B3, unchanged). The phenotype comes from the demo-001 store; nothing here simulates a device.
+export function clopidogrelOrderSign(patientId = DEMO_PATIENT_ID) {
+  return {
+    hook: 'order-sign',
+    hookInstance: 'f6-demo-0000-0000-0000-000000000001',
+    context: {
+      userId: 'Practitioner/demo-clinician',
+      patientId,
+      draftOrders: { resourceType: 'Bundle', type: 'collection', entry: [{ resource: {
+        resourceType: 'MedicationRequest', id: 'f6-clopidogrel', status: 'draft', intent: 'order',
+        subject: { reference: `Patient/${patientId}` },
+        medicationCodeableConcept: { coding: [{ system: 'http://www.nlm.nih.gov/research/umls/rxnorm', code: '32968', display: 'Clopidogrel 75 MG Oral Tablet' }], text: 'Clopidogrel 75 MG Oral Tablet' },
+        reasonCode: [{ text: 'Acute coronary syndrome, PCI' }],
+      } }] },
+    },
+  };
+}
+
+async function urgentCard() {
+  try {
+    const r = await fetch(`${CDS_URL}/cds-services/meyar-pgx`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(clopidogrelOrderSign()), signal: AbortSignal.timeout(3000) });
+    if (!r.ok) return { ok: false, error: `CDS service answered ${r.status}` };
+    return { ok: true, ...(await r.json()) };
+  } catch (e) {
+    return { ok: false, error: `CDS service not reachable at ${CDS_URL} (${e.message}). Run: docker compose up -d` };
+  }
+}
+
+function readHandoff(manifest, kitId = null) {
   if (!fs.existsSync(manifest)) return null;
   const h = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  if (kitId && h.kitId !== kitId) return null;
   return { ...h, vcfPresent: fs.existsSync(path.resolve(REPO_ROOT, h.vcfPath)) }; // checked now, not at hand-off time
 }
 
@@ -185,9 +266,9 @@ function sendJSON(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
-function sendFile(res, file) {
+function sendFile(res, file, extra = {}) {
   if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return sendJSON(res, 404, { error: 'Not found.' });
-  res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+  res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache', ...extra });
   fs.createReadStream(file).pipe(res);
 }
 
