@@ -804,12 +804,27 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     });
   }
 
+  // Arabic labels for the order-table context and status columns (drug names stay as ordered).
+  const ORDER_AR = {
+    'ACS / PCI': 'متلازمة الشريان التاجي الحادة / قسطرة تاجية',
+    'Active medication': 'دواء حالي',
+    'New analgesic order': 'طلب مسكّن جديد',
+    'Hospital record (CYP2D6 strong inhibitor)': 'سجل المستشفى (مثبط قوي لـ CYP2D6)',
+    'Strong CYP2D6 inhibitor': 'مثبط قوي لـ CYP2D6',
+    'Existing active order': 'طلب حالي نشط',
+    'PPI dose adjustment (no CPIC alternative)': 'تعديل جرعة مثبط مضخة البروتون (لا بديل في CPIC)',
+    'Signing now': 'قيد التوقيع',
+    'Active': 'نشط',
+    'Selected': 'مُختار',
+  };
+  const trOrder = (s) => (currentLang === 'ar' && ORDER_AR[s]) || s;
+
   function renderOrdersTable() {
     document.getElementById('patient-label').textContent = currentScenario.patientId;
     const tbody = document.getElementById('orders-body');
     tbody.innerHTML = currentScenario.orders
       .map(
-        (o) => \`<tr class="\${o.pending ? 'is-pending' : ''}"><td><strong>\${esc(o.name)}</strong></td><td>\${esc(o.context)}</td><td>\${esc(o.status)}</td></tr>\`
+        (o) => \`<tr class="\${o.pending ? 'is-pending' : ''}"><td><strong>\${esc(o.name)}</strong></td><td>\${esc(trOrder(o.context))}</td><td>\${esc(trOrder(o.status))}</td></tr>\`
       )
       .join('');
   }

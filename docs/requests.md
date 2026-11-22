@@ -23,3 +23,5 @@ Write here instead of editing a table you do not own.
 - **Ask:** add `- ./docs/fixtures:/data/fixtures:ro` to the `cds` service `volumes`.
 - **Why:** `cds/lib/phenotypes.js` falls back to `docs/fixtures/<patientId>.contract.json` when `engine/data/out/` has no contract (fresh checkout, pipeline not run). Outside Docker that path resolves on its own; inside the container `docs/` is not in the build context, so the service now looks for `/data/fixtures` and finds nothing until this mount exists. Without it, a fresh-checkout `docker compose up` with an empty HAPI returns no cards.
 - **Status: DONE (22 Nov 2026).** Mount added to `docker-compose.yml` on `main`, at the team's request.
+
+- **B6 → design/ owner (2026-11-23):** `scaleHTML(gene, 'clinician')` in `design/meyar.js` prints the Meyar Scale labels (Ultrarapid / Rapid / Normal / Intermediate / Poor, Genetic, Acting like) in English even on `lang=ar` pages. Please add Arabic labels (e.g. read `document.documentElement.lang`). Seen on `/preview?lang=ar`.
