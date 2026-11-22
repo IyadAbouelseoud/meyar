@@ -13,6 +13,9 @@ Node 22 LTS (stdlib only, zero external runtime dependencies) CDS Hooks 2.0.1 se
 | `POST` | `/cds-services/meyar-pgx-select` | Evaluates `order-select` selected draft orders. |
 | `GET` | `/health` | Health and loaded table summary. |
 | `GET` | `/design/*` | Read-only static serving of `design/` (for B4/B5 surfaces). |
+| `GET` | `/dashboard` | Live clinician alert log and counts dashboard (`data-theme="instrument"`). |
+| `GET` | `/dashboard/data` | JSON summary of `cds/data/alerts.jsonl` (`?range=today|week`). |
+| `POST` | `/alerts/action` | Logs prescriber response (`accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl`. |
 
 ## Phenotype resolution order
 

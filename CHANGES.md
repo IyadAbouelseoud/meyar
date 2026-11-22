@@ -122,3 +122,9 @@ Data contract unchanged. No new runtime dependency.
   - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
   - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.
 - **Notes:** Built strictly from `design/` (`@design` Vite alias); reads `tables/cpic_recommendations.json` and `tables/saudi_frequencies.json` read-only. Data contract unchanged. No new runtime dependency (`vite` devDependency only).
+
+## B4 — Alert log and counts dashboard (22 Nov 2026)
+Files: `cds/lib/alertLog.js`, `cds/lib/dashboard.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B4.md`.
+Notes: Logs every CDS Hooks card fired (`POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`) and every prescriber response (`POST /alerts/action` for `accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl` (append-only JSONL, no database server). Serves `GET /dashboard` (`<html data-theme="instrument" data-voice="clinician">`) and `GET /dashboard/data?range=today|week` built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`, `charts.js`) with Hijri (Umm al-Qura) and Gregorian dates, EN/AR RTL toggle, Today / 7 days switch, 4 KPI tiles, `area()`, `gauge()`, `bars()`, `rings()`, fixture-only `.m-watch`, `.m-feed`, and `.m-heat` (CYP2D6 hatched per A8). Explicitly states no published national ADR rate exists for Saudi Arabia and labels all counts as `Demo log`.
+Run: `cd cds && npm start`, fire hooks, and open `http://localhost:3000/dashboard`; test with `node --test cds/test/cds.test.js` (`31 pass, 0 fail`).
+Data contract unchanged. No new runtime dependency.
