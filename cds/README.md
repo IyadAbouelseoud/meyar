@@ -31,7 +31,7 @@ Clinical safety rules enforced on every request:
 - **No silent gaps:** a gene a drug's CPIC rows need, with `No Result` or no record, gets an `info` card saying the order was not checked — never silence that reads as normal.
 - **A7 phenoconversion:** lookups use `effectivePhenotype` when `phenoconversion.applied === true`; the card always shows both results, and also quotes the genetic phenotype's CPIC row ("applies if <drug> is stopped") so an inhibitor never hides a genetic risk.
 - **Lookup only (B1):** every recommendation and alternative comes verbatim from `tables/cpic_recommendations.json`.
-- **Backward sweep (B3):** on the first `order-sign` for a patient, active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) are checked for affected drugs already taken (e.g., statins with `SLCO1B1` Decreased Function).
+- **Backward sweep (B3 / B6):** on the first `order-sign` for a patient, active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) are checked for affected drugs already taken (e.g., statins with `SLCO1B1` Decreased Function). When an ordered medication is a strong inhibitor in `tables/cyp_inhibitors.json` (e.g. `paroxetine` for `CYP2D6`), Meyar simulates the A7 phenoconversion shift (`2.0 × 0 = 0.0` via Thomas et al. 2020) and emits one `info` backward-sweep card listing existing substrates whose CPIC recommendation now changes (e.g. `codeine`).
 - **One-tap pharmacist escalation & oncology note (B3):** actionable cards include a `Send to pharmacist` FHIR `Task` suggestion, and oncology PGx cards print `Germline result — tumour profiling is separate.`
 
 ## Card rules
@@ -76,6 +76,7 @@ CORS headers (`Access-Control-Allow-Origin: *`, `GET, POST, OPTIONS`) are enable
 
 ## UI Routes
 
+- `GET /preview` — Interactive prescriber `order-sign` preview on chart-paper ground (`?lang=ar` for Arabic RTL), wired to `POST /cds-services/meyar-pgx` with `.m-cds` cards, `scaleHTML(gene, 'clinician')`, `combHTML`, and one-click CPIC alternatives.
 - `GET /dashboard` — Instrument-theme alert log and counts dashboard (`?lang=ar` for Arabic RTL).
 - `GET /compare` — Side-by-side alert comparison screen on chart-paper ground (`?lang=ar` for Arabic RTL), comparing a generic interruptive modal against Meyar's `.m-cds` card.
 

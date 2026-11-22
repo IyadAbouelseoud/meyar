@@ -49,6 +49,7 @@ import {
   renderDashboardHtml,
 } from './lib/dashboard.js';
 import { renderCompareHtml } from './lib/compare.js';
+import { renderPreviewHtml } from './lib/preview.js';
 
 // Request-size guard (engineering limit, not a clinical number).
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
@@ -127,6 +128,15 @@ function sendJson(res, statusCode, payload, extraHeaders = {}) {
     ...extraHeaders,
   });
   res.end(body);
+}
+
+function sendHtml(res, html) {
+  res.writeHead(200, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Content-Length': Buffer.byteLength(html),
+    ...corsHeaders(),
+  });
+  res.end(html);
 }
 
 function readJsonBody(req) {
@@ -725,14 +735,12 @@ export function createCdsServer(options = {}) {
 
     if (req.method === 'GET' && pathname === '/compare') {
       const lang = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
-      const html = renderCompareHtml({ lang });
-      res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Length': Buffer.byteLength(html),
-        ...corsHeaders(),
-      });
-      res.end(html);
-      return;
+      return sendHtml(res, renderCompareHtml({ lang }));
+    }
+
+    if (req.method === 'GET' && pathname === '/preview') {
+      const lang = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
+      return sendHtml(res, renderPreviewHtml({ lang }));
     }
 
     if (req.method === 'GET' && pathname === '/dashboard') {
@@ -743,13 +751,7 @@ export function createCdsServer(options = {}) {
         watchFixtures: loadWatchFixtures(fixturesDir),
         coverageGrid: loadCoverageGrid(fixturesDir),
       });
-      res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Length': Buffer.byteLength(html),
-        ...corsHeaders(),
-      });
-      res.end(html);
-      return;
+      return sendHtml(res, html);
     }
 
     if (req.method === 'POST' && pathname === '/alerts/action') {
