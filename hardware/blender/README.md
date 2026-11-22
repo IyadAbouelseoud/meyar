@@ -87,3 +87,23 @@ foreach ($v in "intact","tampered") { & "D:\blender.exe" --background --factory-
 ```
 
 `make_f3_art.py` uses the kit's own demo control to edit event 4 for the tampered capture, then restores it and checks that the chain verifies again. `build_f3_render.py` reuses `build_t1()` from `build_renders.py`, adds the phone and stand, renders in Cycles at 3000 × 2000, and bakes on the caption strip.
+
+## F3 video — the six scans live on the T1 kit
+
+`renders/meyar-f3-kit-scans-live.mp4`: 1920 × 1080, 30 fps, H.264, 15 s (450 frames). `renders/meyar-f3-video-contact-sheet.jpg` shows one frame every 2 s.
+
+| Time | What moves | What the phone shows (a real capture after that scan) | Callout (Arabic first) |
+|---|---|---|---|
+| 0–4 s | Kit at rest, then the funnel docks on the tube and the sample fills | Scans 1 → 2 recorded | ١ صُرفت العُدّة · ٢ جُمعت العيّنة |
+| 4–7 s | The funnel goes back, the cap twists on | Scan 3 | ٣ خُتمت الأنبوبة |
+| 7–11 s | The tube goes into the mailer, the mailer leaves and comes back | Scans 4 → 5 | ٤ شُحنت · ٥ استلمها المختبر |
+| 12–13 s | — | Scan 6, chain intact (FHIR) | ٦ اكتمل التنميط · سُلِّم للمحرّك |
+| 13.3–15 s | — | Scan 4 edited after the fact: "Chain broken here" | ! السلسلة مكسورة هنا |
+
+"Kit design — software working" and the honesty note stay on screen for the whole clip. The phone screens come from the kit's own API: the art script resets the demo kit, records each scan, captures the screen after each one, then edits and restores scan 4.
+
+```powershell
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_video_art.py   # kit app + HAPI running
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video.py         # frames/f3 (EEVEE)
+uv run --no-project python hardware/blender/encode_f3_video.py                                       # MP4 + contact sheet
+```
