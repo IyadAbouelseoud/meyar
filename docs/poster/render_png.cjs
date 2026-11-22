@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 const dir = path.resolve('docs/poster');
-const jobs = [['f4-tier-panel-poster', 1600, 2000, 2], ['f4-tier-panel-slide', 1920, 1080, 1]];
+const jobs = [['f4-tier-panel-poster', 1600, 2000, 2], ['f4-tier-panel-slide', 1920, 1080, 1], ['f4-tier-panel-poster-ar', 1600, 2000, 2], ['f4-tier-panel-slide-ar', 1920, 1080, 1]];
 (async () => {
 const browser = await chromium.launch();
 for (const [name, w, h, scale] of jobs) {

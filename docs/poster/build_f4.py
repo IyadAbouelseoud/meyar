@@ -21,6 +21,64 @@ C = dict(paper0="#F9FBF7", paper1="#EDF2EC", paper2="#E1E9E2", paper3="#D1DCD3",
          saf500="#E2A21B", mad600="#B3372C", amb800="#7A4300", amb100="#FBE7CD",
          none="#3C4A43", noneTint="#E1E9E2", info="#115A51", infoTint="#DCEDE8", kohl="#17160F")
 
+LRI, PDI = "\u2066", "\u2069"  # isolate Latin runs (genes, alleles, money) inside Arabic lines
+def L(t): return f"{LRI}{t}{PDI}"
+
+# Arabic strings are drafts for C4 native-speaker review.
+TIERS_AR = [
+    dict(id="T1", name="عُدّة لعاب بسلسلة حفظ موثّقة", sub="أي عيادة تجمع العيّنة. بلا سحب دم ولا سلسلة تبريد.",
+         chip=("info", "تصميم العُدّة — البرنامج يعمل"), label=None,
+         facts=[("يبقى الحمض النووي في اللعاب 8 أشهر بحرارة الغرفة دون أي فقد", 1),
+                ("الباركود يقلّل أخطاء التعريف: الملصق اليدوي أخطاؤه 4.4 أضعاف", 2)], img="T1"),
+    dict(id="T2", name="التنميط الجيني في المختبر المركزي", sub="لوحة مجمّعة، تُقرأ مرة واحدة وتبقى مدى الحياة.",
+         chip=("info", "متوفر اليوم"), label=None,
+         facts=[(f"فحص {L('CYP2C19')} المخبري {L('£44–£139')}، أرخص مع الدفعات الأكبر", 3),
+                ("نتيجة لوحة من 12 جيناً تصل إلى الطبيب خلال 7 أيام", 4),
+                ("في السعودية: مستشفى الملك فيصل التخصصي، أكثر من 1,500 مريض", 5)], img=None),
+    dict(id="T3", name="وحدة جين واحد لمختبر القسطرة", sub="للحالة العاجلة: قبل أول جرعة من كلوبيدوقريل.",
+         chip=("ask", "خارطة طريق"), label="تصوّر ثلاثي الأبعاد — لم يُصنع",
+         facts=[(f"فحص {L('CYP2C19 *2/*3/*17')} عند السرير خلال ساعة تقريباً متوفر تجارياً", 6),
+                (f"العُدّة {L('£100–£125')} للفحص، لذا يبقى المختبر هو الأساس", 3)], img="T3"),
+    dict(id="T4", name="قارئ متعدد الجينات", sub=f"عدة جينات عند السرير. لا يجيب عن {L('CYP2D6')} أبداً (عدد النسخ).",
+         chip=("none", "مفهوم فقط"), label="تصوّر ثلاثي الأبعاد — لم يُصنع",
+         facts=[("لا يوجد بعد جهاز معتمد يفحص عدة جينات عند السرير", 7)], img="T4"),
+]
+SPINE_AR = [
+    ("سلسلة الحفظ", "كل أنبوب بباركود يُمسح عند الجمع والإرسال والمختبر والنتيجة"),
+    ("تنبيه في وقته", f"تصل النتيجة إلى الطبيب عند توقيع الوصفة، لا في ملف {L('PDF')}"),
+    ("امسح من أي مكان", f"رمز {L('QR')} في الجواز يحمل النتيجة نفسها؛ يقرؤه أي مستشفى دون إنترنت"),
+    ("المريض يتابع", "يرى المريض: استُلمت العيّنة، قيد التحليل، النتيجة جاهزة"),
+]
+STR = {
+ "en": dict(eyebrow="MEYAR · F SERIES · TESTING FOR EVERY HOSPITAL", second="سُلَّم الفحص: من العيّنة إلى الوصفة الصحيحة",
+            spine="One software spine on every step", tag="SOFTWARE PROTOTYPE · DEMO ON MOCK DATA",
+            why="Why it matters: in PREPARE, patients with an actionable result had 30% lower odds of clinically relevant side effects (21.0% vs 27.7%).",
+            disc="Research prototype, not for clinical use. T3 and T4 renders are concepts: not built, not validated.", mark="مِعيار"),
+ "ar": dict(eyebrow="مِعيار · سلسلة F · فحص لكل مستشفى", second="Four ways to test, one standard of care",
+            spine="منظومة برمجية واحدة على كل درجة", tag="نموذج برمجي أولي · عرض ببيانات تجريبية",
+            why=f"لماذا يهم: في دراسة {L('PREPARE')} انخفضت احتمالات الآثار الجانبية المهمة سريرياً 30% لدى المرضى ذوي النتيجة القابلة للتطبيق ({L('21.0% vs 27.7%')}).",
+            disc=f"نموذج بحثي أولي، ليس للاستخدام السريري. صور {L('T3')} و{L('T4')} تصوّرات: لم تُصنع ولم يُتحقق منها.", mark="MEYAR"),
+}
+
+import re
+def mirror(svg, W):
+    """RTL layout: flip the whole drawing, then un-flip every text and image in place so they read normally."""
+    def txt(m):
+        a = m.group(1); x = float(re.search(r' x="([-\d.]+)"', a).group(1))
+        if 'data-ltr="1"' in a:  # Latin citations stay LTR, anchored to the right edge after the flip
+            a = a.replace('<text', '<text text-anchor="end"', 1)
+        else:
+            a = a.replace('<text', '<text direction="rtl"', 1)
+        return f'{a} transform="matrix(-1 0 0 1 {2*x:.1f} 0)">'
+    svg = re.sub(r'(<text\b[^>]*?)>', txt, svg)
+    def img(m):
+        a = m.group(0); x = float(re.search(r' x="([-\d.]+)"', a).group(1)); w = float(re.search(r' width="([-\d.]+)"', a).group(1))
+        return a.replace('<image', f'<image transform="matrix(-1 0 0 1 {2*x+w:.1f} 0)"', 1)
+    svg = re.sub(r'<image\b[^>]*/>', img, svg)
+    head, body = svg.split('</defs>', 1)
+    body = body.rsplit('</svg>', 1)[0]
+    return f'{head}</defs><g transform="matrix(-1 0 0 1 {W} 0)">{body}</g></svg>'
+
 def font_face(family, file, weight):
     b = base64.b64encode((FONTS / file).read_bytes()).decode()
     return f"@font-face{{font-family:'{family}';font-weight:{weight};src:url(data:font/woff2;base64,{b}) format('woff2');}}"
@@ -113,7 +171,8 @@ def qatt(y, w, h):
             f'<rect width="24" height="2.2" fill="{C["kohl"]}"/><rect y="27.8" width="24" height="2.2" fill="{C["kohl"]}"/></g></pattern>')
     return tile, f'<rect x="0" y="{y}" width="{w}" height="{h}" fill="url(#qatt)" aria-hidden="true"/>'
 
-def build(W, H, k, title_lines, video=False):
+def build(W, H, k, title_lines, video=False, lang="en"):
+    S = STR[lang]; tiers = TIERS_AR if lang == "ar" else TIERS; spine_items = SPINE_AR if lang == "ar" else SPINE
     """k scales type. Stairs occupy a band; spine below; footnotes at bottom."""
     pad = 64 * k
     tile, band = qatt(0, W, 30 * k)
@@ -125,12 +184,12 @@ def build(W, H, k, title_lines, video=False):
          f'</defs><rect width="{W}" height="{H}" fill="{C["paper1"]}"/>', band, band2]
     # header
     y = 30 * k + pad * 0.9
-    o.append(f'<text x="{pad}" y="{y}" font-family="Plex Mono" font-weight="500" font-size="{15*k}" letter-spacing="{3*k}" fill="{C["jun700"]}">MEYAR · F SERIES · TESTING FOR EVERY HOSPITAL</text>')
-    o.append(f'<text x="{W-pad}" y="{y+6*k}" text-anchor="end" font-family="Alexandria" font-weight="800" font-size="{34*k}" fill="{C["jun900"]}">مِعيار</text>')
+    o.append(f'<text x="{pad}" y="{y}" font-family="{'Plex Arabic' if lang=='ar' else 'Plex Mono'}" font-weight="500" font-size="{(18 if lang=='ar' else 15)*k}" letter-spacing="{0 if lang=='ar' else 3*k}" fill="{C["jun700"]}">{S["eyebrow"]}</text>')
+    o.append(f'<text x="{W-pad}" y="{y+6*k}" text-anchor="end" font-family="Alexandria" font-weight="800" font-size="{34*k}" fill="{C["jun900"]}">{S["mark"]}</text>')
     for i, line in enumerate(title_lines):
         o.append(f'<text x="{pad}" y="{y + (62 + i*58)*k}" font-family="Alexandria" font-weight="{300 if i==0 else 700}" font-size="{52*k}" fill="{C["ink1"]}">{esc(line)}</text>')
     y += (62 + (len(title_lines)-1)*58) * k
-    o.append(f'<text x="{pad}" y="{y + 44*k}" font-family="Plex Arabic" font-weight="400" font-size="{22*k}" fill="{C["ink2"]}">سُلَّم الفحص: من العيّنة إلى الوصفة الصحيحة</text>')
+    o.append(f'<text x="{pad}" y="{y + 44*k}" font-family="Plex Arabic" font-weight="400" font-size="{22*k}" fill="{C["ink2"]}">{S["second"]}</text>')
     top = y + 80 * k
 
     # staircase geometry
@@ -139,7 +198,7 @@ def build(W, H, k, title_lines, video=False):
     base = H - 30 * k - pad * 0.6 - foot_h - spine_h - 30 * k
     colw = (W - 2 * pad) / 4
     rise = (base - top) * 0.1
-    for i, t in enumerate(TIERS):
+    for i, t in enumerate(tiers):
         x0 = pad + i * colw
         tread = base - (base - top) * 0.58 - i * rise  # top of step i
         style = t["chip"][0]
@@ -160,7 +219,7 @@ def build(W, H, k, title_lines, video=False):
             op = "1" if style != "none" else "0.92"
             o.append(f'<image x="{ix:.0f}" y="{tread-ih-6*k:.0f}" width="{iw:.0f}" height="{ih:.0f}" opacity="{op}" href="data:image/jpeg;base64,{IMG[t["img"]]}"/>')
             if t["label"]:
-                lw = len(t["label"]) * 8.4 * k + 22 * k
+                lw = len(t["label"]) * (7.6 if lang=="ar" else 8.4) * k + 22 * k
                 o.append(f'<rect x="{ix:.0f}" y="{tread-6*k-30*k:.0f}" width="{lw:.0f}" height="{24*k:.0f}" fill="{C["kohl"]}"/>'
                          f'<text x="{ix+11*k:.0f}" y="{tread-6*k-13*k:.0f}" font-family="Plex Arabic" font-weight="600" font-size="{15*k}" fill="{C["paper0"]}">{esc(t["label"])}</text>')
         else:  # T2: a 96-well plate drawn in line, no stock icon
@@ -194,10 +253,10 @@ def build(W, H, k, title_lines, video=False):
     # spine: the software that runs on every step
     sy = base + 30 * k
     o.append(f'<rect x="{pad}" y="{sy}" width="{W-2*pad}" height="{spine_h-20*k}" rx="{10*k}" fill="{C["jun900"]}"/>')
-    o.append(f'<text x="{pad+24*k}" y="{sy+36*k}" font-family="Alexandria" font-weight="700" font-size="{22*k}" fill="{C["paper0"]}">One software spine on every step</text>')
-    o.append(f'<text x="{W-pad-24*k}" y="{sy+36*k}" text-anchor="end" font-family="Plex Mono" font-weight="500" font-size="{13*k}" fill="{C["jun100"]}">SOFTWARE PROTOTYPE · DEMO ON MOCK DATA</text>')
+    o.append(f'<text x="{pad+24*k}" y="{sy+36*k}" font-family="Alexandria" font-weight="700" font-size="{22*k}" fill="{C["paper0"]}">{S["spine"]}</text>')
+    o.append(f'<text x="{W-pad-24*k}" y="{sy+36*k}" text-anchor="end" font-family="{'Plex Arabic' if lang=='ar' else 'Plex Mono'}" font-weight="500" font-size="{(15 if lang=='ar' else 13)*k}" fill="{C["jun100"]}">{S["tag"]}</text>')
     sw = (W - 2 * pad - 48 * k) / 4
-    for i, (h, d) in enumerate(SPINE):
+    for i, (h, d) in enumerate(spine_items):
         x = pad + 24 * k + i * sw
         o.append(f'<text x="{x}" y="{sy+80*k}" font-family="Plex Mono" font-weight="500" font-size="{13*k}" fill="{C["saf500"]}">{i+1:02d}</text>')
         o.append(f'<text x="{x+30*k}" y="{sy+80*k}" font-family="Alexandria" font-weight="600" font-size="{19*k}" fill="{C["paper0"]}">{esc(h)}</text>')
@@ -209,18 +268,21 @@ def build(W, H, k, title_lines, video=False):
 
     # outcome line + footnotes
     fy = sy + spine_h + 12 * k
-    o.append(f'<text x="{pad}" y="{fy}" font-family="Plex Arabic" font-weight="600" font-size="{17*k}" fill="{C["ink1"]}">Why it matters: in PREPARE, patients with an actionable result had 30% lower odds of clinically relevant side effects (21.0% vs 27.7%).<tspan font-family="Plex Mono" font-size="{11*k}" dy="{-6*k}"> 4</tspan></text>')
+    o.append(f'<text x="{pad}" y="{fy}" font-family="Plex Arabic" font-weight="600" font-size="{17*k}" fill="{C["ink1"]}">{esc(S["why"])}<tspan font-family="Plex Mono" font-size="{11*k}" dy="{-6*k}"> 4</tspan></text>')
     fy += 28 * k
     cols = 2
     for i, f in enumerate(FOOTNOTES):
         cx = pad + (i % cols) * (W - 2*pad) / cols
         cy = fy + (i // cols) * 19 * k
-        o.append(f'<text x="{cx}" y="{cy}" font-family="Plex Arabic" font-weight="400" font-size="{12*k}" fill="{C["ink3"]}"><tspan font-family="Plex Mono">{i+1}</tspan>  {esc(f)}</text>')
-    o.append(f'<text x="{W-pad}" y="{H-30*k-14*k}" text-anchor="end" font-family="Plex Arabic" font-weight="400" font-size="{12*k}" fill="{C["ink3"]}">Research prototype, not for clinical use. T3 and T4 renders are concepts: not built, not validated.</text>')
+        o.append(f'<text data-ltr="1" x="{cx}" y="{cy}" font-family="Plex Arabic" font-weight="400" font-size="{12*k}" fill="{C["ink3"]}"><tspan font-family="Plex Mono">{i+1}</tspan>  {esc(f)}</text>')
+    o.append(f'<text x="{W-pad}" y="{H-30*k-14*k}" text-anchor="end" font-family="Plex Arabic" font-weight="400" font-size="{12*k}" fill="{C["ink3"]}">{esc(S["disc"])}</text>')
     o.append("</svg>")
-    return "\n".join(o)
+    svg = "\n".join(o)
+    return mirror(svg, W) if lang == "ar" else svg
 
 if __name__ == "__main__":
     (OUT / "f4-tier-panel-poster.svg").write_text(build(1600, 2000, 1.18, ["Four ways to test,", "one standard of care"]), encoding="utf-8")
     (OUT / "f4-tier-panel-slide.svg").write_text(build(1920, 1080, 0.86, ["Four ways to test, one standard of care"], video=True), encoding="utf-8")
+    (OUT / "f4-tier-panel-poster-ar.svg").write_text(build(1600, 2000, 1.18, ["أربع طرق للفحص،", "ومعيار رعاية واحد"], lang="ar"), encoding="utf-8")
+    (OUT / "f4-tier-panel-slide-ar.svg").write_text(build(1920, 1080, 0.86, ["أربع طرق للفحص، ومعيار رعاية واحد"], video=True, lang="ar"), encoding="utf-8")
     print("wrote", *(p.name for p in OUT.glob("f4-*.svg")))
