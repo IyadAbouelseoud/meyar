@@ -29,6 +29,18 @@ import {
   PGX_OBSERVATION_QUERY,
 } from './lib/phenotypes.js';
 import { buildCpicCard, buildNotAssessedSvCard, buildNoResultCard } from './lib/cards.js';
+import {
+  resolveAlertsLogPath,
+  appendAlertEvents,
+  readAlertEvents,
+  summarizeAlerts,
+  VALID_ACTIONS,
+} from './lib/alertLog.js';
+import {
+  loadWatchFixtures,
+  loadCoverageGrid,
+  renderDashboardHtml,
+} from './lib/dashboard.js';
 
 // Request-size guard (engineering limit, not a clinical number).
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
@@ -435,6 +447,28 @@ export async function handleHookRequest(serviceId, body, deps) {
 
   const seenCardKeys = new Set();
   const cards = [];
+  const logEntries = [];
+
+  const recordCard = (card, { drug, geneSymbol, geneRecord, isBackwardSweep }) => {
+    cards.push(card);
+    const phenoApplied = Boolean(geneRecord?.phenoconversion?.applied);
+    const effective =
+      phenoApplied && geneRecord?.effectivePhenotype
+        ? geneRecord.effectivePhenotype
+        : geneRecord?.phenotype || 'Not assessed';
+    logEntries.push({
+      time: new Date().toISOString(),
+      patientPseudonym: patientId,
+      drug,
+      gene: geneSymbol,
+      phenotype: effective,
+      cardId: card.uuid,
+      action: 'fired',
+      backwardSweep: Boolean(isBackwardSweep),
+      phenoconversionApplied: phenoApplied,
+      mock: true,
+    });
+  };
 
   for (const med of draftMeds) {
     for (const drug of matchDrugsInTable(med, deps.tables)) {
@@ -446,16 +480,17 @@ export async function handleHookRequest(serviceId, body, deps) {
         if (seenCardKeys.has(dedupeKey)) continue;
         seenCardKeys.add(dedupeKey);
 
+        const geneRecord = geneMap.get(geneSymbol);
         const card = buildCardForGene({
           drug,
           geneSymbol,
-          geneRecord: geneMap.get(geneSymbol),
+          geneRecord,
           med,
           patientId,
           tables: deps.tables,
           isBackwardSweep: false,
         });
-        if (card) cards.push(card);
+        if (card) recordCard(card, { drug, geneSymbol, geneRecord, isBackwardSweep: false });
       }
     }
   }
@@ -479,19 +514,24 @@ export async function handleHookRequest(serviceId, body, deps) {
           if (seenCardKeys.has(dedupeKey)) continue;
           seenCardKeys.add(dedupeKey);
 
+          const geneRecord = geneMap.get(geneSymbol);
           const card = buildCardForGene({
             drug,
             geneSymbol,
-            geneRecord: geneMap.get(geneSymbol),
+            geneRecord,
             med,
             patientId,
             tables: deps.tables,
             isBackwardSweep: true,
           });
-          if (card) cards.push(card);
+          if (card) recordCard(card, { drug, geneSymbol, geneRecord, isBackwardSweep: true });
         }
       }
     }
+  }
+
+  if (deps.alertsLogPath && logEntries.length > 0) {
+    appendAlertEvents(deps.alertsLogPath, logEntries);
   }
 
   return {
@@ -510,6 +550,7 @@ export function createCdsServer(options = {}) {
   const contractsDir = resolveContractsDir(options.contractsDir);
   const fixturesDir = resolveFixturesDir(options.fixturesDir);
   const designDir = resolveDesignDir(options.designDir);
+  const alertsLogPath = resolveAlertsLogPath(options.alertsLogPath);
   const fhirTimeoutMs = options.fhirTimeoutMs ?? Number(process.env.FHIR_TIMEOUT_MS || 400);
   const fetchImpl = options.fetchImpl || fetch;
 
@@ -518,6 +559,7 @@ export function createCdsServer(options = {}) {
     fhirBase,
     contractsDir,
     fixturesDir,
+    alertsLogPath,
     fhirTimeoutMs,
     fetchImpl,
     sweptPatients: new Set(),
@@ -564,6 +606,59 @@ export function createCdsServer(options = {}) {
 
     if (req.method === 'GET' && url.pathname.startsWith('/design/')) {
       return serveStaticDesign(url.pathname, res, designDir);
+    }
+
+    if (req.method === 'GET' && pathname === '/dashboard/data') {
+      const range = url.searchParams.get('range') === 'week' ? 'week' : 'today';
+      const summary = summarizeAlerts(readAlertEvents(alertsLogPath), { range });
+      return sendJson(res, 200, summary);
+    }
+
+    if (req.method === 'GET' && pathname === '/dashboard') {
+      const range = url.searchParams.get('range') === 'week' ? 'week' : 'today';
+      const initialSummary = summarizeAlerts(readAlertEvents(alertsLogPath), { range });
+      const html = renderDashboardHtml({
+        initialSummary,
+        watchFixtures: loadWatchFixtures(fixturesDir),
+        coverageGrid: loadCoverageGrid(fixturesDir),
+      });
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Length': Buffer.byteLength(html),
+        ...corsHeaders(),
+      });
+      res.end(html);
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/alerts/action') {
+      try {
+        const body = await readJsonBody(req);
+        const action = String(body?.action || '').trim().toLowerCase();
+        if (!VALID_ACTIONS.has(action)) {
+          return sendJson(res, 400, {
+            error: `Invalid action "${body?.action}"; expected one of: ${[...VALID_ACTIONS].join(', ')}`,
+          });
+        }
+        const event = {
+          time: new Date().toISOString(),
+          patientPseudonym: String(body?.patientPseudonym || 'demo-001').trim(),
+          drug: String(body?.drug || 'Unknown').trim(),
+          gene: String(body?.gene || 'Unknown').trim(),
+          phenotype: String(body?.phenotype || 'Unknown').trim(),
+          cardId: String(body?.cardId || '').trim() || 'manual',
+          action,
+          backwardSweep: Boolean(body?.backwardSweep),
+          phenoconversionApplied: Boolean(body?.phenoconversionApplied),
+          mock: true,
+        };
+        appendAlertEvents(alertsLogPath, [event]);
+        return sendJson(res, 201, { ok: true, event });
+      } catch (err) {
+        return sendJson(res, Number(err?.statusCode) || 500, {
+          error: err?.message || 'Internal server error',
+        });
+      }
     }
 
     if (req.method === 'POST' && pathname.startsWith('/cds-services/')) {

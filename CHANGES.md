@@ -105,6 +105,11 @@ Notes: Enforces `design/README.md` §7 card JSON grammar (`summary` < 140 chars,
 Run: `node design/build-tokens.mjs` (62/62 contrast pairs pass), `cd cds && node --test test/cds.test.js` (18/18 pass), `docker compose up -d --build hapi cds`.
 Data contract unchanged. No new runtime dependency.
 
+## F4
+- Arabic RTL versions: `docs/poster/f4-tier-panel-{poster,slide}-ar.{svg,png}` (Arabic strings are drafts for C4 review).
+- Added `docs/poster/build_f4.py`, `docs/poster/render_png.cjs`, `docs/poster/f4-tier-panel-poster.{svg,png}` (1600x2000, PNG @2x) and `docs/poster/f4-tier-panel-slide.{svg,png}` (1920x1080).
+- Added 7 rows to `docs/sources.md`; new `prompts/F6.md` (end-to-end staircase demo) listed in `prompts/README.md`.
+- Run: `python3 docs/poster/build_f4.py && node docs/poster/render_png.cjs` (uses the pre-installed Playwright).
 
 ## C1 — Arabic-first patient screen (Medication Passport)
 - **Files added/changed:**
@@ -129,3 +134,9 @@ Data contract unchanged. No new runtime dependency.
   - `cd passport && node --test test/qr.test.mjs` (3/3 pass)
   - `cd passport && npm run build` (or `npm.cmd run build` on Windows PowerShell) and `npm run dev` (port 5173; append `?tab=doctor&dev=1` to inspect dev byte-size metrics and plaintext toggle)
 - **Notes:** Encodes a compact phenotype + CPIC recommendation-key payload (`deflate-raw` + `base64url`, Error Correction `M`, SVG `shape-rendering="crispEdges"`, `#14201B` on `#FFFFFF`, 4-module quiet zone) wrapped in the C8 WebCrypto envelope (`PBKDF2-SHA256` 600,000 iterations + `AES-GCM-256`) by default. Added `qrcode` dependency (`^1.5.4`). Data contract unchanged.
+
+## B4 — Alert log and counts dashboard (22 Nov 2026)
+Files: `cds/lib/alertLog.js`, `cds/lib/dashboard.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B4.md`.
+Notes: Logs every CDS Hooks card fired (`POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`) and every prescriber response (`POST /alerts/action` for `accepted`, `pharmacist`, `dismissed`) to `cds/data/alerts.jsonl` (append-only JSONL, no database server). Serves `GET /dashboard` (`<html data-theme="instrument" data-voice="clinician">`) and `GET /dashboard/data?range=today|week` built strictly from `design/` (`fonts/fonts.css`, `tokens.css`, `meyar.css`, `meyar.js`, `charts.js`) with Hijri (Umm al-Qura) and Gregorian dates, EN/AR RTL toggle, Today / 7 days switch, 4 KPI tiles, `area()`, `gauge()`, `bars()`, `rings()`, fixture-only `.m-watch`, `.m-feed`, and `.m-heat` (CYP2D6 hatched per A8). Explicitly states no published national ADR rate exists for Saudi Arabia and labels all counts as `Demo log`.
+Run: `cd cds && npm start`, fire hooks, and open `http://localhost:3000/dashboard`; test with `node --test cds/test/cds.test.js` (`31 pass, 0 fail`).
+Data contract unchanged. No new runtime dependency.
