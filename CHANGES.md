@@ -98,3 +98,9 @@ Review fixes (`prompts/REVIEW-opus-5.5.md` applied to B2, 22 Nov 2026), files `c
 - 26/26 tests pass (Node 22.23.3 in the compose image; Node 24 on host).
 - Request for a `/data/fixtures` compose mount logged in `docs/requests.md`.
 Data contract unchanged. No new runtime dependency.
+
+## B3 — Non-interruptive prescriber card (22 Nov 2026)
+Files: `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B3.md`.
+Notes: Enforces `design/README.md` §7 card JSON grammar (`summary` < 140 chars, `indicator` `warning` | `info`, `**Genetic:**` / `**Acting like:**`, verbatim CPIC quote, guaranteed A5 coverage line, `_Advises, does not prescribe. <guidelineVersion>._`, `source.label` `"Meyar (research prototype)"`). Adds one-tap `Send to pharmacist` FHIR `Task` suggestion, oncology `"Germline result — tumour profiling is separate."` notice, and first-`order-sign` backward sweep over active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) returning cards for affected current drugs (e.g. `SLCO1B1` Decreased Function on `simvastatin`).
+Run: `node design/build-tokens.mjs` (62/62 contrast pairs pass), `cd cds && node --test test/cds.test.js` (18/18 pass), `docker compose up -d --build hapi cds`.
+Data contract unchanged. No new runtime dependency.

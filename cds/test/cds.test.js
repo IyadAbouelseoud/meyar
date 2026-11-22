@@ -7,6 +7,7 @@ import path from 'node:path';
 
 import { createCdsServer } from '../server.js';
 import { isForbiddenPublicFhir } from '../lib/phenotypes.js';
+import { buildCpicCard } from '../lib/cards.js';
 
 function startServer(server) {
   return new Promise((resolve) => {
@@ -227,6 +228,32 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
       })
     );
 
+    // Synthetic SLCO1B1 Decreased Function contract for B3 backward-sweep testing.
+    fs.writeFileSync(
+      path.join(tmpContractsDir, 'statin-001.contract.json'),
+      JSON.stringify({
+        patientId: 'statin-001',
+        sampleOrigin: 'germline',
+        genes: [
+          {
+            gene: 'SLCO1B1',
+            diplotype: '*1/*5',
+            phenotype: 'Decreased Function',
+            candidates: ['*1/*5'],
+            coverage: {
+              definingPositionsAssayed: 0,
+              definingPositionsTotal: 0,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: null,
+              saudiDataTier: 2,
+              saudiDataNote: 'Tier 2: No published Saudi frequency for this gene.',
+            },
+            guidelineVersion: 'CPIC 2022-02',
+          },
+        ],
+      })
+    );
+
     // Point FHIR_BASE to a closed local port to exercise contract fallback deterministically.
     cdsServer = createCdsServer({
       fhirBase: 'http://127.0.0.1:1',
@@ -308,7 +335,10 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
     assert.match(card.detail, /CVI ACS PCI \(Strong\) — assumed; the order states no indication/);
     assert.match(card.detail, /- NVI \(Moderate\): Avoid clopidogrel if possible\./);
     const labels = (card.suggestions || []).map((s) => s.label);
-    assert.deepEqual(labels, ["Better matched for this patient's genes: ticagrelor"]);
+    assert.deepEqual(labels, [
+      "Better matched for this patient's genes: ticagrelor",
+      'Send to pharmacist',
+    ]);
     // CDS Hooks 2.0: selectionBehavior MUST be present when suggestions are.
     assert.equal(card.selectionBehavior, 'at-most-one');
     assert.equal(card.suggestions[0].actions[0].resource.subject.reference, 'Patient/demo-001');
@@ -644,8 +674,12 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
       ),
     });
     const card = (await resp.json()).cards[0];
-    assert.equal(card.suggestions, undefined);
-    assert.equal(card.selectionBehavior, undefined);
+    const hasMedicationCreate = (card.suggestions || []).some((s) =>
+      (s.actions || []).some((a) => a.resource?.resourceType === 'MedicationRequest')
+    );
+    assert.equal(hasMedicationCreate, false);
+    assert.ok(card.suggestions.some((s) => s.label === 'Send to pharmacist'));
+    assert.equal(card.selectionBehavior, 'at-most-one');
     assert.match(card.detail, /\*\*Better matched for this patient's genes:\*\* non-tramadol opioid/);
   });
 
@@ -687,10 +721,10 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
     assert.ok(summaries.some((s) => /omeprazole/.test(s)));
   });
 
-  it('discovery prefetch is code-filtered to genotype Observations', async () => {
+  it('discovery prefetch is code-filtered to genotype Observations and includes currentMedications', async () => {
     const data = await (await fetch(`${cdsBaseUrl}/cds-services`)).json();
     for (const svc of data.services) {
-      assert.deepEqual(Object.keys(svc.prefetch), ['pgxObservations']);
+      assert.deepEqual(Object.keys(svc.prefetch), ['pgxObservations', 'currentMedications']);
       assert.match(svc.prefetch.pgxObservations, /code=http:\/\/loinc\.org%7C84413-4/);
     }
   });
@@ -702,5 +736,244 @@ describe('Meyar CDS Hooks 2.0.1 service (B2)', () => {
       body: 'x'.repeat(2 * 1024 * 1024 + 10),
     });
     assert.equal(resp.status, 413);
+  });
+
+  it('B3: includes one-tap Send to pharmacist Task suggestion and §7 detail grammar', async () => {
+    const resp = await fetch(`${cdsBaseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(makeOrderSignBody({ patientId: 'demo-001' })),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    assert.equal(data.cards.length, 1);
+    const card = data.cards[0];
+
+    assert.ok(card.summary.length < 140);
+    assert.equal(card.indicator, 'warning');
+    assert.equal(card.source.label, 'Meyar (research prototype)');
+    assert.match(card.detail, /\*\*Genetic:\*\* CYP2C19 \*2\/\*2 \(Poor Metabolizer\)/);
+    assert.match(card.detail, /> Avoid clopidogrel if possible\./);
+    assert.match(card.detail, /Assay covered 9 of 11 defining positions; did not test \*35\./);
+    assert.match(card.detail, /Advises, does not prescribe\. CPIC 2022-11/);
+
+    const pharmSuggestion = (card.suggestions || []).find(
+      (s) => s.label === 'Send to pharmacist'
+    );
+    assert.ok(pharmSuggestion, 'Send to pharmacist suggestion must be present');
+    assert.equal(pharmSuggestion.actions[0].type, 'create');
+    assert.equal(pharmSuggestion.actions[0].resource.resourceType, 'Task');
+    assert.equal(pharmSuggestion.actions[0].resource.status, 'requested');
+    assert.equal(card.selectionBehavior, 'at-most-one');
+  });
+
+  it('B3: oncology drug card prints "Germline result — tumour profiling is separate."', () => {
+    const row = {
+      drug: 'fluorouracil',
+      gene: 'DPYD',
+      phenotype: 'Intermediate Metabolizer',
+      implication: 'Decreased dihydropyrimidine dehydrogenase activity',
+      recommendation: 'Reduce starting dose by 50% followed by titration based on toxicity.',
+      classification: 'Strong',
+      population: 'general',
+      alternatives: [],
+      guideline: {
+        name: 'DPYD and Fluoropyrimidines',
+        pub: 'Amstutz U et al., Clin Pharmacol Ther 2018',
+        url: 'https://www.clinpgx.org/guideline/PA166109594',
+      },
+    };
+    const card = buildCpicCard({
+      geneRecord: {
+        gene: 'DPYD',
+        diplotype: '*1/*2A',
+        phenotype: 'Intermediate Metabolizer',
+        candidates: ['*1/*2A'],
+        coverage: {
+          definingPositionsAssayed: 4,
+          definingPositionsTotal: 4,
+          untestedLocalAlleles: [],
+          uninformativeNormalRisk: 0,
+        },
+        guidelineVersion: 'CPIC 2017-10',
+      },
+      match: {
+        row,
+        indicationInferred: true,
+        otherPopulationRows: [],
+        normalRecommendation: 'Initiate therapy with recommended starting dose.',
+      },
+      drugDisplay: 'Fluorouracil 500 MG',
+    });
+
+    assert.equal(card.indicator, 'warning');
+    assert.match(card.detail, /Germline result — tumour profiling is separate\./);
+    assert.match(card.detail, /Advises, does not prescribe\. CPIC 2017-10/);
+    assert.ok(card.suggestions.some((s) => s.label === 'Send to pharmacist'));
+  });
+
+  it('B3: backward sweep on first order-sign returns card for SLCO1B1 Decreased Function on simvastatin, once per patient', async () => {
+    const currentMedsBundle = {
+      resourceType: 'Bundle',
+      type: 'searchset',
+      entry: [
+        {
+          resource: {
+            resourceType: 'MedicationStatement',
+            id: 'stmt-simva-1',
+            status: 'active',
+            subject: { reference: 'Patient/statin-001' },
+            medicationCodeableConcept: {
+              coding: [
+                {
+                  system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
+                  code: '36567',
+                  display: 'Simvastatin 40 MG Oral Tablet',
+                },
+              ],
+              text: 'Simvastatin 40 MG Oral Tablet',
+            },
+          },
+        },
+      ],
+    };
+
+    // First order-sign: ordering an unrelated drug (metformin) triggers backward sweep on simvastatin.
+    const firstResp = await fetch(`${cdsBaseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'statin-001',
+          drugCode: '6809',
+          drugDisplay: 'Metformin 500 MG Oral Tablet',
+          prefetch: { currentMedications: currentMedsBundle },
+        })
+      ),
+    });
+
+    assert.equal(firstResp.status, 200);
+    assert.equal(firstResp.headers.get('x-meyar-backward-sweep'), 'true');
+    const firstData = await firstResp.json();
+    assert.equal(firstData.cards.length, 1);
+
+    const card = firstData.cards[0];
+    assert.ok(card.summary.length < 140);
+    assert.equal(card.indicator, 'warning');
+    assert.match(card.summary, /Backward sweep/i);
+    assert.match(card.summary, /SLCO1B1/i);
+    assert.match(card.summary, /simvastatin/i);
+    assert.match(card.detail, /\*\*Existing medication \(backward sweep\):\*\* Simvastatin 40 MG Oral Tablet/);
+    assert.match(card.detail, /\*\*Genetic:\*\* SLCO1B1 \*1\/\*5 \(Decreased Function\)/);
+    assert.match(card.detail, /Advises, does not prescribe\. CPIC 2022-02/);
+    assert.ok(card.suggestions.some((s) => s.label === 'Send to pharmacist'));
+
+    // Second order-sign for same patient: backward sweep does not repeat.
+    const secondResp = await fetch(`${cdsBaseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'statin-001',
+          drugCode: '6809',
+          drugDisplay: 'Metformin 500 MG Oral Tablet',
+          prefetch: { currentMedications: currentMedsBundle },
+        })
+      ),
+    });
+
+    assert.equal(secondResp.status, 200);
+    assert.equal(secondResp.headers.get('x-meyar-backward-sweep'), 'false');
+    const secondData = await secondResp.json();
+    assert.equal(secondData.cards.length, 0);
+  });
+
+  it('B3: backward sweep fetches active MedicationStatements from local HAPI FHIR', async () => {
+    const mockHapi = http.createServer((req, res) => {
+      if (req.url?.startsWith('/fhir/Observation')) {
+        res.writeHead(200, { 'Content-Type': 'application/fhir+json' });
+        res.end(
+          JSON.stringify({
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: makeGenomicsObservation({
+                  patientId: 'hapi-statin-001',
+                  gene: 'SLCO1B1',
+                  diplotype: '*1/*5',
+                  phenotype: 'Decreased Function',
+                  guidelineVersion: 'CPIC 2022-02',
+                }),
+              },
+            ],
+          })
+        );
+        return;
+      }
+      if (req.url?.startsWith('/fhir/MedicationStatement')) {
+        res.writeHead(200, { 'Content-Type': 'application/fhir+json' });
+        res.end(
+          JSON.stringify({
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'MedicationStatement',
+                  id: 'stmt-atorva-1',
+                  status: 'active',
+                  subject: { reference: 'Patient/hapi-statin-001' },
+                  medicationCodeableConcept: {
+                    coding: [
+                      {
+                        system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
+                        code: '83367',
+                        display: 'Atorvastatin 40 MG Oral Tablet',
+                      },
+                    ],
+                    text: 'Atorvastatin 40 MG Oral Tablet',
+                  },
+                },
+              },
+            ],
+          })
+        );
+        return;
+      }
+      res.writeHead(404);
+      res.end();
+    });
+
+    const hapiUrl = await startServer(mockHapi);
+    const hapiCds = createCdsServer({
+      fhirBase: `${hapiUrl}/fhir`,
+      contractsDir: tmpContractsDir,
+    });
+    const hapiCdsUrl = await startServer(hapiCds);
+
+    try {
+      const resp = await fetch(`${hapiCdsUrl}/cds-services/meyar-pgx`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          makeOrderSignBody({
+            patientId: 'hapi-statin-001',
+            drugCode: '6809',
+            drugDisplay: 'Metformin 500 MG Oral Tablet',
+          })
+        ),
+      });
+      assert.equal(resp.status, 200);
+      assert.equal(resp.headers.get('x-meyar-backward-sweep'), 'true');
+      const data = await resp.json();
+      assert.equal(data.cards.length, 1);
+      assert.match(data.cards[0].summary, /Backward sweep/i);
+      assert.match(data.cards[0].summary, /SLCO1B1/i);
+      assert.match(data.cards[0].summary, /atorvastatin/i);
+    } finally {
+      await stopServer(hapiCds);
+      await stopServer(mockHapi);
+    }
   });
 });
