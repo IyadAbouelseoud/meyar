@@ -492,3 +492,47 @@ body {
   border-block: 0;
   padding-block: 0;
 }
+
+/* C8 — pre-PIN holder view: only the holder line and the patient's optional emergency line. */
+.m-holder {
+  display: grid;
+  gap: var(--m-space-2);
+  padding-block-end: var(--m-space-4);
+  border-block-end: 1px solid var(--m-line);
+}
+
+.m-holder__line {
+  display: flex;
+  align-items: center;
+  gap: var(--m-space-2);
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--m-size-md);
+  color: var(--m-text);
+}
+
+.m-holder__line svg {
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  flex: none;
+  color: var(--m-brand);
+}
+
+.m-holder__emergency {
+  margin: 0;
+  padding: var(--m-space-3);
+  background: var(--m-sunken);
+  border-radius: var(--m-radius-card);
+  font-size: var(--m-size-sm);
+  color: var(--m-text);
+  overflow-wrap: anywhere;
+}
+
+.m-holder__label {
+  color: var(--m-text2);
+}
+
+.m-qr-emergency {
+  display: grid;
+  gap: var(--m-space-2);
+}

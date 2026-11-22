@@ -23,7 +23,7 @@ test('C2: demo-001 compact payload has no URL, no raw genome, no name', async ()
     return [];
   });
 
-  assert.equal(payload.id, 'demo-001');
+  assert.equal('id' in payload, false, 'C8: payload carries no identity');
   assert.equal(payload.o, 'germline');
   assert.equal(payload.g.length, 2);
   assert.equal(payload.g[0].gene, 'CYP2C19');
@@ -66,6 +66,6 @@ test('C2: dev plaintext mode round-trips without PIN when explicitly enabled', a
   const encoded = await encodeQrEnvelope(contract, { plaintext: true });
   assert.equal(encoded.encrypted, false);
   assert.equal(encoded.envelope.v, 0);
-  const decoded = await decodeQrEnvelope(encoded.qrText);
+  const decoded = await decodeQrEnvelope(encoded.qrText, { allowPlaintext: true });
   assert.deepEqual(decoded, encoded.payload);
 });

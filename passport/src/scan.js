@@ -7,7 +7,8 @@ import jsQR from 'jsqr';
 import cpicTable from '@tables/cpic_recommendations.json';
 import saudiFreqs from '@tables/saudi_frequencies.json';
 import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
-import { decodeQrEnvelope } from './qr.js';
+import { decodeQrEnvelope, holderView } from './qr.js';
+import { createPinLimiter, PIN_LENGTH } from './pinguard.js';
 import { buildCdsCardsFromPayload } from './scan-lookup.js';
 import { renderScanApp, SCAN_COPY } from './scan-render.js';
 
@@ -22,12 +23,30 @@ const state = {
   scanError: '',
   pasteDraft: '',
   rawQrText: '',
+  holder: null, // what may be shown before the PIN (holder line + optional emergency line)
   pin: '',
   pinError: '',
+  lockMs: 0,
   decrypting: false,
   decoded: null,
   cards: [],
 };
+const devMode = params.get('dev') === '1';
+
+// Cosmetic wrong-PIN limit (C8): slows tapping on this screen only; a copied QR can be
+// attacked offline. One limiter per page session, never persisted, never stores the PIN.
+const limiter = createPinLimiter();
+let lockTimer = null;
+function startLockCountdown() {
+  clearInterval(lockTimer);
+  state.lockMs = limiter.remainingMs();
+  if (state.lockMs <= 0) return;
+  lockTimer = setInterval(() => {
+    state.lockMs = limiter.remainingMs();
+    if (state.lockMs <= 0) clearInterval(lockTimer);
+    update();
+  }, 1000);
+}
 
 let mediaStream = null;
 let rafId = null;
@@ -66,19 +85,32 @@ async function handleScannedText(text) {
     update();
     return;
   }
-  if (!envelope || (envelope.v !== 1 && envelope.v !== 0)) {
+  // Plaintext (v:0) cards exist only behind C2's dev flag; production readers refuse them.
+  if (!envelope || (envelope.v !== 1 && !(devMode && envelope.v === 0))) {
     state.scanError = t.qrInvalid;
     update();
     return;
   }
 
+  let holder = null;
+  if (envelope.v === 1) {
+    try {
+      holder = holderView(envelope);
+    } catch {
+      state.scanError = t.qrInvalid;
+      update();
+      return;
+    }
+  }
+
   stopCamera();
   state.scanError = '';
   state.rawQrText = JSON.stringify(envelope);
+  state.holder = holder;
 
   if (envelope.v === 0) {
     try {
-      const payload = await decodeQrEnvelope(state.rawQrText);
+      const payload = await decodeQrEnvelope(state.rawQrText, { allowPlaintext: true });
       state.decoded = payload;
       state.cards = buildCdsCardsFromPayload(payload, {
         cpicRows: cpicTable.rows || [],
@@ -160,7 +192,7 @@ async function startCamera() {
 
 async function submitPin() {
   const t = SCAN_COPY[state.lang] || SCAN_COPY.ar;
-  if (state.pin.length < 4 || state.decrypting) return;
+  if (state.pin.length !== PIN_LENGTH || state.decrypting || !limiter.canTry()) return;
   state.decrypting = true;
   state.pinError = '';
   update();
@@ -173,8 +205,13 @@ async function submitPin() {
       freqRows: saudiFreqs.rows || [],
     });
     state.step = 'result';
+    state.pin = '';
+    limiter.recordSuccess();
   } catch {
     state.pinError = t.pinError;
+    state.pin = '';
+    limiter.recordFailure();
+    startLockCountdown();
   } finally {
     state.decrypting = false;
     update();
@@ -227,7 +264,7 @@ root.addEventListener('click', (e) => {
     const area = document.getElementById('scan-paste-input');
     handleScannedText(area ? area.value : state.pasteDraft);
   } else if (action === 'pin-digit') {
-    if (state.pin.length < 6) {
+    if (state.pin.length < PIN_LENGTH && limiter.canTry()) {
       state.pin += btn.dataset.digit;
       state.pinError = '';
       update();
@@ -246,6 +283,7 @@ root.addEventListener('click', (e) => {
     stopCamera();
     state.step = 'scan';
     state.rawQrText = '';
+    state.holder = null;
     state.pin = '';
     state.pinError = '';
     state.decoded = null;
@@ -257,7 +295,7 @@ root.addEventListener('click', (e) => {
 
 window.addEventListener('keydown', (e) => {
   if (state.step !== 'pin') return;
-  if (/^[0-9]$/.test(e.key) && state.pin.length < 6) {
+  if (/^[0-9]$/.test(e.key) && state.pin.length < PIN_LENGTH && limiter.canTry()) {
     state.pin += e.key;
     state.pinError = '';
     update();
@@ -265,7 +303,7 @@ window.addEventListener('keydown', (e) => {
     state.pin = state.pin.slice(0, -1);
     state.pinError = '';
     update();
-  } else if (e.key === 'Enter' && state.pin.length >= 4) {
+  } else if (e.key === 'Enter' && state.pin.length === PIN_LENGTH) {
     submitPin();
   }
 });

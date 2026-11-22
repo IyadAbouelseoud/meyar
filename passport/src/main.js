@@ -6,7 +6,9 @@ import './app.css';
 import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
 import { getDrugsForGene } from './lookup.js';
 import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg } from './qr.js';
+import { isValidPin, normalizeDigits } from './pinguard.js';
 import { renderApp } from './render.js';
+import { COPY } from './i18n.js';
 
 const root = document.getElementById('app');
 
@@ -18,7 +20,13 @@ const state = {
   tab: ['genes', 'meds', 'doctor'].includes(params.get('tab')) ? params.get('tab') : 'genes',
   patientId: params.get('patient') || 'demo-001',
   devMode: params.get('dev') === '1',
-  qrPin: '123456',
+  // C8: no default PIN. Held in memory only, never stored or logged.
+  qrPin: '',
+  qrPinConfirm: '',
+  qrPinError: '',
+  qrEmergencyOn: false, // off by default
+  qrEmergency: '',
+  qrIssued: 0, // cards made this session (a new one = reissue)
   qrPlaintext: false,
   qrResult: null,
   qrDecoded: null,
@@ -34,18 +42,25 @@ async function refreshQr() {
     state.qrResult = null;
     return;
   }
+  const plaintext = state.devMode && state.qrPlaintext;
+  if (!plaintext && !isValidPin(state.qrPin)) {
+    state.qrResult = null;
+    return;
+  }
   const seq = ++qrSeq;
-  const pin = state.qrPin && state.qrPin.length >= 4 ? state.qrPin : '123456';
+  // Every encode draws a fresh salt and nonce: a new card, never an edit of the old one.
   const encoded = await encodeQrEnvelope(state.contract, {
-    pin,
-    plaintext: state.devMode && state.qrPlaintext,
+    pin: state.qrPin,
+    plaintext,
     getDrugsFn: getDrugsForGene,
+    emergency: state.qrEmergencyOn ? state.qrEmergency : '',
   });
   if (seq !== qrSeq) return;
   const svgInfo = renderQrSvg(encoded.qrText, {
-    ariaLabel: `${state.contract.patientId} offline QR`,
+    ariaLabel: 'Meyar Medication Passport encrypted QR',
   });
   state.qrResult = { ...encoded, ...svgInfo };
+  state.qrIssued += 1;
   update();
 }
 
@@ -76,16 +91,39 @@ function update() {
   calibrate(root);
 }
 
+// Inputs only update state (no re-render while typing, so focus stays put).
 root.addEventListener('input', (e) => {
-  const input = e.target.closest('[data-action="qr-pin"]');
-  if (!input) return;
-  state.qrPin = input.value;
-  state.qrDecoded = null;
-  state.qrDecodeError = false;
-  if (state.qrPin.length >= 4) {
-    refreshQr();
+  const el = e.target;
+  if (el.dataset.action === 'qr-pin' || el.dataset.action === 'qr-pin-confirm') {
+    const clean = normalizeDigits(el.value).replace(/[^0-9]/g, '').slice(0, 6);
+    if (clean !== el.value) el.value = clean;
+    if (el.dataset.action === 'qr-pin') state.qrPin = clean; else state.qrPinConfirm = clean;
+  } else if (el.dataset.action === 'qr-emergency') {
+    state.qrEmergency = el.value;
   }
 });
+
+root.addEventListener('change', (e) => {
+  if (e.target.dataset.action === 'qr-emergency-toggle') {
+    state.qrEmergencyOn = e.target.checked;
+    update();
+  }
+});
+
+async function issueCard() {
+  const t = COPY[state.lang] || COPY.ar;
+  state.qrDecoded = null;
+  state.qrDecodeError = false;
+  if (!isValidPin(state.qrPin)) {
+    state.qrPinError = t.qrPinErrSix;
+  } else if (state.qrPin !== state.qrPinConfirm) {
+    state.qrPinError = t.qrPinErrMatch;
+  } else {
+    state.qrPinError = '';
+    await refreshQr();
+  }
+  update();
+}
 
 root.addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-action]');
@@ -111,12 +149,14 @@ root.addEventListener('click', async (e) => {
   } else if (action === 'decode-qr' && state.qrResult) {
     state.qrDecodeError = false;
     try {
-      state.qrDecoded = await decodeQrEnvelope(state.qrResult.qrText, { pin: state.qrPin });
+      state.qrDecoded = await decodeQrEnvelope(state.qrResult.qrText, { pin: state.qrPin, allowPlaintext: state.devMode });
     } catch {
       state.qrDecoded = null;
       state.qrDecodeError = true;
     }
     update();
+  } else if (action === 'issue-card') {
+    issueCard();
   } else if (action === 'speak' && 'speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(btn.dataset.speak);
