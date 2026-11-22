@@ -1,8 +1,14 @@
 import QRCode from 'qrcode';
+import { isValidPin } from './pinguard.js';
 
-const PBKDF2_ITERATIONS = 600000;
-const SALT_BYTES = 16;
-const NONCE_BYTES = 12;
+// C8 envelope parameters (docs/qr-envelope.md). 600,000 PBKDF2-SHA256 iterations:
+// OWASP Password Storage Cheat Sheet (docs/sources.md).
+export const PBKDF2_ITERATIONS = 600000;
+export const SALT_BYTES = 16;
+export const NONCE_BYTES = 12;
+const GCM_TAG_BYTES = 16;
+// Longest emergency line the patient may type (UI limit to keep the QR scannable).
+export const EMERGENCY_MAX_CHARS = 120;
 
 export function toBase64Url(bytes) {
   let bin = '';
@@ -54,7 +60,8 @@ export async function inflateBytes(bytes) {
 
 /**
  * Build a compact, self-contained payload from a Meyar data contract.
- * Never includes raw genome, patient name, or any URL.
+ * Never includes raw genome, patient name, patient ID, or any URL (C8: no identity,
+ * so a brute-forced card reveals phenotypes, never who they belong to).
  */
 export function buildCompactPayload(contract, getDrugsFn = () => []) {
   const genes = (contract.genes || []).map((g) => {
@@ -102,7 +109,6 @@ export function buildCompactPayload(contract, getDrugsFn = () => []) {
 
   const payload = {
     v: 1,
-    id: contract.patientId,
     o: contract.sampleOrigin,
     g: genes,
   };
@@ -148,36 +154,62 @@ async function deriveAesKey(pin, salt) {
  * Encrypt compressed payload bytes into the C8 envelope:
  * { v: 1, s: base64url(salt), n: base64url(nonce), c: base64url(ciphertext) }
  */
-export async function encryptEnvelope(compressedBytes, pin) {
-  if (!pin || String(pin).length < 4) {
-    throw new Error('PIN must be at least 4 characters');
+// The clear emergency line (if any) is bound as AES-GCM additional data: editing it
+// on a copied card makes decryption fail instead of showing a forged line beside real data.
+function aadFor(emergency) {
+  return new TextEncoder().encode(emergency ? `meyar-e:${emergency}` : 'meyar-e:');
+}
+
+export async function encryptEnvelope(compressedBytes, pin, { emergency = '' } = {}) {
+  if (!isValidPin(pin)) {
+    throw new Error('PIN must be exactly 6 digits');
   }
   const salt = globalThis.crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const nonce = globalThis.crypto.getRandomValues(new Uint8Array(NONCE_BYTES));
   const key = await deriveAesKey(pin, salt);
   const cipherBuf = await globalThis.crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: nonce },
+    { name: 'AES-GCM', iv: nonce, additionalData: aadFor(emergency) },
     key,
     compressedBytes
   );
-  return {
+  const envelope = {
     v: 1,
     s: toBase64Url(salt),
     n: toBase64Url(nonce),
     c: toBase64Url(new Uint8Array(cipherBuf)),
   };
+  if (emergency) envelope.e = emergency;
+  return envelope;
+}
+
+const B64URL = /^[A-Za-z0-9_-]+$/;
+
+/** Structural check of a v1 envelope; throws before any key derivation. */
+export function assertEnvelopeV1(envelope) {
+  const bad = (why) => { throw new Error(`Invalid encrypted QR envelope: ${why}`); };
+  if (!envelope || typeof envelope !== 'object' || envelope.v !== 1) bad('version');
+  for (const k of ['s', 'n', 'c']) {
+    if (typeof envelope[k] !== 'string' || !B64URL.test(envelope[k])) bad(k);
+  }
+  if (fromBase64Url(envelope.s).length !== SALT_BYTES) bad('salt length');
+  if (fromBase64Url(envelope.n).length !== NONCE_BYTES) bad('nonce length');
+  if (fromBase64Url(envelope.c).length <= GCM_TAG_BYTES) bad('ciphertext length');
+  if (envelope.e !== undefined && (typeof envelope.e !== 'string' || envelope.e.length > EMERGENCY_MAX_CHARS)) bad('emergency line');
+  const allowed = new Set(['v', 's', 'n', 'c', 'e']);
+  if (Object.keys(envelope).some((k) => !allowed.has(k))) bad('unknown field');
 }
 
 export async function decryptEnvelope(envelope, pin) {
-  if (!envelope || envelope.v !== 1 || !envelope.s || !envelope.n || !envelope.c) {
-    throw new Error('Invalid encrypted QR envelope');
+  assertEnvelopeV1(envelope);
+  if (!isValidPin(pin)) {
+    throw new Error('PIN must be exactly 6 digits');
   }
   const salt = fromBase64Url(envelope.s);
   const nonce = fromBase64Url(envelope.n);
   const cipher = fromBase64Url(envelope.c);
   const key = await deriveAesKey(pin, salt);
   const plainBuf = await globalThis.crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: nonce },
+    { name: 'AES-GCM', iv: nonce, additionalData: aadFor(envelope.e || '') },
     key,
     cipher
   );
@@ -188,15 +220,22 @@ export async function decryptEnvelope(envelope, pin) {
  * Encode a contract into an offline QR string (C8 encrypted envelope by default;
  * plaintext mode only when plaintext: true under dev flag).
  */
-export async function encodeQrEnvelope(contract, { pin = '123456', plaintext = false, getDrugsFn } = {}) {
+export async function encodeQrEnvelope(contract, { pin, plaintext = false, getDrugsFn, emergency = '' } = {}) {
+  // C8: no default PIN. The patient chooses it; every call makes a fresh salt and
+  // nonce, so re-encoding with a new PIN is a reissue (a new card).
+  if (!plaintext && !isValidPin(pin)) {
+    throw new Error('PIN must be exactly 6 digits');
+  }
   const payload = buildCompactPayload(contract, getDrugsFn);
   const rawJson = JSON.stringify(payload);
   const rawBytes = new TextEncoder().encode(rawJson);
   const compressedBytes = await deflateBytes(rawBytes);
 
+  // Optional emergency line: off unless the patient typed one. Stored in clear, by design.
+  const line = String(emergency || '').trim().slice(0, EMERGENCY_MAX_CHARS);
   const envelope = plaintext
     ? { v: 0, p: toBase64Url(compressedBytes) }
-    : await encryptEnvelope(compressedBytes, pin);
+    : await encryptEnvelope(compressedBytes, pin, { emergency: line });
 
   const qrText = JSON.stringify(envelope);
   const envelopeBytes = new TextEncoder().encode(qrText).length;
@@ -213,10 +252,22 @@ export async function encodeQrEnvelope(contract, { pin = '123456', plaintext = f
   };
 }
 
-export async function decodeQrEnvelope(qrText, { pin } = {}) {
+/**
+ * What a reader may show BEFORE the PIN: the holder line, plus the patient's own
+ * emergency line if they chose one. Nothing else is readable without the PIN.
+ */
+export function holderView(qrText) {
+  const envelope = typeof qrText === 'string' ? JSON.parse(qrText) : qrText;
+  assertEnvelopeV1(envelope);
+  return { kind: 'meyar-passport', v: 1, emergency: envelope.e || null };
+}
+
+export async function decodeQrEnvelope(qrText, { pin, allowPlaintext = false } = {}) {
   const envelope = typeof qrText === 'string' ? JSON.parse(qrText) : qrText;
   let compressedBytes;
   if (envelope.v === 0 && envelope.p) {
+    // Dev-only plaintext mode (C2). Production readers refuse it.
+    if (!allowPlaintext) throw new Error('Plaintext QR is accepted only in dev mode');
     compressedBytes = fromBase64Url(envelope.p);
   } else if (envelope.v === 1) {
     if (!pin) throw new Error('PIN required to decrypt QR');

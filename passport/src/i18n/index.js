@@ -71,6 +71,8 @@ function buildScanCopy(lang) {
   const sep = lang === 'ar' ? '، ' : ', ';
   return {
     ...s,
+    // C8: wrong-PIN lockout countdown (seconds in the reader's digits).
+    pinLocked: (secs) => fill(s.pinLocked, { s: formatNum(secs, lang) }),
     covAssayed: (assayed, total, untested) => {
       const base = fill(c.coverageBase, {
         assayed: formatNum(assayed, lang),

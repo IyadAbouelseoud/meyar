@@ -227,14 +227,34 @@ function renderQrCard(state, t) {
         </span>
       </div>
       <div class="m-qr-box" data-testid="qr-svg-box">
-        ${qr ? qr.svg : `<p class="m-sec-sub">${esc(t.qrGenerating)}</p>`}
+        ${qr ? qr.svg : `<p class="m-sec-sub">${esc(t.qrPinPrompt)}</p>`}
       </div>
       <div class="m-qr-controls">
-        <div class="m-qr-pin-field">
+        <div class="m-qr-pin-field m-field">
           <label for="qr-pin-input">${esc(t.qrPinLabel)}</label>
-          <input id="qr-pin-input" class="m-qr-pin-input m-data" type="text" inputmode="numeric" maxlength="6" value="${esc(state.qrPin)}" data-action="qr-pin">
+          <input id="qr-pin-input" class="m-input m-qr-pin-input m-data" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" value="${esc(state.qrPin)}" data-action="qr-pin">
         </div>
-        <button type="button" class="m-btn" data-action="decode-qr" ${qr ? '' : 'disabled'}>
+        <div class="m-qr-pin-field m-field">
+          <label for="qr-pin-confirm">${esc(t.qrPinConfirmLabel)}</label>
+          <input id="qr-pin-confirm" class="m-input m-qr-pin-input m-data" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" value="${esc(state.qrPinConfirm)}" data-action="qr-pin-confirm">
+        </div>
+      </div>
+      <div class="m-qr-emergency">
+        <label class="m-switch"><input type="checkbox" role="switch" data-action="qr-emergency-toggle" ${state.qrEmergencyOn ? 'checked' : ''}><span>${esc(t.qrEmergencyToggle)}</span></label>
+        ${state.qrEmergencyOn ? `
+          <div class="m-field">
+            <label for="qr-emergency-input">${esc(t.qrEmergencyLabel)}</label>
+            <input id="qr-emergency-input" class="m-input" type="text" maxlength="120" value="${esc(state.qrEmergency)}" data-action="qr-emergency">
+            <p class="m-qr-honesty">${esc(t.qrEmergencyHint)}</p>
+          </div>` : ''}
+      </div>
+      ${state.qrPinError ? `<div class="m-status m-status--stop" role="alert"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(state.qrPinError)}</span></div>` : ''}
+      <div class="m-qr-controls">
+        <button type="button" class="m-btn" data-action="issue-card">
+          <svg aria-hidden="true"><use href="#i-lock"/></svg>
+          <span>${esc(state.qrIssued > 0 ? t.qrReissueBtn : t.qrIssueBtn)}</span>
+        </button>
+        <button type="button" class="m-btn m-btn--secondary" data-action="decode-qr" ${qr ? '' : 'disabled'}>
           <svg aria-hidden="true"><use href="#i-qr"/></svg>
           <span>${esc(t.qrVerifyBtn)}</span>
         </button>
@@ -250,7 +270,8 @@ function renderQrCard(state, t) {
       ${state.devMode && qr ? `
         <p class="m-data m-qr-honesty" data-testid="qr-metrics">raw ${qr.rawBytes} B → deflate ${qr.compressedBytes} B → envelope ${qr.envelopeBytes} B · ${qr.modules}×${qr.modules} · EC ${qr.errorCorrectionLevel}</p>
       ` : ''}
-      <p class="m-qr-honesty">${esc(t.qrPinHonesty)}</p>
+      <p class="m-qr-honesty" data-testid="qr-brute-honesty">${esc(t.qrPinBrute)}</p>
+      ${state.qrIssued > 0 ? `<p class="m-qr-honesty">${esc(t.qrReissueNote)}</p>` : ''}
       ${state.qrDecodeError ? `<div class="m-status m-status--stop"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(t.qrDecodedFail)}</span></div>` : ''}
       ${state.qrDecoded ? `
         <div class="m-qr-decoded" data-testid="qr-decoded-output">

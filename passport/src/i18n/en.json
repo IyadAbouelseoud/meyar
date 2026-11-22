@@ -6,8 +6,20 @@
     "reviewedAt": null
   },
   "scale": {
-    "metabolizer": ["Slow", "A bit slow", "Normal", "A bit fast", "Very fast"],
-    "function": ["Weak", "Weaker", "Normal", "Stronger", "—"]
+    "metabolizer": [
+      "Slow",
+      "A bit slow",
+      "Normal",
+      "A bit fast",
+      "Very fast"
+    ],
+    "function": [
+      "Weak",
+      "Weaker",
+      "Normal",
+      "Stronger",
+      "—"
+    ]
   },
   "phenotypePlain": {
     "Poor Metabolizer": "Your body processes these medicines slowly.",
@@ -97,7 +109,7 @@
     "outsideCallNote": "Mock outside-call result for copy-number demonstration.",
     "qrTitle": "Offline QR passport",
     "qrSub": "Carries your compressed gene summary encrypted with a PIN — never a URL.",
-    "qrPinLabel": "Demo PIN",
+    "qrPinLabel": "Choose a 6-digit PIN",
     "qrPinHonesty": "The PIN stops casual scanning only; a copied QR can be brute-forced offline.",
     "qrVerifyBtn": "Verify offline decode",
     "qrDecodedOk": "Decoded locally with no network:",
@@ -106,7 +118,18 @@
     "qrEncryptedBadge": "Encrypted (C8)",
     "qrPlainBadge": "Plaintext (dev)",
     "qrGenerating": "Generating QR…",
-    "openScannerBtn": "Open scan-side reader"
+    "openScannerBtn": "Open scan-side reader",
+    "qrPinConfirmLabel": "Type the PIN again",
+    "qrPinPrompt": "Choose your PIN to show your card. We never store or send it.",
+    "qrIssueBtn": "Make my card",
+    "qrReissueBtn": "Make a new card",
+    "qrReissueNote": "Each new card is encrypted afresh. Old cards still open with their old PIN and cannot be cancelled, because they work offline. Destroy them yourself.",
+    "qrEmergencyToggle": "Add an emergency line readable without the PIN",
+    "qrEmergencyLabel": "Emergency line (anyone who scans the card sees it)",
+    "qrEmergencyHint": "Write only what you want everyone to see. The full record is at the hospital.",
+    "qrPinBrute": "A 6-digit PIN can be guessed on another device if the QR is copied. The card holds gene results only, never your genome or your name.",
+    "qrPinErrSix": "The PIN must be exactly 6 digits.",
+    "qrPinErrMatch": "The two PINs do not match. Type it again."
   },
   "scan": {
     "proto": "Research prototype — not for clinical use",
@@ -133,7 +156,7 @@
     "decryptBusy": "Decrypting locally…",
     "pinError": "Could not decrypt with this PIN — ask the patient and try again.",
     "rescanBtn": "Scan another card",
-    "patientLabel": "Demo ID",
+    "patientLabel": "Card holder",
     "originLabel": "Sample origin",
     "medsLabel": "Current medicines",
     "noMeds": "None recorded",
@@ -148,6 +171,11 @@
     "outsideCallFoot": "CYP2D6 from outside call (mock caller)",
     "notAssessedFoot": "Copy number not assessed — no result reported",
     "clearKey": "Clear",
-    "backKey": "Del"
+    "backKey": "Del",
+    "holderLine": "Meyar Medication Passport — ask the card holder for the PIN.",
+    "holderNote": "Until the PIN is entered, this line is all the card shows.",
+    "emergencyLabel": "Emergency line (chosen by the patient, not encrypted):",
+    "pinLocked": "Too many wrong PINs. Wait {s} s, then try again, or ask the patient for the PIN.",
+    "patientNoId": "The QR carries no name and no ID number"
   }
 }

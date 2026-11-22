@@ -69,8 +69,19 @@ function renderPinStep(state, t) {
   const dots = Array.from({ length: maxLen }, (_, i) => `<i${i < len ? ' class="is-on"' : ''}></i>`).join('');
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
+  const locked = (state.lockMs || 0) > 0;
+  const lockSecs = Math.ceil((state.lockMs || 0) / 1000);
+  const emergency = state.holder?.emergency;
+
   return `
     <section class="m-panel m-scan-panel m-scan-pin-panel" aria-labelledby="pin-heading">
+      <div class="m-holder" data-testid="holder-view">
+        <p class="m-holder__line"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>${esc(t.holderLine)}</span></p>
+        ${emergency
+          ? `<p class="m-holder__emergency"><span class="m-holder__label">${esc(t.emergencyLabel)}</span> <bdi>${esc(emergency)}</bdi></p>`
+          : ''}
+        <p class="m-sec-sub">${esc(t.holderNote)}</p>
+      </div>
       <div>
         <h2 class="m-sec-title" id="pin-heading">${esc(t.pinTitle)}</h2>
         <p class="m-sec-sub">${esc(t.pinSub)}</p>
@@ -78,10 +89,10 @@ function renderPinStep(state, t) {
       <div class="m-pin-dots" role="img" aria-label="${len} of ${maxLen} digits entered" data-testid="pin-dots">
         ${dots}
       </div>
-      <div class="m-pin" role="group" aria-label="PIN keypad">
+      <div class="m-pin" role="group" aria-label="PIN keypad"${locked ? ' aria-disabled="true"' : ''}>
         ${keys.map((d) => `
           <button type="button" data-action="pin-digit" data-digit="${d}">
-            <b>${AR_DIGITS[Number(d)]}</b>
+            <b>${formatNum(d, 'ar')}</b>
             <small>${d}</small>
           </button>
         `).join('')}
@@ -89,7 +100,7 @@ function renderPinStep(state, t) {
           <small>${esc(t.clearKey)}</small>
         </button>
         <button type="button" data-action="pin-digit" data-digit="0">
-          <b>${AR_DIGITS[0]}</b>
+          <b>${formatNum(0, 'ar')}</b>
           <small>0</small>
         </button>
         <button type="button" data-action="pin-back" aria-label="${esc(t.backKey)}">
@@ -97,7 +108,7 @@ function renderPinStep(state, t) {
         </button>
       </div>
       <div class="m-scan-actions">
-        <button type="button" class="m-btn" data-action="decrypt" ${len >= 4 && !state.decrypting ? '' : 'disabled'}>
+        <button type="button" class="m-btn" data-action="decrypt" ${len === maxLen && !state.decrypting && !locked ? '' : 'disabled'}>
           <svg aria-hidden="true"><use href="#i-lock"/></svg>
           <span>${esc(state.decrypting ? t.decryptBusy : t.decryptBtn)}</span>
         </button>
@@ -105,7 +116,9 @@ function renderPinStep(state, t) {
           ${esc(t.rescanBtn)}
         </button>
       </div>
-      ${state.pinError ? `<div class="m-status m-status--stop" role="alert"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(state.pinError)}</span></div>` : ''}
+      ${locked
+        ? `<div class="m-status m-status--ask" role="status" data-testid="pin-locked"><svg aria-hidden="true"><use href="#i-ask"/></svg><span>${esc(t.pinLocked(lockSecs))}</span></div>`
+        : (state.pinError ? `<div class="m-status m-status--stop" role="alert"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(state.pinError)}</span></div>` : '')}
       <p class="m-qr-honesty" data-testid="pin-honesty">${esc(t.pinHonesty)}</p>
     </section>
   `;
@@ -197,7 +210,7 @@ function renderResultStep(state, t) {
         <div class="m-doctor-meta">
           <div class="m-doctor-meta__item">
             <small>${esc(t.patientLabel)}</small>
-            <span class="m-data" id="result-heading">${esc(payload.id)}</span>
+            <span id="result-heading">${esc(t.patientNoId)}</span>
           </div>
           <div class="m-doctor-meta__item">
             <small>${esc(t.originLabel)}</small>
