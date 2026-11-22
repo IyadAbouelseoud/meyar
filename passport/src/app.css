@@ -20,7 +20,7 @@ body {
   margin-inline: auto;
   padding-inline: var(--m-space-4);
   padding-block-start: var(--m-space-3);
-  padding-block-end: calc(var(--m-space-8) + 64px);
+  padding-block-end: calc(var(--m-space-8) + var(--m-target) + 20px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--m-space-5);
@@ -546,4 +546,78 @@ body {
 .m-scan-pin-panel .m-holder {
   inline-size: 100%;
   text-align: start;
+}
+
+/* Elder accessibility, caregiver view, and read-aloud tooltip (C5) */
+.m-switch {
+  min-block-size: var(--m-target);
+  font-size: var(--m-size-sm);
+  color: var(--m-text);
+  max-inline-size: 100%;
+  flex-wrap: wrap;
+}
+
+.m-caregiver-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--m-space-3);
+  padding: var(--m-space-3) var(--m-space-4);
+  background: var(--m-surface);
+  border: 1px solid var(--m-line-strong);
+  border-radius: var(--m-radius-card);
+}
+
+.m-caregiver-bar__info {
+  display: grid;
+  gap: var(--m-space-1);
+  min-width: 0;
+}
+
+.m-speak-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-block-size: var(--m-target);
+  padding-inline: var(--m-space-2);
+  border-radius: var(--m-radius-control);
+  color: var(--m-text2);
+  font-size: var(--m-size-xs);
+  cursor: help;
+}
+
+.m-speak-tooltip svg {
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  flex: none;
+}
+
+.m-speak-tooltip[data-tooltip]:hover::after,
+.m-speak-tooltip[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  inset-block-end: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: 30;
+  inline-size: max-content;
+  max-inline-size: min(260px, 80vw);
+  padding: var(--m-space-2) var(--m-space-3);
+  border-radius: var(--m-radius-control);
+  background: var(--m-text);
+  color: var(--m-surface);
+  font-size: var(--m-size-xs);
+  line-height: 1.4;
+  white-space: normal;
+  pointer-events: none;
+}
+
+[data-elder="on"] .m-tabs--fixed button {
+  font-size: var(--m-size-xs);
+  padding-block: var(--m-space-1);
+}
+
+[data-elder="on"] .m-topbar__controls {
+  gap: var(--m-space-3);
 }

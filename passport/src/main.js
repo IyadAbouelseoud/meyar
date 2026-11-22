@@ -9,17 +9,47 @@ import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg } from './qr.js';
 import { isValidPin, normalizeDigits } from './pinguard.js';
 import { renderApp } from './render.js';
 import { COPY } from './i18n.js';
+import { hasSpeechVoice, selectVoiceForLang } from './speech.js';
 
 const root = document.getElementById('app');
-
 const params = new URLSearchParams(window.location.search);
 
+function readPref(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writePref(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage errors in restricted contexts
+  }
+}
+
+const initialLang = params.get('lang') === 'en'
+  ? 'en'
+  : params.get('lang') === 'ar'
+    ? 'ar'
+    : (readPref('meyar:lang') === 'en' ? 'en' : 'ar');
+
+const initialElder = params.has('elder')
+  ? params.get('elder') === 'on'
+  : readPref('meyar:elder') === 'on';
+
 const state = {
-  lang: params.get('lang') === 'en' ? 'en' : 'ar',
-  elder: params.get('elder') === 'on',
+  lang: initialLang,
+  elder: initialElder,
+  caregiverMode: params.get('mode') === 'caregiver',
+  caregiverCopied: false,
   tab: ['genes', 'meds', 'doctor'].includes(params.get('tab')) ? params.get('tab') : 'genes',
   patientId: params.get('patient') || 'demo-001',
   devMode: params.get('dev') === '1',
+  speechAvailable: hasSpeechVoice(initialLang),
+  speakingIndex: null,
   // C8: no default PIN. Held in memory only, never stored or logged.
   qrPin: '',
   qrPinConfirm: '',
@@ -34,6 +64,29 @@ const state = {
   contract: null,
   error: null,
 };
+
+function syncUrlMode() {
+  try {
+    const url = new URL(window.location.href);
+    if (state.caregiverMode) url.searchParams.set('mode', 'caregiver');
+    else url.searchParams.delete('mode');
+    url.searchParams.set('patient', state.patientId);
+    url.searchParams.set('lang', state.lang);
+    url.searchParams.set('elder', state.elder ? 'on' : 'off');
+    window.history.replaceState(null, '', url.toString());
+  } catch {
+    // Ignore history errors
+  }
+}
+
+function buildCaregiverUrl() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('patient', state.patientId);
+  url.searchParams.set('mode', 'caregiver');
+  url.searchParams.set('lang', state.lang);
+  url.searchParams.set('elder', state.elder ? 'on' : 'off');
+  return url.toString();
+}
 
 let qrSeq = 0;
 
@@ -85,14 +138,25 @@ async function loadPatient(patientId) {
 }
 
 function update() {
+  state.speechAvailable = hasSpeechVoice(state.lang);
   setLang(state.lang);
   setElder(state.elder);
   renderApp(root, state);
   calibrate(root);
 }
 
+root.addEventListener('change', (e) => {
+  const elderInput = e.target.closest('input[data-action="elder"]');
+  if (!elderInput) return;
+  state.elder = Boolean(elderInput.checked);
+  writePref('meyar:elder', state.elder ? 'on' : 'off');
+  syncUrlMode();
+  update();
+});
+
 // Inputs only update state (no re-render while typing, so focus stays put).
 root.addEventListener('input', (e) => {
+  if (state.caregiverMode) return;
   const el = e.target;
   if (el.dataset.action === 'qr-pin' || el.dataset.action === 'qr-pin-confirm') {
     const clean = normalizeDigits(el.value).replace(/[^0-9]/g, '').slice(0, 6);
@@ -131,17 +195,35 @@ root.addEventListener('click', async (e) => {
   const action = btn.dataset.action;
   if (action === 'lang') {
     state.lang = state.lang === 'ar' ? 'en' : 'ar';
-    update();
-  } else if (action === 'elder') {
-    state.elder = !state.elder;
+    writePref('meyar:lang', state.lang);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    state.speakingIndex = null;
+    syncUrlMode();
     update();
   } else if (action === 'tab') {
     state.tab = btn.dataset.tab;
+    state.caregiverCopied = false;
     update();
     window.scrollTo({ top: 0 });
-  } else if (action === 'patient') {
+  } else if (action === 'patient' && !state.caregiverMode) {
     loadPatient(btn.dataset.patient);
-  } else if (action === 'toggle-plaintext') {
+  } else if (action === 'caregiver-toggle') {
+    state.caregiverMode = !state.caregiverMode;
+    state.caregiverCopied = false;
+    syncUrlMode();
+    update();
+  } else if (action === 'caregiver-copy') {
+    const shareUrl = buildCaregiverUrl();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      }
+      state.caregiverCopied = true;
+    } catch {
+      state.caregiverCopied = false;
+    }
+    update();
+  } else if (action === 'toggle-plaintext' && !state.caregiverMode) {
     state.qrPlaintext = !state.qrPlaintext;
     state.qrDecoded = null;
     state.qrDecodeError = false;
@@ -158,12 +240,51 @@ root.addEventListener('click', async (e) => {
   } else if (action === 'issue-card') {
     issueCard();
   } else if (action === 'speak' && 'speechSynthesis' in window) {
+    const idx = Number(btn.dataset.geneIndex);
+    if (state.speakingIndex === idx) {
+      window.speechSynthesis.cancel();
+      state.speakingIndex = null;
+      update();
+      return;
+    }
     window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(btn.dataset.speak);
-    utter.lang = state.lang === 'ar' ? 'ar-SA' : 'en-US';
+    const voice = selectVoiceForLang(window.speechSynthesis.getVoices(), state.lang);
+    if (!voice) {
+      state.speechAvailable = false;
+      state.speakingIndex = null;
+      update();
+      return;
+    }
+    const utter = new SpeechSynthesisUtterance(btn.dataset.speak || '');
+    utter.voice = voice;
+    utter.lang = voice.lang;
+    state.speakingIndex = idx;
+    utter.onend = () => {
+      if (state.speakingIndex === idx) {
+        state.speakingIndex = null;
+        update();
+      }
+    };
+    utter.onerror = () => {
+      if (state.speakingIndex === idx) {
+        state.speakingIndex = null;
+        update();
+      }
+    };
     window.speechSynthesis.speak(utter);
+    update();
   }
 });
+
+if ('speechSynthesis' in window && typeof window.speechSynthesis.addEventListener === 'function') {
+  window.speechSynthesis.addEventListener('voiceschanged', () => {
+    const available = hasSpeechVoice(state.lang);
+    if (available !== state.speechAvailable) {
+      state.speechAvailable = available;
+      update();
+    }
+  });
+}
 
 initMotion();
 if ('serviceWorker' in navigator) {

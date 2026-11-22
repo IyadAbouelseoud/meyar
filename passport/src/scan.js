@@ -15,9 +15,31 @@ import { renderScanApp, SCAN_COPY } from './scan-render.js';
 const root = document.getElementById('scan-app');
 const params = new URLSearchParams(window.location.search);
 
+function readPref(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writePref(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 const state = {
-  lang: params.get('lang') === 'en' ? 'en' : 'ar',
-  elder: params.get('elder') === 'on',
+  lang: params.get('lang') === 'en'
+    ? 'en'
+    : params.get('lang') === 'ar'
+      ? 'ar'
+      : (readPref('meyar:lang') === 'en' ? 'en' : 'ar'),
+  elder: params.has('elder')
+    ? params.get('elder') === 'on'
+    : readPref('meyar:elder') === 'on',
   step: 'scan', // 'scan' | 'pin' | 'result'
   cameraActive: false,
   scanError: '',
@@ -219,6 +241,13 @@ async function submitPin() {
 }
 
 root.addEventListener('change', async (e) => {
+  const elderInput = e.target.closest('input[data-action="elder"]');
+  if (elderInput) {
+    state.elder = Boolean(elderInput.checked);
+    writePref('meyar:elder', state.elder ? 'on' : 'off');
+    update();
+    return;
+  }
   const fileInput = e.target.closest('[data-action="scan-file"]');
   if (!fileInput || !fileInput.files?.[0]) return;
   const t = SCAN_COPY[state.lang] || SCAN_COPY.ar;
@@ -251,9 +280,7 @@ root.addEventListener('click', (e) => {
 
   if (action === 'lang') {
     state.lang = state.lang === 'ar' ? 'en' : 'ar';
-    update();
-  } else if (action === 'elder') {
-    state.elder = !state.elder;
+    writePref('meyar:lang', state.lang);
     update();
   } else if (action === 'start-cam') {
     startCamera();

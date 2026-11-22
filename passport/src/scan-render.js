@@ -18,9 +18,10 @@ function renderTopbar(state, t) {
       </div>
       <div class="m-topbar__controls">
         <a class="m-btn m-btn--quiet m-ctrl-btn" href="/index.html?tab=doctor">${esc(t.backToPassport)}</a>
-        <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="elder" aria-pressed="${state.elder}">
-          ${esc(state.elder ? t.elderOn : t.elderOff)}
-        </button>
+        <label class="m-switch">
+          <input type="checkbox" data-action="elder" ${state.elder ? 'checked' : ''} aria-label="${esc(t.elderOff)}">
+          <span>${esc(t.elderOff)}</span>
+        </label>
         <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="lang">
           ${esc(t.langToggle)}
         </button>

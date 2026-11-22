@@ -118,6 +118,19 @@ Data contract unchanged. No new runtime dependency.
   - `passport/public/demo/demo-001.contract.json`, `demo-002.contract.json`, `demo-006.contract.json`
   - `handoff/C1.md` (`Status: DONE`)
 - **How to run:**
+
+## C5 — Elder accessibility mode (23 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/speech.js` (new), `passport/test/c5.test.mjs` (new)
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/scan.js`, `passport/src/scan-render.js`, `passport/src/app.css`
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`
+  - `passport/dist/` (rebuilt production bundle)
+  - `handoff/C5.md` (`Status: DONE`)
+- **How to run:**
+  - `cd passport && npm run dev` (serves on `http://localhost:5173`; supports `?elder=on`, `?mode=caregiver`, `?lang=ar|en`)
+  - `node --test passport/test/*.test.mjs` (8/8 pass)
+  - `npm --prefix passport run build`
+- **Notes:** Elder mode uses `.m-switch` (`data-elder="on"` on `<html>`, persisted in `localStorage`). Read-aloud checks `speechSynthesis` for an `ar-SA` voice and hides the button with an explanatory tooltip when unavailable. Caregiver view (`?mode=caregiver`) provides a read-only family view locking profile switching and PIN/dev edits. Verified with `axe-core` WCAG 2.2 AA (0 violations) and 200% text resize at 375 px and 1440 px. No new runtime dependencies; data contract unchanged.
   - `node design/build-tokens.mjs`
   - `cd passport && npm install && npm run dev` (serves on `http://localhost:5173`)
   - On Windows PowerShell if `npm.ps1` is restricted, use `npm.cmd`.

@@ -1,6 +1,7 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
 import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
 import { getDrugsForGene, getTierInfo, isMedCausingShift } from './lookup.js';
+import { buildGeneSpeakText } from './speech.js';
 
 function esc(str) {
   return String(str ?? '')
@@ -31,21 +32,38 @@ function renderTopbar(state, t) {
         <span class="m-mock">${esc(t.demo)}</span>
       </div>
       <div class="m-topbar__controls">
-        <div class="m-seg" role="group" aria-label="${esc(t.patientLabel)}">
-          ${patients.map((id) => `
-            <button type="button" data-action="patient" data-patient="${id}" aria-pressed="${state.patientId === id}">
-              <span class="m-data">${id}</span>
-            </button>
-          `).join('')}
-        </div>
-        <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="elder" aria-pressed="${state.elder}">
-          ${esc(state.elder ? t.elderOn : t.elderOff)}
-        </button>
+        ${state.caregiverMode ? '' : `
+          <div class="m-seg" role="group" aria-label="${esc(t.patientLabel)}">
+            ${patients.map((id) => `
+              <button type="button" data-action="patient" data-patient="${id}" aria-pressed="${state.patientId === id}">
+                <span class="m-data">${id}</span>
+              </button>
+            `).join('')}
+          </div>
+        `}
+        <label class="m-switch">
+          <input type="checkbox" data-action="elder" ${state.elder ? 'checked' : ''} aria-label="${esc(t.elderOff)}">
+          <span>${esc(t.elderOff)}</span>
+        </label>
         <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="lang">
           ${esc(t.langToggle)}
         </button>
       </div>
     </header>
+    ${state.caregiverMode ? `
+      <div class="m-caregiver-bar" role="status" data-testid="caregiver-banner">
+        <div class="m-caregiver-bar__info">
+          <span class="m-status m-status--info">
+            <svg aria-hidden="true"><use href="#i-info"/></svg>
+            <span>${esc(t.caregiverBadge)}</span>
+          </span>
+          <p class="m-sec-sub">${esc(t.caregiverNote)}</p>
+        </div>
+        <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="caregiver-toggle">
+          ${esc(t.caregiverExitBtn)}
+        </button>
+      </div>
+    ` : ''}
   `;
 }
 
@@ -66,7 +84,29 @@ function renderCover(t) {
   `;
 }
 
-function renderGeneCard(gene, index, lang, t) {
+function renderSpeakControl(speakText, index, state, t) {
+  const isSpeaking = state.speakingIndex === index;
+  if (state.speechAvailable) {
+    return `
+      <button type="button" class="m-btn m-btn--quiet" data-action="speak" data-gene-index="${index}" data-speak="${esc(speakText)}" aria-pressed="${isSpeaking}">
+        <svg aria-hidden="true"><use href="#i-speak"/></svg>
+        <span>${esc(isSpeaking ? t.stopReading : t.readAloud)}</span>
+      </button>
+    `;
+  }
+  return `
+    <span class="m-speak-tooltip" title="${esc(t.readAloudUnavailable)}" data-tooltip="${esc(t.readAloudUnavailable)}" tabindex="0" role="note" aria-label="${esc(t.readAloudUnavailable)}">
+      <button type="button" class="m-btn m-btn--quiet" data-action="speak" data-gene-index="${index}" hidden aria-hidden="true" tabindex="-1">
+        <svg aria-hidden="true"><use href="#i-speak"/></svg>
+        <span>${esc(t.readAloud)}</span>
+      </button>
+      <svg aria-hidden="true"><use href="#i-info"/></svg>
+      <span>${esc(t.readAloudUnavailableShort)}</span>
+    </span>
+  `;
+}
+
+function renderGeneCard(gene, index, lang, t, state) {
   const notAssessed = gene.callability?.method === 'not-assessed';
   const tierInfo = getTierInfo(gene);
   const activePhenotype = gene.effectivePhenotype || gene.phenotype;
@@ -80,11 +120,19 @@ function renderGeneCard(gene, index, lang, t) {
   `;
 
   if (notAssessed) {
+    const naSpeakText = buildGeneSpeakText({
+      gene,
+      plainSentence: `${t.notAssessedTitle}. ${t.notAssessedBody}`,
+      lang,
+    });
     return `
       <article class="m-gene" aria-labelledby="${headingId}">
         <div class="m-gene__head">
           <span class="m-gene__name m-data">${esc(gene.gene)} · VCF</span>
-          ${tierBadge}
+          <div class="m-gene__actions">
+            ${tierBadge}
+            ${renderSpeakControl(naSpeakText, index, state, t)}
+          </div>
         </div>
         <p class="m-gene__plain" id="${headingId}">${esc(t.notAssessedTitle)}</p>
         ${scaleHTML(gene, lang, getScaleLabels(gene, lang))}
@@ -97,6 +145,14 @@ function renderGeneCard(gene, index, lang, t) {
   const drugs = getDrugsForGene(gene);
   const actionable = drugs.filter((d) => d.status === 'stop' || d.status === 'ask');
   const shownDrugs = actionable.length > 0 ? actionable : drugs.slice(0, 3);
+
+  const becausePlain = gene.phenoconversion?.applied
+    ? t.phenoconversionLine(
+        PHENOTYPE_SHORT[lang]?.[gene.phenotype] || gene.phenotype,
+        PHENOTYPE_SHORT[lang]?.[gene.effectivePhenotype] || gene.effectivePhenotype,
+        (gene.phenoconversion.cause || []).map((c) => drugLabel(c, lang)).join(', ')
+      ).replace(/<[^>]+>/g, '')
+    : '';
 
   const becauseHtml = gene.phenoconversion?.applied
     ? `<p class="m-gene__because">${t.phenoconversionLine(
@@ -139,7 +195,16 @@ function renderGeneCard(gene, index, lang, t) {
         ? `<p class="m-coverage__line">${esc(t.outsideCallNote)}</p>`
         : '');
 
-  const speakText = `${gene.gene}. ${plainSentence}`;
+  const speakText = buildGeneSpeakText({
+    gene,
+    plainSentence,
+    phenoconversionLine: becausePlain,
+    drugs: shownDrugs.map((d) => ({
+      label: drugLabel(d.drug, lang),
+      statusLabel: statusText(d.status, t),
+    })),
+    lang,
+  });
 
   return `
     <article class="m-gene" aria-labelledby="${headingId}">
@@ -147,10 +212,7 @@ function renderGeneCard(gene, index, lang, t) {
         <span class="m-gene__name m-data">${esc(gene.gene)}${gene.diplotype ? ` · ${esc(gene.diplotype)}` : ''}</span>
         <div class="m-gene__actions">
           ${tierBadge}
-          <button type="button" class="m-btn m-btn--quiet" data-action="speak" data-speak="${esc(speakText)}">
-            <svg aria-hidden="true"><use href="#i-speak"/></svg>
-            <span>${esc(t.readAloud)}</span>
-          </button>
+          ${renderSpeakControl(speakText, index, state, t)}
         </div>
       </div>
       <p class="m-gene__plain" id="${headingId}">${esc(plainSentence)}</p>
@@ -162,7 +224,7 @@ function renderGeneCard(gene, index, lang, t) {
   `;
 }
 
-function renderGenesView(contract, lang, t) {
+function renderGenesView(contract, lang, t, state) {
   return `
     ${renderCover(t)}
     <section class="m-stack" aria-labelledby="genes-heading">
@@ -170,7 +232,7 @@ function renderGenesView(contract, lang, t) {
         <h2 class="m-sec-title" id="genes-heading">${esc(t.myGenesTitle)}</h2>
         <p class="m-sec-sub">${esc(t.myGenesSub)}</p>
       </div>
-      ${(contract.genes || []).map((g, i) => renderGeneCard(g, i, lang, t)).join('')}
+      ${(contract.genes || []).map((g, i) => renderGeneCard(g, i, lang, t, state)).join('')}
     </section>
   `;
 }
@@ -229,6 +291,7 @@ function renderQrCard(state, t) {
       <div class="m-qr-box" data-testid="qr-svg-box">
         ${qr ? qr.svg : `<p class="m-sec-sub">${esc(t.qrPinPrompt)}</p>`}
       </div>
+      ${state.caregiverMode ? '<div class="m-qr-controls">' : `
       <div class="m-qr-controls">
         <div class="m-qr-pin-field m-field">
           <label for="qr-pin-input">${esc(t.qrPinLabel)}</label>
@@ -257,11 +320,19 @@ function renderQrCard(state, t) {
         <button type="button" class="m-btn m-btn--secondary" data-action="decode-qr" ${qr ? '' : 'disabled'}>
           <svg aria-hidden="true"><use href="#i-qr"/></svg>
           <span>${esc(t.qrVerifyBtn)}</span>
-        </button>
+        </button>`}
         <a class="m-btn m-btn--secondary" href="/scan.html">
           <span>${esc(t.openScannerBtn)}</span>
         </a>
-        ${state.devMode ? `
+        ${!state.caregiverMode ? `
+          <button type="button" class="m-btn m-btn--secondary" data-action="caregiver-toggle">
+            ${esc(t.caregiverOpenBtn)}
+          </button>
+          <button type="button" class="m-btn m-btn--quiet" data-action="caregiver-copy">
+            ${esc(state.caregiverCopied ? t.caregiverCopied : t.caregiverCopyBtn)}
+          </button>
+        ` : ''}
+        ${!state.caregiverMode && state.devMode ? `
           <button type="button" class="m-btn m-btn--secondary" data-action="toggle-plaintext" aria-pressed="${state.qrPlaintext}">
             ${esc(t.qrPlaintextToggle)}
           </button>
@@ -383,7 +454,7 @@ export function renderApp(root, state) {
   } else if (state.tab === 'doctor') {
     body = renderDoctorView(state.contract, state.lang, t, state);
   } else {
-    body = renderGenesView(state.contract, state.lang, t);
+    body = renderGenesView(state.contract, state.lang, t, state);
   }
 
   root.innerHTML = `
