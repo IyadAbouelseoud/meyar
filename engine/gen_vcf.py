@@ -368,7 +368,7 @@ DEMO_PATIENTS: Dict[str, Dict[str, object]] = {
         "omitted": DEMO_006_OMITTED,
         "outside_calls": [
             "# mock: true",
-            "# source: Mock CNV-aware caller (StellarPGx-compatible synthetic demo; not run in prototype)",
+            "# source: Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype)",
             "CYP2D6\t*1/*2x2",
         ],
     },
@@ -426,8 +426,13 @@ def write_patient_files(patient_id: str, out_dir: Path) -> List[Path]:
     outside_calls = spec.get("outside_calls")
     if outside_calls:
         outside_path = out_dir / f"{patient_id}.outside.tsv"
-        outside_path.write_text("\n".join(outside_calls) + "\n", encoding="utf-8", newline="\n")  # type: ignore[arg-type]
-        written.append(outside_path)
+        # The committed outside-call files are owned by A8 (engine/data/in/*.outside.tsv).
+        # Only seed one when it is missing; never overwrite the committed version.
+        if outside_path.exists():
+            print(f"{patient_id}: kept existing {outside_path.name} (owned by A8)")
+        else:
+            outside_path.write_text("\n".join(outside_calls) + "\n", encoding="utf-8", newline="\n")  # type: ignore[arg-type]
+            written.append(outside_path)
 
     return written
 

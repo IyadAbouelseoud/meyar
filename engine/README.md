@@ -4,6 +4,17 @@ PharmCAT wrapper, A5 coverage flag, A6 germline guard, A7 phenoconversion, A8 st
 
 Build prompts: see `prompts/`.
 
+## Run the whole chain (do this before the tests)
+
+The engine tests read pipeline outputs (`engine/data/out/`, `engine/validation/data/`), which are gitignored. From a clean checkout, run the chain once, in order, then the tests:
+
+```bash
+bash engine/run_pipeline.sh        # A1 VCFs → PharmCAT (A2, with A8 outside calls) → A3 GeT-RM → A4/A6 contract (FHIR dry-run) → A5 → A8 → A7
+python -m pytest engine/tests
+```
+
+Use `FHIR=1 bash engine/run_pipeline.sh` to also write to the local HAPI (`docker compose up -d hapi` first), and `PYTHON="uv run --no-project --python 3.12 --with jsonschema python"` to choose the interpreter. If outputs are missing, the tests that need them are reported as SKIPPED under a "NOT A FULL PASS" banner instead of passing silently.
+
 ## A1 — Synthetic GRCh38 VCF generator (`engine/gen_vcf.py`)
 
 Generates GRCh38 (`chr`-prefixed) VCFv4.2 inputs and `.origin.json` germline tags for `demo-001`..`demo-006` without patient data. Every locus (`CHROM`, `POS`, `ID`, `REF`, `ALT`, `PX`) and haplotype allele mapping is extracted directly from `pgkb/pharmcat:3.4.0` (`/pharmcat/pharmcat_positions.vcf` and `*_translation.json` inside `pharmcat.jar`, source `CLINPGX 2026-07-13-11-40`).
@@ -31,7 +42,7 @@ All patients emit `<patientId>.origin.json` containing `{"sampleOrigin": "germli
 | `demo-003` | `CYP2C19 *1/*17`, `SLCO1B1 *1/*5` (`rs4149056` `T>C`), `CYP2C9 *1/*1`, `DPYD Reference/Reference` | — | Complete VCF (241/241 positions). Covers `CYP2C19 *1/*17` and `SLCO1B1` decreased-function `rs4149056` C allele. |
 | `demo-004` | `CYP2C19 *17/*17`, `CYP2C9 *1/*2` (`rs1799853` `C>T`), `SLCO1B1 *1/*1`, `DPYD Reference/Reference` | — | Complete VCF (241/241 positions). Covers `CYP2C19 *17/*17` and `CYP2C9 *1/*2`. |
 | `demo-005` | `CYP2C9 *2/*3` (phased trans: `1\|0` at `rs1799853`, `0\|1` at `rs1057910`), `DPYD Reference / c.1905+1G>A (*2A)` (`rs3918290` `C>T`), `CYP2C19 *1/*1`, `SLCO1B1 *1/*1` | — | Complete VCF (241/241 positions). See `DPYD c.257C>T` note below. |
-| `demo-006` | `CYP2C19 *1/*1` (32/35 positions), `CYP2C9 *1/*1` (86/88 positions), `SLCO1B1 *1/*1` (35/35), `DPYD Reference/Reference` (83/83) | `demo-006.outside.tsv` (`# mock: true`, `CYP2D6\t*1/*2x2`) | Deliberately incomplete VCF (236/241 positions) for A5 coverage gap + mock `CYP2D6` duplication outside-call. |
+| `demo-006` | `CYP2C19 *1/*1` (32/35 positions), `CYP2C9 *1/*1` (86/88 positions), `SLCO1B1 *1/*1` (35/35), `DPYD Reference/Reference` (83/83) | `demo-006.outside.tsv` (`# mock: true`, `CYP2D6\t*1/*2x2`; owned by A8, never overwritten by `gen_vcf.py`) | Deliberately incomplete VCF (236/241 positions) for A5 coverage gap + mock `CYP2D6` duplication outside-call. Mock current medicine duloxetine (moderate CYP2D6 inhibitor): genetic Ultrarapid → acting like Normal (A7). |
 
 ### Deliberately missing positions in `demo-006.vcf` (for A5 coverage testing)
 

@@ -14,6 +14,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from engine.coverage import (  # noqa: E402
+    NOT_ASSAYED_NOTE,
     TIER2_NOTE,
     compute_gene_coverage,
     compute_match_coverage,
@@ -128,12 +129,14 @@ def test_demo_006_incomplete_vcf_hand_computed() -> None:
     assert cov["DPYD"]["uninformativeNormalRisk"] == 0.0
     assert cov["DPYD"]["saudiDataTier"] == 1
 
-    # CYP3A5: 0/7 assayed -> *3 (0.845) + *6 (0.024) + *7 (0.004) = 0.873; *8 (<0.1%) noted
+    # CYP3A5: 0/7 assayed -> no genotype result, so no score (null, never a number);
+    # the locally common alleles the assay could not see are still listed.
     assert cov["CYP3A5"]["definingPositionsAssayed"] == 0
     assert cov["CYP3A5"]["definingPositionsTotal"] == 7
     assert cov["CYP3A5"]["untestedLocalAlleles"] == ["*3", "*6", "*7", "*8"]
-    assert cov["CYP3A5"]["uninformativeNormalRisk"] == 0.873
+    assert cov["CYP3A5"]["uninformativeNormalRisk"] is None
     assert cov["CYP3A5"]["saudiDataTier"] == 1
+    assert NOT_ASSAYED_NOTE in cov["CYP3A5"]["saudiDataNote"]
 
     # SLCO1B1: Tier 2 (no published Saudi frequency -> null)
     assert cov["SLCO1B1"]["definingPositionsAssayed"] == 35
@@ -186,6 +189,33 @@ def test_tier2_gene_returns_null_risk_and_note() -> None:
     assert cov_unknown["saudiDataTier"] == 2
     assert cov_unknown["uninformativeNormalRisk"] is None
     assert cov_unknown["saudiDataNote"] == "No published Saudi frequency for this gene"
+
+
+def test_tier1_gene_with_nothing_assayed_never_scores_zero() -> None:
+    """Review finding 3: VKORC1 0/1 assayed (rs9923231 missing, not in Table 1) gave 0.0."""
+    freq_table = load_saudi_frequencies(SAUDI_FREQ_PATH)
+    sv_genes = load_sv_genes(SV_GENES_PATH)
+    match_result = {"variants": [], "matchData": {"missingPositions": [{"rsid": "rs9923231"}]}}
+    cov = compute_gene_coverage("VKORC1", match_result, freq_table, sv_genes)
+    assert cov["definingPositionsAssayed"] == 0
+    assert cov["definingPositionsTotal"] == 1
+    assert cov["uninformativeNormalRisk"] is None
+    assert cov["saudiDataTier"] == 1
+    assert NOT_ASSAYED_NOTE in cov["saudiDataNote"]
+
+
+def test_partial_assay_with_unlisted_missing_position_is_flagged_lower_bound() -> None:
+    freq_table = load_saudi_frequencies(SAUDI_FREQ_PATH)
+    sv_genes = load_sv_genes(SV_GENES_PATH)
+    match_result = {
+        "variants": [{}, {}],
+        "matchData": {"missingPositions": [{"rsid": "rs1057910"}, {"rsid": "rs0000000001"}]},
+    }
+    cov = compute_gene_coverage("CYP2C9", match_result, freq_table, sv_genes)
+    assert cov["untestedLocalAlleles"] == ["*3"]
+    assert cov["uninformativeNormalRisk"] == 0.053
+    assert "lower bound" in cov["saudiDataNote"]
+    assert "rs0000000001" in cov["saudiDataNote"]
 
 
 def test_cyp2d6_tier0_gets_no_a5_score() -> None:

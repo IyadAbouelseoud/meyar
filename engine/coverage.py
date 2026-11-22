@@ -29,6 +29,7 @@ DEFAULT_SV_GENES_PATH = REPO_ROOT / "tables" / "sv_genes.json"
 DEFAULT_SCHEMA_PATH = REPO_ROOT / "docs" / "data-contract.schema.json"
 
 TIER2_NOTE = "No published Saudi frequency for this gene"
+NOT_ASSAYED_NOTE = "No defining position assayed for this gene; no score"
 DEFAULT_TIER0_NOTE = (
     "No A5 score (Tier 0): structural-variation gene owned by A8; excluded from "
     "Goljan et al. 2022 (doi:10.1371/journal.pone.0263137) because deletions, "
@@ -163,10 +164,36 @@ def compute_gene_coverage(
         else:
             below_threshold_alleles.append(allele_name)
 
-    risk = min(1.0, round(risk_sum, 6))
     note = str(row.get("saudiDataNote") or "Tier 1: Goljan et al. 2022 Table 1 (n=11,889)")
+
+    if assayed == 0:
+        # Nothing was tested, so there is no genotype result for a score to qualify.
+        # Never report 0.0 here: that would read as reassurance for an untested gene.
+        return {
+            "definingPositionsAssayed": 0,
+            "definingPositionsTotal": total,
+            "untestedLocalAlleles": untested_alleles,
+            "uninformativeNormalRisk": None,
+            "saudiDataTier": 1,
+            "saudiDataNote": f"{NOT_ASSAYED_NOTE}; {note}",
+        }
+
+    risk = min(1.0, round(risk_sum, 6))
     if below_threshold_alleles:
         note = f"{note}; <0.1% allele(s) not summed numerically: {', '.join(below_threshold_alleles)}"
+
+    table_rsids = {
+        _normalize_rsid(rs)
+        for allele_entry in row.get("alleles", [])
+        for rs in (allele_entry.get("coreVariantRsids") or [])
+        if rs
+    }
+    unmatched_missing = sorted(rs for rs in missing_rsids if rs and rs not in table_rsids)
+    if unmatched_missing:
+        note = (
+            f"{note}; score is a lower bound: untested position(s) with no Saudi "
+            f"Table 1 row: {', '.join(unmatched_missing)}"
+        )
 
     return {
         "definingPositionsAssayed": assayed,

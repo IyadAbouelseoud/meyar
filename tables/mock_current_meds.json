@@ -1,6 +1,6 @@
 {
   "_owner": "A7",
-  "_note": "Only the owner edits this file. Every row needs a source. Mock current-medication lists per demo patient (demo-001..demo-005). Every row and medication item carries mock:true.",
+  "_note": "Only the owner edits this file. Every row needs a source. Mock current-medication lists per demo patient (demo-001..demo-006). Every row and medication item carries mock:true.",
   "rows": [
     {
       "patientId": "demo-001",
@@ -34,14 +34,8 @@
     },
     {
       "patientId": "demo-004",
-      "medications": [
-        {
-          "name": "duloxetine",
-          "source": "patient-entered",
-          "mock": true
-        }
-      ],
-      "source": "Synthetic demo cohort (A7 mock medication list; exercises patient-entered moderate CYP2D6 inhibitor)",
+      "medications": [],
+      "source": "Synthetic demo cohort (A7 mock medication list; no current medicines. CYP2D6 is not assessed for this patient (A8), so a CYP2D6 inhibitor here could not be shown; the moderate-inhibitor case moved to demo-006)",
       "mock": true
     },
     {
@@ -54,6 +48,18 @@
         }
       ],
       "source": "Synthetic demo cohort (A7 mock medication list; non-inhibitor baseline)",
+      "mock": true
+    },
+    {
+      "patientId": "demo-006",
+      "medications": [
+        {
+          "name": "duloxetine",
+          "source": "patient-entered",
+          "mock": true
+        }
+      ],
+      "source": "Synthetic demo cohort (A7 mock medication list; exercises a patient-entered moderate CYP2D6 inhibitor on the mock outside-call CYP2D6 *1/*2x2 Ultrarapid Metabolizer)",
       "mock": true
     }
   ]

@@ -21,6 +21,7 @@ INHIBITORS_PATH = REPO_ROOT / "tables" / "cyp_inhibitors.json"
 MOCK_MEDS_PATH = REPO_ROOT / "tables" / "mock_current_meds.json"
 FIXTURE_001_PATH = REPO_ROOT / "docs" / "fixtures" / "demo-001.contract.json"
 FIXTURE_002_PATH = REPO_ROOT / "docs" / "fixtures" / "demo-002.contract.json"
+FIXTURE_006_PATH = REPO_ROOT / "docs" / "fixtures" / "demo-006.contract.json"
 
 
 def _validate_against_contract_schema(doc: Dict[str, Any], schema: Dict[str, Any]) -> None:
@@ -317,17 +318,52 @@ class TestPhenoconvert(unittest.TestCase):
             self.assertTrue(str(row["source"]).startswith("https://www.fda.gov/"))
             self.assertRegex(str(row["accessed"]), r"^\d{4}-\d{2}-\d{2}$")
 
-    def test_mock_current_meds_demo_001_to_005_all_mock_true(self) -> None:
+    def test_mock_current_meds_demo_001_to_006_all_mock_true(self) -> None:
         data = json.loads(MOCK_MEDS_PATH.read_text(encoding="utf-8"))
         self.assertEqual(data["_owner"], "A7")
         pids = {r["patientId"] for r in data["rows"]}
-        self.assertTrue({"demo-001", "demo-002", "demo-003", "demo-004", "demo-005"}.issubset(pids))
+        self.assertTrue({f"demo-00{i}" for i in range(1, 7)}.issubset(pids))
         for row in data["rows"]:
             self.assertIs(row["mock"], True)
             for med in row["medications"]:
                 self.assertIs(med["mock"], True)
                 self.assertIn(med["source"], {"hospital-record", "patient-entered"})
         self.assertEqual([m["name"] for m in self.mock_meds["demo-002"]], ["paroxetine"])
+        # Review finding 4: the moderate-inhibitor case sits on a patient whose CYP2D6 is
+        # actually assessed (demo-006 outside call), not on a not-assessed patient.
+        self.assertEqual([m["name"] for m in self.mock_meds["demo-006"]], ["duloxetine"])
+        self.assertEqual(self.mock_meds["demo-004"], [])
+
+    def test_demo_006_ultrarapid_on_moderate_inhibitor_acts_normal(self) -> None:
+        fixture_006 = json.loads(FIXTURE_006_PATH.read_text(encoding="utf-8"))
+        base = {
+            "patientId": fixture_006["patientId"],
+            "sampleOrigin": fixture_006["sampleOrigin"],
+            "genes": [
+                {k: v for k, v in g.items() if k not in {"effectivePhenotype", "phenoconversion"}}
+                for g in fixture_006["genes"]
+            ],
+        }
+        out = phenoconvert.phenoconvert_contract(
+            base, self.inhibitors, meds_override=self.mock_meds["demo-006"]
+        )
+        self.assertEqual(out, fixture_006)
+        g = next(x for x in out["genes"] if x["gene"] == "CYP2D6")
+        self.assertEqual(g["diplotype"], "*1/*2x2")
+        self.assertEqual(g["phenotype"], "Ultrarapid Metabolizer")
+        self.assertEqual(g["effectivePhenotype"], "Normal Metabolizer")
+        self.assertEqual(
+            g["phenoconversion"],
+            {
+                "applied": True,
+                "cause": ["duloxetine"],
+                "inhibitorStrength": "moderate",
+                "geneticActivityScore": 3.0,
+                "adjustedActivityScore": 1.5,
+                "method": "Thomas et al. 2020",
+            },
+        )
+        _validate_against_contract_schema(out, self.schema)
 
     def test_demo_002_fixture_matches_engine_and_schema(self) -> None:
         fixture_002 = json.loads(FIXTURE_002_PATH.read_text(encoding="utf-8"))

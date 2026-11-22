@@ -24,6 +24,14 @@
       "callability": {
         "method": "vcf",
         "svAssessed": false
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": false,
+        "cause": [],
+        "inhibitorStrength": null,
+        "geneticActivityScore": null,
+        "adjustedActivityScore": null
       }
     },
     {
@@ -48,6 +56,14 @@
       "callability": {
         "method": "vcf",
         "svAssessed": false
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": false,
+        "cause": [],
+        "inhibitorStrength": null,
+        "geneticActivityScore": null,
+        "adjustedActivityScore": null
       }
     },
     {
@@ -70,7 +86,25 @@
         "method": "outside-call",
         "svAssessed": true,
         "source": "Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype)"
+      },
+      "effectivePhenotype": "Normal Metabolizer",
+      "phenoconversion": {
+        "applied": true,
+        "cause": [
+          "duloxetine"
+        ],
+        "inhibitorStrength": "moderate",
+        "geneticActivityScore": 3.0,
+        "adjustedActivityScore": 1.5,
+        "method": "Thomas et al. 2020"
       }
+    }
+  ],
+  "currentMedications": [
+    {
+      "name": "duloxetine",
+      "source": "patient-entered",
+      "mock": true
     }
   ]
 }
