@@ -18,7 +18,7 @@ Node 22 LTS (stdlib only, zero external runtime dependencies) CDS Hooks 2.0.1 se
 
 1. **CDS Hooks prefetch** (`prefetch.pgxObservations`: genotype `Observation`s, LOINC `84413-4`, FHIR R4 Genomics Reporting IG).
 2. **Local HAPI FHIR** (`FHIR_BASE`, default `http://hapi:8080/fhir` inside Docker Compose or `http://localhost:8080/fhir` locally; never contacts public `hapi.fhir.org`), with a bounded timeout (`FHIR_TIMEOUT_MS`, default `400` ms) so responses stay under 1 s. The request's `fhirServer` is deliberately not used.
-3. **Contract JSON fallback**: `engine/data/out/<patientId>.contract.json` (`/data/contracts` in Compose), then `docs/fixtures/<patientId>.contract.json`. Outside Docker the fixtures path works on a fresh checkout; inside Compose it needs the `/data/fixtures` mount requested in `docs/requests.md` (until then, run `bash engine/run_pipeline.sh` first).
+3. **Contract JSON fallback**: `engine/data/out/<patientId>.contract.json` (`/data/contracts` in Compose), then `docs/fixtures/<patientId>.contract.json`. Compose mounts `docs/fixtures` at `/data/fixtures`, so this works on a fresh checkout both inside and outside Docker.
 
 When FHIR answers, the contract still supplies A5 coverage, A7 phenoconversion and A8 callability for each gene.
 

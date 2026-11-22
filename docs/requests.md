@@ -22,4 +22,4 @@ Write here instead of editing a table you do not own.
 - **To:** whoever owns `docker-compose.yml` (team decision; B2's scope lock is `cds/` only).
 - **Ask:** add `- ./docs/fixtures:/data/fixtures:ro` to the `cds` service `volumes`.
 - **Why:** `cds/lib/phenotypes.js` falls back to `docs/fixtures/<patientId>.contract.json` when `engine/data/out/` has no contract (fresh checkout, pipeline not run). Outside Docker that path resolves on its own; inside the container `docs/` is not in the build context, so the service now looks for `/data/fixtures` and finds nothing until this mount exists. Without it, a fresh-checkout `docker compose up` with an empty HAPI returns no cards.
-- **Until then:** run `bash engine/run_pipeline.sh` first (fills `engine/data/out/`, already mounted at `/data/contracts`).
+- **Status: DONE (22 Nov 2026).** Mount added to `docker-compose.yml` on `main`, at the team's request.

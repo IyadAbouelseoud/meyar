@@ -13,6 +13,7 @@ services:
       FHIR_BASE: http://hapi:8080/fhir
     volumes:
       - ./engine/data/out:/data/contracts:ro
+      - ./docs/fixtures:/data/fixtures:ro   # contract fallback when engine/data/out has no contract (B2)
       - ./tables:/data/tables:ro
       - ./design:/data/design:ro   # design system, served by cds at /design/* (B4, B5)
     depends_on:
