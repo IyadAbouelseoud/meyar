@@ -104,3 +104,8 @@ Files: `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/serv
 Notes: Enforces `design/README.md` §7 card JSON grammar (`summary` < 140 chars, `indicator` `warning` | `info`, `**Genetic:**` / `**Acting like:**`, verbatim CPIC quote, guaranteed A5 coverage line, `_Advises, does not prescribe. <guidelineVersion>._`, `source.label` `"Meyar (research prototype)"`). Adds one-tap `Send to pharmacist` FHIR `Task` suggestion, oncology `"Germline result — tumour profiling is separate."` notice, and first-`order-sign` backward sweep over active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) returning cards for affected current drugs (e.g. `SLCO1B1` Decreased Function on `simvastatin`).
 Run: `node design/build-tokens.mjs` (62/62 contrast pairs pass), `cd cds && node --test test/cds.test.js` (18/18 pass), `docker compose up -d --build hapi cds`.
 Data contract unchanged. No new runtime dependency.
+
+## F4
+- Added `docs/poster/build_f4.py`, `docs/poster/render_png.cjs`, `docs/poster/f4-tier-panel-poster.{svg,png}` (1600x2000, PNG @2x) and `docs/poster/f4-tier-panel-slide.{svg,png}` (1920x1080).
+- Added 7 rows to `docs/sources.md`; new `prompts/F6.md` (end-to-end staircase demo) listed in `prompts/README.md`.
+- Run: `python3 docs/poster/build_f4.py && node docs/poster/render_png.cjs` (uses the pre-installed Playwright).
