@@ -1,0 +1,37 @@
+/* F6 second-device reader. Layout only; colours, fonts, radii and durations are design tokens. */
+.rd-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 16px clamp(16px, 4vw, 40px); border-block-end: 1px solid var(--m-line); background: var(--m-surface); }
+.rd-bar__title { flex: 1 1 220px; display: grid; gap: 2px; }
+.rd-bar__title h1 { font-family: var(--m-font-display); font-weight: 800; font-size: var(--m-size-xl); }
+[lang="en"] .rd-bar__title h1 { font-weight: 300; }
+.rd-bar__end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.rd-proto { padding: 8px clamp(16px, 4vw, 40px); border-block-end: 1px solid var(--m-line); }
+.rd-net { font-size: var(--m-size-sm); display: inline-flex; gap: 6px; align-items: center; }
+.rd-main { display: grid; gap: 24px; align-items: start; padding: 24px clamp(16px, 4vw, 40px) 40px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); max-inline-size: 1440px; margin-inline: auto; }
+@media (max-width: 960px) { .rd-main { grid-template-columns: minmax(0, 1fr); } }
+.rd-sheet { background-color: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-sheet); padding: clamp(16px, 3vw, 28px); display: grid; gap: 14px; }
+.rd-sheet h2, .rd-result h2 { font-size: var(--m-size-lg); font-weight: 600; }
+.rd-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.rd-file { position: relative; overflow: hidden; }
+.rd-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.rd-note { font-size: var(--m-size-xs); color: var(--m-text2); max-inline-size: 70ch; }
+#video { inline-size: 100%; border-radius: var(--m-radius-card); background: var(--m-sunken); }
+.rd-measure { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 0; padding: 12px; border-radius: var(--m-radius-card); background: var(--m-sunken); }
+.rd-measure dt { font-size: var(--m-size-xs); color: var(--m-text2); }
+.rd-measure dd { margin: 0; font-size: var(--m-size-md); font-weight: 600; }
+.rd-pin { display: grid; gap: 8px; }
+.rd-pin label { font-weight: 600; font-size: var(--m-size-sm); }
+.rd-pin .m-input { inline-size: 100%; font-size: var(--m-size-lg); letter-spacing: 0.2em; }
+.rd-pin[hidden], .rd-measure[hidden] { display: none; }
+#holder .m-status, .rd-result .m-status { justify-self: start; font-size: var(--m-size-sm); }
+.rd-result { display: grid; gap: 16px; }
+.rd-reject { display: grid; gap: 8px; padding: 16px; border-radius: var(--m-radius-card); background: var(--m-stop-tint); color: var(--m-stop); }
+.rd-reject b { font-size: var(--m-size-md); }
+.rd-reject p { color: var(--m-stop); font-size: var(--m-size-sm); }
+.rd-gene { background: var(--m-surface); border: 1px solid var(--m-line); border-radius: var(--m-radius-card); padding: 18px; display: grid; gap: 12px; }
+.rd-gene__head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.rd-gene__head h3 { font-size: var(--m-size-lg); font-weight: 700; }
+.rd-gene__ph { font-size: var(--m-size-md); }
+.rd-recs { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rd-recs li { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; padding-block: 6px; border-block-start: 1px solid var(--m-line); }
+.rd-recs b { min-inline-size: 9em; }
+.rd-foot { padding: 16px clamp(16px, 4vw, 40px) 32px; border-block-start: 1px solid var(--m-line); }

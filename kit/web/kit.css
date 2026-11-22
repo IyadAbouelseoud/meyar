@@ -91,3 +91,10 @@
 .kit-label figcaption .m-data { white-space: nowrap; }
 .kit-hashlabel { font-family: var(--m-font-clinician); }
 .kit-form[hidden] { display: none; }
+
+/* F6 gates: lab QC, pharmacist review, release. Same .m-chain nodes, text label instead of a number. */
+.kit-gate .m-chain__node { font-family: var(--m-font-data); font-size: var(--m-size-xs); letter-spacing: 0; }
+.kit-gate .kit-ev__title { font-weight: 700; }
+.kit-gate .m-status { justify-self: start; font-size: var(--m-size-sm); }
+#nav .m-btn, .kit-demo .m-btn { text-decoration: none; }
+.kit-demo .m-btn[disabled] { opacity: 0.5; cursor: not-allowed; }

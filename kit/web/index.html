@@ -39,6 +39,7 @@
       <div>
         <span class="m-eyebrow" data-t="kitLabel"></span>
         <h2 id="kit-id" class="m-data kit-id">—</h2>
+        <p class="kit-sub"><span id="kit-role"></span></p>
         <p class="kit-sub"><span data-t="patientLabel"></span> <span class="m-data" id="patient-id">—</span> · <span data-t="specimenLabel"></span> <span class="m-data" id="specimen-ref">—</span></p>
       </div>
       <p class="kit-progress" id="progress" aria-live="polite"></p>
@@ -72,6 +73,22 @@
         <button class="m-btn m-btn--block" type="submit" id="record"><svg aria-hidden="true"><use href="#i-send"/></svg><span id="record-label"></span></button>
         <div id="scan-error" aria-live="assertive"></div>
       </form>
+    </section>
+
+    <section class="kit-panel" aria-labelledby="gate-h">
+      <h2 id="gate-h" data-t="gateTitle"></h2>
+      <div class="kit-demo">
+        <button class="m-btn m-btn--secondary" type="button" id="qc-pass" data-t="qcPass"></button>
+        <button class="m-btn m-btn--secondary" type="button" id="qc-fail" data-t="qcFail"></button>
+        <button class="m-btn m-btn--secondary" type="button" id="do-review" data-t="doReview"></button>
+        <button class="m-btn m-btn--secondary" type="button" id="do-release" data-t="doRelease"></button>
+      </div>
+      <p class="kit-note" data-t="gGateNote"></p>
+    </section>
+
+    <section class="kit-panel" aria-labelledby="nav-h">
+      <h2 id="nav-h" data-t="navTitle"></h2>
+      <nav class="kit-demo" id="nav"></nav>
     </section>
 
     <section class="kit-panel" aria-labelledby="labels-h">

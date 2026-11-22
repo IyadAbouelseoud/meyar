@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="paper" data-voice="clinician" data-elder="off">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meyar reader · قارئ جواز الدواء</title>
+<link rel="stylesheet" href="../design/fonts/fonts.css">
+<link rel="stylesheet" href="../design/tokens.css">
+<link rel="stylesheet" href="../design/meyar.css">
+<link rel="stylesheet" href="./reader.css">
+<script type="importmap">{ "imports": { "qrcode": "./qrcode-stub.js" } }</script>
+<script src="../vendor/jsQR.js"></script>
+</head>
+<body class="m-body m-grain">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-stop" viewBox="0 0 24 24"><path d="M8 2.5h8l5.5 5.5v8L16 21.5H8L2.5 16V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7.5 12h9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><path d="M12 3 22 20.5H2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9.5v5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.25" fill="currentColor"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.25" fill="currentColor"/></symbol>
+  <symbol id="i-none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3.2 2.6"/><path d="M8.5 12h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-better" viewBox="0 0 24 24"><path d="M4 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 21v-5M7.5 21v-8M12 21V9M16.5 21v-8M21 21v-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 1.8 14.3 4.6 12 7.4 9.7 4.6z" fill="currentColor"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<header class="rd-bar">
+  <span class="m-wordmark" aria-label="Meyar"><svg class="m-wordmark__tick" aria-hidden="true"><use href="#i-mark"/></svg><span class="m-wordmark__ar" lang="ar">مِعيار</span><span class="m-wordmark__en" lang="en">Meyar</span></span>
+  <div class="rd-bar__title"><span class="m-eyebrow" data-t="eyebrow"></span><h1 data-t="title"></h1></div>
+  <div class="rd-bar__end">
+    <span class="m-mock" data-t="mock"></span>
+    <span class="rd-net" id="net" aria-live="polite"></span>
+    <div class="m-seg" role="group" aria-label="Language / اللغة">
+      <button type="button" data-lang="ar" lang="ar">العربية</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+</header>
+<p class="m-proto rd-proto"><svg aria-hidden="true" width="16" height="16"><use href="#i-info"/></svg><span data-t="proto"></span></p>
+
+<main class="rd-main">
+  <section class="rd-sheet m-chartpaper" aria-labelledby="scan-h">
+    <h2 id="scan-h" data-t="scanTitle"></h2>
+    <p class="rd-note" data-t="scanIntro"></p>
+    <div class="rd-actions">
+      <button class="m-btn" type="button" id="camera" data-t="camera"></button>
+      <label class="m-btn m-btn--secondary rd-file"><span data-t="image"></span><input type="file" id="file" accept="image/*"></label>
+    </div>
+    <div class="rd-actions">
+      <button class="m-btn m-btn--quiet" type="button" id="demo-ok" data-t="demoOk"></button>
+      <button class="m-btn m-btn--quiet" type="button" id="demo-bad" data-t="demoBad"></button>
+    </div>
+    <video id="video" playsinline muted hidden></video>
+    <canvas id="canvas" hidden></canvas>
+    <dl class="rd-measure" id="measure" hidden>
+      <div><dt data-t="mBytes"></dt><dd class="m-data" id="m-bytes"></dd></div>
+      <div><dt data-t="mVersion"></dt><dd class="m-data" id="m-version"></dd></div>
+      <div><dt data-t="mDecoder"></dt><dd><span class="m-data">jsQR</span></dd></div>
+    </dl>
+    <div id="holder" aria-live="polite"></div>
+    <form id="pin-form" class="rd-pin" hidden autocomplete="off">
+      <label for="pin" data-t="pinLabel"></label>
+      <input class="m-input m-data" id="pin" inputmode="numeric" maxlength="6" pattern="[0-9٠-٩]{6}">
+      <button class="m-btn" type="submit"><svg aria-hidden="true"><use href="#i-lock"/></svg><span data-t="open"></span></button>
+      <p class="rd-note" data-t="pinHonest"></p>
+    </form>
+  </section>
+
+  <section class="rd-result" id="result" aria-live="polite" aria-labelledby="res-h">
+    <h2 id="res-h" data-t="resultTitle"></h2>
+    <p class="rd-note" data-t="resultEmpty"></p>
+  </section>
+</main>
+
+<footer class="rd-foot"><p class="m-proto"><span data-t="footer"></span></p></footer>
+<script type="module" src="./reader.js"></script>
+</body>
+</html>
