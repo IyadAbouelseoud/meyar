@@ -119,3 +119,7 @@ Data contract unchanged. No new runtime dependency.
 ## F3 video — six scans live on the T1 kit (22 Nov 2026)
 Files: `hardware/blender/build_f3_video.py`, `hardware/blender/encode_f3_video.py`, `hardware/blender/art/make_f3_video_art.py`, `hardware/blender/art/out/f3v_*.png`, `hardware/blender/meyar_f3_video.blend`, `hardware/blender/renders/meyar-f3-kit-scans-live.mp4`, `hardware/blender/renders/meyar-f3-video-contact-sheet.jpg`, `hardware/blender/README.md`.
 Notes: A 15 s clip (1920 × 1080, 30 fps, H.264, 2.8 MB). The kit acts out each scan (funnel, cap, mailer) while the phone swaps to a real capture of the kit software after that scan. It ends on a tampered scan caught by verify. Arabic-first callouts. "Kit design — software working" is on screen for the whole clip. T1 only. Rendered in EEVEE.
+
+## F3 video v2 — paced chain-of-custody demo (23 Nov 2026)
+Files: `hardware/blender/build_f3_video2.py`, `encode_f3_video2.py`, `art/make_f3_video2_art.py`, `art/out/f3w_*.png`, `anim/f3v2_anchors.json`, `meyar_f3_video2.blend`, `renders/meyar-f3-kit-chain-of-custody.mp4`, `renders/meyar-f3-video2-contact-sheet.jpg`, `README.md`.
+Notes: A 57 s cut (1920 × 1080, 30 fps, H.264), rebuilt after BUNYAN's feedback on the 15 s version. It has phone close-ups, a hollow mailer with a hinged lid, and real packing (tube into the bag on its pad, bag into the mailer, lid closed). Arrow callouts are pinned to 3D anchors, with Arabic first. A live phone inset shows the real kit/web captures. Labelled "Kit design — software working" throughout. T1 only.
