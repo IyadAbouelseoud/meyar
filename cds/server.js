@@ -21,6 +21,7 @@ import {
 } from './lib/cpic.js';
 import {
   resolvePatientProfile,
+  resolveCurrentMedications,
   resolveFhirBase,
   resolveContractsDir,
   resolveFixturesDir,
@@ -33,10 +34,9 @@ import { buildCpicCard, buildNotAssessedSvCard, buildNoResultCard } from './lib/
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
 const DEPRECATED_HOOK = 'medication-prescribe';
 
-// Only the prefetch this service actually reads. Active medications for A7 come
-// from the engine's contract (phenoconversion is computed there, never here).
 const PREFETCH = {
   pgxObservations: `Observation?subject=Patient/{{context.patientId}}&${PGX_OBSERVATION_QUERY}`,
+  currentMedications: 'MedicationStatement?subject=Patient/{{context.patientId}}&status=active',
 };
 
 export const DISCOVERY_DOCUMENT = {
@@ -93,7 +93,8 @@ function corsHeaders() {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Expose-Headers': 'X-Meyar-Latency-Ms, X-Meyar-Phenotype-Source',
+    'Access-Control-Expose-Headers':
+      'X-Meyar-Latency-Ms, X-Meyar-Phenotype-Source, X-Meyar-Backward-Sweep',
   };
 }
 
@@ -196,10 +197,91 @@ function serveStaticDesign(reqPath, res, designDir) {
   res.end(data);
 }
 
+function evaluateMedications(meds, geneMap, deps, seenCardKeys, { isBackwardSweep = false } = {}) {
+  const cards = [];
+
+  for (const med of meds) {
+    const drug = matchDrugInTable(med, deps.tables);
+    if (!drug) continue;
+
+    const genesForDrug = deps.tables.drugGenes.get(drug);
+    if (!genesForDrug) continue;
+
+    for (const geneSymbol of genesForDrug) {
+      const dedupeKey = `${drug}|${geneSymbol}`;
+      if (seenCardKeys.has(dedupeKey)) continue;
+
+      const geneRecord = geneMap.get(geneSymbol);
+      const svRow = deps.tables.svGenes.get(geneSymbol);
+
+      // A8 structural-variation gate: never report a VCF-derived or Normal phenotype
+      // for an unassessed SV gene.
+      if (
+        svRow &&
+        (!geneRecord ||
+          geneRecord.callability?.method === 'not-assessed' ||
+          geneRecord.phenotype === null ||
+          String(geneRecord.phenotype || '').toLowerCase() === 'no result')
+      ) {
+        if (isBackwardSweep) continue;
+        seenCardKeys.add(dedupeKey);
+        cards.push(
+          buildNotAssessedSvCard({
+            geneRecord,
+            svRow,
+            drugDisplay: med.display,
+          })
+        );
+        continue;
+      }
+
+      if (!geneRecord || !geneRecord.phenotype) continue;
+
+      const phenoApplied = Boolean(geneRecord.phenoconversion?.applied);
+      const lookupPhenotype =
+        phenoApplied && geneRecord.effectivePhenotype
+          ? geneRecord.effectivePhenotype
+          : geneRecord.phenotype;
+
+      const activityScore = phenoApplied
+        ? geneRecord.phenoconversion?.adjustedActivityScore ?? null
+        : geneRecord.phenoconversion?.geneticActivityScore ?? null;
+
+      const row = lookupCpicRow(deps.tables, {
+        drug,
+        gene: geneSymbol,
+        phenotype: lookupPhenotype,
+        activityScore,
+        reasonText: med.reasonText,
+      });
+
+      if (!row) continue;
+
+      // Backward sweep returns cards only for affected drugs the patient already takes.
+      if (isBackwardSweep) {
+        const indicator = selectIndicator(row, lookupPhenotype);
+        if (indicator !== 'warning' && !phenoApplied) continue;
+      }
+
+      seenCardKeys.add(dedupeKey);
+      cards.push(
+        buildCpicCard({
+          geneRecord,
+          row,
+          drugDisplay: med.display,
+          isBackwardSweep,
+        })
+      );
+    }
+  }
+
+  return cards;
+}
+
 /**
  * One card for (drug, gene), or null when CPIC has no row for the phenotype.
  */
-function buildCardForGene({ drug, geneSymbol, geneRecord, med, patientId, tables }) {
+function buildCardForGene({ drug, geneSymbol, geneRecord, med, patientId, tables, isBackwardSweep = false }) {
   const svRow = tables.svGenes.get(geneSymbol);
 
   // A8 structural-variation gate: an SV gene without an outside call is
@@ -210,11 +292,13 @@ function buildCardForGene({ drug, geneSymbol, geneRecord, med, patientId, tables
       geneRecord.callability?.method === 'not-assessed' ||
       !hasUsablePhenotype(geneRecord))
   ) {
+    if (isBackwardSweep) return null;
     return buildNotAssessedSvCard({ geneRecord, svRow, drugDisplay: med.display });
   }
 
   // A gene this drug's CPIC rows need, with no usable result: say so, never stay silent.
   if (!hasUsablePhenotype(geneRecord)) {
+    if (isBackwardSweep) return null;
     return buildNoResultCard({
       gene: geneSymbol,
       geneRecord,
@@ -255,13 +339,20 @@ function buildCardForGene({ drug, geneSymbol, geneRecord, med, patientId, tables
         })
       : null;
 
-  return buildCpicCard({
+  const card = buildCpicCard({
     geneRecord,
     match,
     geneticMatch,
     drugDisplay: med.display,
     patientId,
+    isBackwardSweep,
   });
+
+  if (isBackwardSweep && card.indicator !== 'warning' && !phenoApplied) {
+    return null;
+  }
+
+  return card;
 }
 
 /**
@@ -323,10 +414,17 @@ export async function handleHookRequest(serviceId, body, deps) {
     fetchImpl: deps.fetchImpl,
   });
 
-  if (!profile || draftMeds.length === 0) {
+  const shouldRunBackwardSweep =
+    expectedHook === 'order-sign' &&
+    Boolean(profile) &&
+    deps.sweptPatients &&
+    !deps.sweptPatients.has(patientId);
+
+  if (!profile || (draftMeds.length === 0 && !shouldRunBackwardSweep)) {
     return {
       cards: [],
       phenotypeSource: profile?.source || 'none',
+      backwardSweepRan: false,
     };
   }
 
@@ -335,8 +433,8 @@ export async function handleHookRequest(serviceId, body, deps) {
     if (g?.gene) geneMap.set(String(g.gene).toUpperCase(), g);
   }
 
-  const cards = [];
   const seenCardKeys = new Set();
+  const cards = [];
 
   for (const med of draftMeds) {
     for (const drug of matchDrugsInTable(med, deps.tables)) {
@@ -355,8 +453,43 @@ export async function handleHookRequest(serviceId, body, deps) {
           med,
           patientId,
           tables: deps.tables,
+          isBackwardSweep: false,
         });
         if (card) cards.push(card);
+      }
+    }
+  }
+
+  if (shouldRunBackwardSweep) {
+    deps.sweptPatients.add(patientId);
+    const currentMedsResult = await resolveCurrentMedications(patientId, {
+      prefetch: body.prefetch || null,
+      fhirBase: deps.fhirBase,
+      fhirTimeoutMs: deps.fhirTimeoutMs,
+      contractCurrentMedications: profile.currentMedications || [],
+      fetchImpl: deps.fetchImpl,
+    });
+    for (const med of currentMedsResult.medications) {
+      for (const drug of matchDrugsInTable(med, deps.tables)) {
+        const genesForDrug = deps.tables.drugGenes.get(drug);
+        if (!genesForDrug) continue;
+
+        for (const geneSymbol of genesForDrug) {
+          const dedupeKey = `${drug}|${geneSymbol}`;
+          if (seenCardKeys.has(dedupeKey)) continue;
+          seenCardKeys.add(dedupeKey);
+
+          const card = buildCardForGene({
+            drug,
+            geneSymbol,
+            geneRecord: geneMap.get(geneSymbol),
+            med,
+            patientId,
+            tables: deps.tables,
+            isBackwardSweep: true,
+          });
+          if (card) cards.push(card);
+        }
       }
     }
   }
@@ -364,6 +497,7 @@ export async function handleHookRequest(serviceId, body, deps) {
   return {
     cards,
     phenotypeSource: profile.source,
+    backwardSweepRan: shouldRunBackwardSweep,
   };
 }
 
@@ -386,6 +520,7 @@ export function createCdsServer(options = {}) {
     fixturesDir,
     fhirTimeoutMs,
     fetchImpl,
+    sweptPatients: new Set(),
   };
 
   return http.createServer(async (req, res) => {
@@ -445,6 +580,7 @@ export function createCdsServer(options = {}) {
           {
             'X-Meyar-Latency-Ms': elapsedMs.toFixed(2),
             'X-Meyar-Phenotype-Source': result.phenotypeSource,
+            'X-Meyar-Backward-Sweep': String(Boolean(result.backwardSweepRan)),
           }
         );
       } catch (err) {

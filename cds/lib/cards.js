@@ -4,6 +4,7 @@
 // A5 coverage sentence, honesty line, and table-only alternatives).
 
 import crypto from 'node:crypto';
+import { isOncologyDrug } from './cpic.js';
 
 // CDS Hooks 2.0 Card.summary: "One-sentence, <140-character summary message".
 const MAX_SUMMARY_LENGTH = 139;
@@ -93,24 +94,59 @@ export function formatCoverageLine(coverage) {
 }
 
 /**
+ * Build a one-tap CDS Hooks 2.0.1 suggestion to send the PGx advisory to a pharmacist.
+ */
+function buildPharmacistSuggestion({ gene, effectivePhenotype, drugName, guidelineName, guidelineVersion }) {
+  return {
+    label: 'Send to pharmacist',
+    uuid: crypto.randomUUID(),
+    actions: [
+      {
+        type: 'create',
+        description: `Send ${gene} (${effectivePhenotype}) / ${drugName} advisory to pharmacist for review`,
+        resource: {
+          resourceType: 'Task',
+          status: 'requested',
+          intent: 'order',
+          code: {
+            text: 'Pharmacist pharmacogenomics review',
+          },
+          description: `${gene} ${effectivePhenotype} with ${drugName}. ${guidelineName || 'CPIC guideline'} (${guidelineVersion}).`,
+        },
+      },
+    ],
+  };
+}
+
+/**
  * Card for an unassessed structural-variation gene (A8).
  * Never reports a normal phenotype or reassurance (AGENTS.md §8b).
  */
-export function buildNotAssessedSvCard({ geneRecord, svRow, drugDisplay }) {
-  const gene = geneRecord?.gene || svRow?.gene;
+export function buildNotAssessedSvCard({ geneRecord, svRow, drugDisplay, isBackwardSweep = false }) {
+  const gene = geneRecord?.gene || svRow?.gene || 'CYP2D6';
+  const prefix = isBackwardSweep ? 'Backward sweep — ' : '';
   const summary = truncateSummary(
-    `${gene}: copy number not assessed by this test — no result reported`
+    `${prefix}${gene}: copy number not assessed by this test — no result reported`
   );
 
   const reason = geneRecord?.callability?.reason || svRow?.justification || '';
   const requiredInput = geneRecord?.callability?.requiredInput || svRow?.requiredInput || '';
+  const guidelineVersion = geneRecord?.guidelineVersion || 'CPIC PharmCAT 3.4.0';
 
-  const lines = [
-    `**${gene} (${drugDisplay}):** copy number not assessed by this test — no result reported. This is not a normal result.`,
-  ];
+  const lines = [];
+  if (isBackwardSweep) {
+    lines.push(`**Existing medication (backward sweep):** ${drugDisplay}`);
+  }
+  lines.push(
+    `**${gene} (${drugDisplay}):** copy number not assessed by this test — no result reported. This is not a normal result.`
+  );
   if (reason) lines.push(quote(reason));
   if (requiredInput) lines.push(`Required input: ${requiredInput}.`);
-  lines.push(footer(geneRecord?.guidelineVersion));
+  lines.push(
+    formatCoverageLine(geneRecord?.coverage) ||
+      'No A5 score (Tier 0): structural-variation gene; copy number not assessed.'
+  );
+  lines.push(footer(guidelineVersion));
 
   return {
     uuid: crypto.randomUUID(),
@@ -118,6 +154,16 @@ export function buildNotAssessedSvCard({ geneRecord, svRow, drugDisplay }) {
     indicator: 'info',
     detail: lines.join('\n\n'),
     source: { label: 'Meyar (research prototype)' },
+    suggestions: [
+      buildPharmacistSuggestion({
+        gene,
+        effectivePhenotype: 'copy number not assessed',
+        drugName: drugDisplay,
+        guidelineName: 'A8 structural-variation gate',
+        guidelineVersion,
+      }),
+    ],
+    selectionBehavior: 'at-most-one',
   };
 }
 
@@ -248,7 +294,14 @@ function formatAlternativesText(alternatives, filteredForIndication = false) {
  * @param {string} args.drugDisplay  order text
  * @param {string} [args.patientId]
  */
-export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisplay, patientId }) {
+export function buildCpicCard({
+  geneRecord,
+  match,
+  geneticMatch = null,
+  drugDisplay,
+  patientId,
+  isBackwardSweep = false,
+}) {
   const { row } = match;
   const gene = geneRecord.gene;
   const geneticPhenotype = geneRecord.phenotype;
@@ -267,10 +320,11 @@ export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisp
       ? row.implication.split(';')[0].trim()
       : row.recommendation.split('.')[0].trim();
 
+  const sweepPrefix = isBackwardSweep ? 'Backward sweep — ' : '';
   const summary = truncateSummary(
     converted
-      ? `${gene} ${geneticPhenotype}, acting like ${effectivePhenotype} (${causes.join(', ')}): ${row.drug} — ${shortEffect}`
-      : `${gene} ${effectivePhenotype}: ${row.drug} — ${shortEffect}`
+      ? `${sweepPrefix}${gene} ${geneticPhenotype}, acting like ${effectivePhenotype} (${causes.join(', ')}): ${row.drug} — ${shortEffect}`
+      : `${sweepPrefix}${gene} ${effectivePhenotype}: ${row.drug} — ${shortEffect}`
   );
 
   let indicator = selectIndicator(row, match.normalRecommendation);
@@ -293,7 +347,9 @@ export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisp
   }
 
   const detailParts = [];
-  if (drugDisplay && drugDisplay.toLowerCase() !== row.drug.toLowerCase()) {
+  if (isBackwardSweep) {
+    detailParts.push(`**Existing medication (backward sweep):** ${drugDisplay || row.drug}`);
+  } else if (drugDisplay && drugDisplay.toLowerCase() !== row.drug.toLowerCase()) {
     detailParts.push(`**Order:** ${drugDisplay}`);
   }
   detailParts.push(statusLine);
@@ -307,6 +363,10 @@ export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisp
   }
 
   detailParts.push(quote(row.recommendation));
+
+  if (isOncologyDrug(row.drug, gene)) {
+    detailParts.push('Germline result — tumour profiling is separate.');
+  }
 
   if (row.implication && row.implication !== 'n/a') {
     detailParts.push(`**Clinical implication:** ${row.implication}`);
@@ -336,14 +396,17 @@ export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisp
   const altText = formatAlternativesText(alternatives, alternatives.length < ownCount);
   if (altText) detailParts.push(altText);
 
-  const coverageLine = formatCoverageLine(geneRecord.coverage);
-  if (coverageLine) detailParts.push(coverageLine);
+  const coverageLine =
+    formatCoverageLine(geneRecord.coverage) ||
+    'Assay coverage metadata not provided in prefetch.';
+  detailParts.push(coverageLine);
 
   const guidelineLabel = row.guideline?.pub
     ? `CPIC: ${row.guideline.name} (${row.guideline.pub})`
     : 'CPIC guideline';
+  const guidelineVersion = geneRecord.guidelineVersion || guidelineLabel;
 
-  detailParts.push(footer(geneRecord.guidelineVersion));
+  detailParts.push(footer(guidelineVersion));
 
   const card = {
     uuid: crypto.randomUUID(),
@@ -361,6 +424,17 @@ export function buildCpicCard({ geneRecord, match, geneticMatch = null, drugDisp
   }
 
   const suggestions = buildSuggestions(alternatives, patientId);
+  if (indicator === 'warning' || isBackwardSweep || isOncologyDrug(row.drug, gene)) {
+    suggestions.push(
+      buildPharmacistSuggestion({
+        gene,
+        effectivePhenotype,
+        drugName: row.drug,
+        guidelineName: row.guideline?.name,
+        guidelineVersion,
+      })
+    );
+  }
   if (suggestions.length > 0) {
     card.suggestions = suggestions;
     // CDS Hooks 2.0: "If suggestions are present, selectionBehavior MUST also be provided."

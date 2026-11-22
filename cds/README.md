@@ -28,6 +28,8 @@ Clinical safety rules enforced on every request:
 - **No silent gaps:** a gene a drug's CPIC rows need, with `No Result` or no record, gets an `info` card saying the order was not checked — never silence that reads as normal.
 - **A7 phenoconversion:** lookups use `effectivePhenotype` when `phenoconversion.applied === true`; the card always shows both results, and also quotes the genetic phenotype's CPIC row ("applies if <drug> is stopped") so an inhibitor never hides a genetic risk.
 - **Lookup only (B1):** every recommendation and alternative comes verbatim from `tables/cpic_recommendations.json`.
+- **Backward sweep (B3):** on the first `order-sign` for a patient, active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) are checked for affected drugs already taken (e.g., statins with `SLCO1B1` Decreased Function).
+- **One-tap pharmacist escalation & oncology note (B3):** actionable cards include a `Send to pharmacist` FHIR `Task` suggestion, and oncology PGx cards print `Germline result — tumour profiling is separate.`
 
 ## Card rules
 
