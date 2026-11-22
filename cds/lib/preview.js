@@ -44,7 +44,7 @@ const COPY = {
     sc1Label: '1. demo-001 · Clopidogrel (ACS/PCI)',
     sc2Label: '2. demo-002 · Codeine (on paroxetine)',
     sc3Label: '3. Paroxetine order · Patient on codeine',
-    sc4Label: '4. Celecoxib · No CPIC alternative',
+    sc4Label: '4. Pantoprazole · No CPIC alternative',
   },
   ar: {
     title: 'مِعيار — معاينة بطاقة الطبيب',
@@ -84,7 +84,7 @@ const COPY = {
     sc1Label: '١. demo-001 · كلوبيدوقريل (ACS/PCI)',
     sc2Label: '٢. demo-002 · كودايين (مع باروكسيتين)',
     sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين',
-    sc4Label: '٤. سيليكوكسيب · دون بديل في CPIC',
+    sc4Label: '٤. بانتوبرازول · دون بديل في CPIC',
   },
 };
 
@@ -325,22 +325,22 @@ export function buildPreviewScenarios() {
       },
     },
     {
-      id: 'celecoxib-no-alt',
+      id: 'pantoprazole-no-alt',
       labelKey: 'sc4Label',
-      patientId: 'demo-cyp2c9-pm',
-      drug: 'celecoxib',
+      patientId: 'demo-cyp2c19-um',
+      drug: 'pantoprazole',
       orders: [
-        { name: 'Celecoxib 200 MG Oral Capsule', context: 'NSAID order (no CPIC alternative)', status: 'Signing now', pending: true },
+        { name: 'Pantoprazole 40 MG Oral Tablet', context: 'PPI dose adjustment (no CPIC alternative)', status: 'Signing now', pending: true },
       ],
       geneProfile: {
-        gene: 'CYP2C9',
-        diplotype: '*3/*3',
-        phenotype: 'Poor Metabolizer',
-        effectivePhenotype: 'Poor Metabolizer',
+        gene: 'CYP2C19',
+        diplotype: '*17/*17',
+        phenotype: 'Ultrarapid Metabolizer',
+        effectivePhenotype: 'Ultrarapid Metabolizer',
         coverage: {
-          definingPositionsAssayed: 86,
-          definingPositionsTotal: 88,
-          untestedLocalAlleles: ['*2', '*3'],
+          definingPositionsAssayed: 35,
+          definingPositionsTotal: 35,
+          untestedLocalAlleles: [],
           saudiDataTier: 1,
         },
       },
@@ -349,7 +349,7 @@ export function buildPreviewScenarios() {
         hookInstance: 'b6-preview-004',
         context: {
           userId: 'Practitioner/demo-clinician',
-          patientId: 'demo-cyp2c9-pm',
+          patientId: 'demo-cyp2c19-um',
           draftOrders: {
             resourceType: 'Bundle',
             type: 'collection',
@@ -360,16 +360,16 @@ export function buildPreviewScenarios() {
                   id: 'medrx-b6-4',
                   status: 'draft',
                   intent: 'order',
-                  subject: { reference: 'Patient/demo-cyp2c9-pm' },
+                  subject: { reference: 'Patient/demo-cyp2c19-um' },
                   medicationCodeableConcept: {
                     coding: [
                       {
                         system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
-                        code: '140587',
-                        display: 'Celecoxib 200 MG Oral Capsule',
+                        code: '40790',
+                        display: 'Pantoprazole 40 MG Oral Tablet',
                       },
                     ],
-                    text: 'Celecoxib 200 MG Oral Capsule',
+                    text: 'Pantoprazole 40 MG Oral Tablet',
                   },
                 },
               },
@@ -383,11 +383,11 @@ export function buildPreviewScenarios() {
             entry: [
               {
                 resource: makeObs({
-                  patientId: 'demo-cyp2c9-pm',
-                  gene: 'CYP2C9',
-                  diplotype: '*3/*3',
-                  phenotype: 'Poor Metabolizer',
-                  guidelineVersion: 'CPIC 2020-03',
+                  patientId: 'demo-cyp2c19-um',
+                  gene: 'CYP2C19',
+                  diplotype: '*17/*17',
+                  phenotype: 'Ultrarapid Metabolizer',
+                  guidelineVersion: 'CPIC 2020-08',
                 }),
               },
             ],
@@ -771,6 +771,24 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     return lines.find((l) => /^Activity score:/.test(l)) || '';
   }
 
+  function extractCoverageNumbers(covText, fallbackCov) {
+    const m = /Assay covered\\s+(\\d+)\\s+of\\s+(\\d+)\\s+defining positions/i.exec(String(covText || ''));
+    if (m) {
+      return {
+        definingPositionsAssayed: Number(m[1]),
+        definingPositionsTotal: Number(m[2]),
+      };
+    }
+    return fallbackCov;
+  }
+
+  function formatMathHtml(mathText) {
+    const str = String(mathText || '');
+    const m = /^(Activity score:\\s*)([0-9.]+\\s*×\\s*[0-9.]+\\s*=\\s*[0-9.]+)(.*)$/i.exec(str);
+    if (!m) return esc(str);
+    return \`\${esc(m[1])}<span class="m-data">\${esc(m[2])}</span>\${esc(m[3])}\`;
+  }
+
   function renderScenarioButtons() {
     const c = COPY[currentLang];
     const host = document.getElementById('scenario-list');
@@ -831,7 +849,6 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 
     const gp = currentScenario.geneProfile;
     const scaleMarkup = scaleHTML(gp, 'clinician');
-    const combMarkup = combHTML(gp.coverage);
 
     host.innerHTML = cards
       .map((card, idx) => {
@@ -845,6 +862,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
         const noteText = extractNoteDetail(card.detail);
         const quotes = extractQuoteLines(card.detail);
         const covText = extractCoverageLine(card.detail);
+        const combMarkup = combHTML(extractCoverageNumbers(covText, gp.coverage));
         const mathText = extractMathLine(card.detail);
         const altLine = extractAltLine(card.detail);
         const tierNum = gp.coverage?.saudiDataTier ?? 1;
@@ -869,17 +887,17 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
             <span><span class="m-mock">\${esc(c.demo)}</span></span>
           </div>
           <div class="m-cds__body">
-            <p class="m-cds__summary">\${esc(card.summary)}</p>
+            <p class="m-cds__summary" dir="auto">\${esc(card.summary)}</p>
             <dl class="m-cds__pheno">
               <dt>\${esc(c.dtGenotype)}</dt><dd class="m-data">\${esc(gp.gene)} \${esc(gp.diplotype)}</dd>
               <dt>\${esc(c.dtGenetic)}</dt><dd>\${esc(gp.phenotype)}</dd>
               <dt>\${esc(c.dtActing)}</dt><dd>\${esc(actingValue)}</dd>
             </dl>
             <div class="prv-mini">\${scaleMarkup}</div>
-            \${mathText ? \`<p class="m-coverage__line"><span class="m-data">\${esc(mathText)}</span></p>\` : ''}
-            \${quotes.length > 0 ? \`<blockquote class="m-cds__rec">\${esc(quotes[0])}\${link ? \`<cite>\${esc(link.label)}</cite>\` : ''}</blockquote>\` : ''}
-            \${altLine && altSuggestions.length === 0 ? \`<p style="font-size:var(--m-size-sm)"><strong>\${esc(c.betterPrefix)}</strong>\${esc(altLine)}</p>\` : ''}
-            \${covText || combMarkup ? \`<div class="m-coverage">\${combMarkup}<p class="m-coverage__line">\${esc(covText)} <span class="m-tier"><span class="m-tier__n">T\${tierNum}</span> <span>\${esc(tierWord)}</span></span></p></div>\` : ''}
+            \${mathText ? \`<p class="m-coverage__line" dir="auto">\${formatMathHtml(mathText)}</p>\` : ''}
+            \${quotes.length > 0 ? \`<blockquote class="m-cds__rec" dir="ltr">\${esc(quotes[0])}\${link ? \`<cite>\${esc(link.label)}</cite>\` : ''}</blockquote>\` : ''}
+            \${altLine && altSuggestions.length === 0 ? \`<p style="font-size:var(--m-size-sm)"><strong>\${esc(c.betterPrefix)}</strong><span dir="auto">\${esc(altLine)}</span></p>\` : ''}
+            \${covText || combMarkup ? \`<div class="m-coverage">\${combMarkup}<p class="m-coverage__line"><span dir="auto">\${esc(covText)}</span> <span class="m-tier"><span class="m-tier__n">T\${tierNum}</span> <span>\${esc(tierWord)}</span></span></p></div>\` : ''}
             \${suggestions.length > 0 ? \`<div class="m-cds__suggest">
               \${altSuggestions.map((s, sIdx) => {
                 const drugLabel = s.actions?.[0]?.resource?.medicationCodeableConcept?.text || s.label;

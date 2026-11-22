@@ -1385,6 +1385,7 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
   });
 
   it('a drug with no CPIC alternative shows no drug-alternative suggestion', async () => {
+    // 1. Info card (Normal Metabolizer clopidogrel): zero suggestions at all
     const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1403,6 +1404,43 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
     const card = data.cards[0];
     assert.equal(card.indicator, 'info');
     assert.equal(card.suggestions, undefined);
+
+    // 2. Warning card with no CPIC alternative (pantoprazole + CYP2C19 Ultrarapid Metabolizer):
+    //    zero MedicationRequest / "Better matched" alternative suggestions.
+    const umResp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-um-001',
+          drugCode: '40790',
+          drugDisplay: 'Pantoprazole 40 MG Oral Tablet',
+          prefetch: {
+            pgxObservations: {
+              resourceType: 'Bundle',
+              type: 'searchset',
+              entry: [
+                {
+                  resource: makeGenomicsObservation({
+                    patientId: 'b6-um-001',
+                    gene: 'CYP2C19',
+                    diplotype: '*17/*17',
+                    phenotype: 'Ultrarapid Metabolizer',
+                  }),
+                },
+              ],
+            },
+          },
+        })
+      ),
+    });
+    assert.equal(umResp.status, 200);
+    const umCard = (await umResp.json()).cards[0];
+    assert.equal(umCard.indicator, 'warning');
+    assert.equal(
+      (umCard.suggestions || []).some((s) => /Better matched/i.test(s.label)),
+      false
+    );
   });
 
   it('GET /preview renders styled .m-cds prescriber preview using design/ in EN and AR RTL', async () => {
