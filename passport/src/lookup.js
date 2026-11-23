@@ -1,5 +1,6 @@
 import cpicTable from '@tables/cpic_recommendations.json';
 import saudiFreqs from '@tables/saudi_frequencies.json';
+import { canonicalDrugName } from './phenoconvert.js';
 
 const cpicRows = cpicTable.rows || [];
 const freqRows = saudiFreqs.rows || [];
@@ -88,7 +89,7 @@ export function getDrugsForGene(geneObj) {
       recommendation: row.recommendation,
       classification: row.classification,
       alternatives: Array.isArray(row.alternatives)
-        ? row.alternatives.map((a) => (typeof a === 'string' ? a : a?.drug)).filter(Boolean)
+        ? row.alternatives.map((a) => (typeof a === 'string' ? a : (a?.drug || a?.drugClass))).filter(Boolean)
         : [],
       guideline: row.guideline || null,
     };
@@ -99,10 +100,24 @@ export function getDrugsForGene(geneObj) {
  * Check whether a current medication is named as a phenoconversion cause in any gene.
  */
 export function isMedCausingShift(medName, genes) {
-  const lower = String(medName || '').toLowerCase();
+  const canon = canonicalDrugName(medName);
   return genes.some(
     (g) => g.phenoconversion?.applied
       && Array.isArray(g.phenoconversion.cause)
-      && g.phenoconversion.cause.some((c) => c.toLowerCase() === lower)
+      && g.phenoconversion.cause.some((c) => canonicalDrugName(c) === canon)
   );
+}
+
+/**
+ * Return the list of genes affected by a current medication.
+ */
+export function getShiftedGenesForMed(medName, genes) {
+  const canon = canonicalDrugName(medName);
+  return genes
+    .filter(
+      (g) => g.phenoconversion?.applied
+        && Array.isArray(g.phenoconversion.cause)
+        && g.phenoconversion.cause.some((c) => canonicalDrugName(c) === canon)
+    )
+    .map((g) => g.gene);
 }
