@@ -249,3 +249,18 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `cd passport && npm install && npm test` (28/28 pass)
   - `cd passport && npm run build && npm run preview` (open `http://localhost:5173/?tab=otc`)
 - **Notes:** Strictly lookup-only from `tables/otc_products.json` and `tables/cpic_recommendations.json` using `effectivePhenotype || phenotype`, respecting A8 `not-assessed` safety (`ask`, never a false reassurance), zero LLM calls, works offline. Data contract unchanged. No new dependency.
+
+## C9 — Patient app: my current medicines, better matches and the pharmacy check (24 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/phenoconvert.js` (new: browser-side A7 phenoconversion engine ported from `engine/phenoconvert.py`, 97 CYP2D6 alleles + copy-number parser, Thomas et al. 2020 `×0`/`×0.5` multipliers, Caudle et al. 2020 thresholds, Arabic/English drug-name normalization, non-scored flagging for non-CYP2D6 genes, A8 `not-assessed` gate)
+  - `passport/src/lookup.js` (fixed `alternatives` extraction to include `drugClass` e.g. `non-tramadol opioid`; added `getShiftedGenesForMed` and canonical drug matching)
+  - `passport/src/otc.js` (canonical Arabic/English drug matching for `currentMedications` against `tables/cyp_inhibitors.json`)
+  - `passport/src/main.js`, `passport/src/render.js`, `passport/src/qr.js`, `passport/src/app.css` ("My medicines" add/remove persisted in `localStorage` as `"source": "patient-entered", "mock": true` triggering offline phenoconversion; plain dual-phenotype + doctor prompt + `.m-better` on gene cards; OTC `inhibitorHits` explanation; large-text `Show to pharmacist` view with dual-marker Meyar Scale per gene, current medicines, better matches, and encrypted QR)
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`, `passport/src/i18n/index.js` (Arabic & English copy for My medicines, gene phenoconversion lines, OTC inhibitor alerts, and Pharmacist view)
+  - `passport/test/c9.test.mjs` (new: 6 unit tests covering `demo-002` gene card wording & `.m-better`, offline `paroxetine` addition, A8/CYP2C19 rules, OTC inhibitor hits, Pharmacist view, and QR size budget), `passport/dist/` (rebuilt), `handoff/C9.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs --check` (`62/62` contrast pairs pass)
+  - `npm.cmd --prefix passport test` (`34/34` pass)
+  - `npm.cmd --prefix passport run build && npm.cmd --prefix passport run preview` (open `http://localhost:5173/?patient=demo-002` or `?view=pharmacist`)
+- **Notes:** Strictly lookup-only from `tables/` (`cyp_inhibitors.json`, `cpic_recommendations.json`, `otc_products.json`, `sv_genes.json`, `saudi_frequencies.json`) with zero network calls and zero LLM usage. Data contract unchanged. No new dependency.
+

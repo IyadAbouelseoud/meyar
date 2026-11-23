@@ -745,12 +745,18 @@ body {
   border-block-end: 1px solid var(--m-line);
 }
 
+.m-pharmacist-head > div {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
 .m-pharmacist-title {
   font-family: var(--m-font-display);
   font-weight: 700;
-  font-size: var(--m-size-2xl);
+  font-size: clamp(1.5rem, 6vw, var(--m-size-2xl));
+  line-height: 1.35;
   color: var(--m-text);
-  margin: 0 0 var(--m-space-1);
+  margin: 0 0 var(--m-space-2);
 }
 
 .m-pharmacist-sub {
