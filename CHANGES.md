@@ -99,11 +99,30 @@ Review fixes (`prompts/REVIEW-opus-5.5.md` applied to B2, 22 Nov 2026), files `c
 - Request for a `/data/fixtures` compose mount logged in `docs/requests.md`.
 Data contract unchanged. No new runtime dependency.
 
+## F3 — Chain-of-custody saliva kit software (22 Nov 2026)
+Files: `kit/` (`server.js`, `package.json`, `.gitignore`, `README.md`, `lib/chain.js`, `lib/events.js`, `lib/demo.js`, `lib/fhir.js`, `lib/fhir-client.js`, `lib/store.js`, `lib/handoff.js`, `web/index.html`, `web/app.js`, `web/kit.css`, `web/barcode128.js`, `web/qr.js`, `tools/export_codes.mjs`, `tools/decode_check.py`, `test/*.test.mjs`, `docs/screenshots/*.png`), `handoff/F3.md`.
+Notes: Kit `MYR-DEMO-0001` goes through six scan events (issued, collected, sealed, shipped, received, genotyped). Each event is stored as a FHIR Provenance on the kit's Specimen in the local HAPI. Every event is SHA-256 hash-chained to the one before. Verify reads the chain back from FHIR and flags the first broken link. The tube label (Code 128) and the mailer QR are drawn in the browser; both decode correctly with zbar and OpenCV. On "genotyped", the kit writes the germline `origin.json` (accepted by `engine/origin_guard.py`) and the VCF path. The timeline screen is Arabic first and built from `design/`. New port 5174 for the kit; pinned ports are untouched. No new dependency. Tamper-evident, not tamper-proof (said on screen). No specimen stability numbers.
+Run: `docker compose up -d hapi`, then `cd kit && npm start` (http://localhost:5174). Tests: `cd kit && npm test`.
+Data contract unchanged.
+
+## F3 render — chain-of-custody software on the T1 kit (22 Nov 2026)
+Files: `hardware/blender/build_f3_render.py`, `hardware/blender/art/make_f3_art.py`, `hardware/blender/art/out/f3_screen_*.png`, `hardware/blender/art/out/caption_f3_*.png`, `hardware/blender/meyar_f3_intact.blend`, `hardware/blender/meyar_f3_tampered.blend`, `hardware/blender/renders/meyar-f3-intact-kit-software.png`, `hardware/blender/renders/meyar-f3-tampered-kit-software.png`, `hardware/blender/README.md`.
+Notes: Two 3000 × 2000 Cycles stills of the T1 kit with a generic, unbranded phone on a stand. The phone screen is a real capture of the running `kit/` software, not a drawing: one capture shows the chain intact, verified from FHIR, and the other shows the chain after event 4 was edited, with the broken link flagged. Both are labelled "Kit design — software working". Only T1 appears, and nothing is placed on T3 or T4. Requested by BUNYAN as a follow-up to F3, outside F3's kit/ scope lock; it lives in the F-owned `hardware/` folder.
+Run: see `hardware/blender/README.md`, section "F3 render".
+
 ## B3 — Non-interruptive prescriber card (22 Nov 2026)
 Files: `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B3.md`.
 Notes: Enforces `design/README.md` §7 card JSON grammar (`summary` < 140 chars, `indicator` `warning` | `info`, `**Genetic:**` / `**Acting like:**`, verbatim CPIC quote, guaranteed A5 coverage line, `_Advises, does not prescribe. <guidelineVersion>._`, `source.label` `"Meyar (research prototype)"`). Adds one-tap `Send to pharmacist` FHIR `Task` suggestion, oncology `"Germline result — tumour profiling is separate."` notice, and first-`order-sign` backward sweep over active `MedicationStatement`s (`prefetch.currentMedications` → local HAPI FHIR → contract `currentMedications`) returning cards for affected current drugs (e.g. `SLCO1B1` Decreased Function on `simvastatin`).
 Run: `node design/build-tokens.mjs` (62/62 contrast pairs pass), `cd cds && node --test test/cds.test.js` (18/18 pass), `docker compose up -d --build hapi cds`.
 Data contract unchanged. No new runtime dependency.
+
+## F3 video — six scans live on the T1 kit (22 Nov 2026)
+Files: `hardware/blender/build_f3_video.py`, `hardware/blender/encode_f3_video.py`, `hardware/blender/art/make_f3_video_art.py`, `hardware/blender/art/out/f3v_*.png`, `hardware/blender/meyar_f3_video.blend`, `hardware/blender/renders/meyar-f3-kit-scans-live.mp4`, `hardware/blender/renders/meyar-f3-video-contact-sheet.jpg`, `hardware/blender/README.md`.
+Notes: A 15 s clip (1920 × 1080, 30 fps, H.264, 2.8 MB). The kit acts out each scan (funnel, cap, mailer) while the phone swaps to a real capture of the kit software after that scan. It ends on a tampered scan caught by verify. Arabic-first callouts. "Kit design — software working" is on screen for the whole clip. T1 only. Rendered in EEVEE.
+
+## F3 video v2 — paced chain-of-custody demo (23 Nov 2026)
+Files: `hardware/blender/build_f3_video2.py`, `encode_f3_video2.py`, `art/make_f3_video2_art.py`, `art/out/f3w_*.png`, `anim/f3v2_anchors.json`, `meyar_f3_video2.blend`, `renders/meyar-f3-kit-chain-of-custody.mp4`, `renders/meyar-f3-video2-contact-sheet.jpg`, `README.md`.
+Notes: A 57 s cut (1920 × 1080, 30 fps, H.264), rebuilt after BUNYAN's feedback on the 15 s version. It has phone close-ups, a hollow mailer with a hinged lid, and real packing (tube into the bag on its pad, bag into the mailer, lid closed). Arrow callouts are pinned to 3D anchors, with Arabic first. A live phone inset shows the real kit/web captures. Labelled "Kit design — software working" throughout. T1 only.
 
 ## F4
 - Arabic RTL versions: `docs/poster/f4-tier-panel-{poster,slide}-ar.{svg,png}` (Arabic strings are drafts for C4 review).

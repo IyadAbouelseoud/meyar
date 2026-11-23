@@ -67,3 +67,64 @@ EEVEE renders about 9 s a frame on an Intel Arc laptop GPU, so both shots take a
 - T3's internals are illustrative shapes, not a design: the reader module callout says "chemistry not chosen", and the caption says "Internals are illustrative". No size, time, price or accuracy appears.
 - The callouts state only design intent from `DESIGN-PLAN.md` (built-in screen, keyed cartridge, wristband-to-cartridge scanner, sealed button and shell). None claims a clinical benefit.
 - The T1 label "Kit design — software working" is the label the F1 prompt set (the chain-of-custody software is F3); the physical kit itself is a design. Callout Arabic is a draft for the C4 review.
+
+## F3 render — the chain-of-custody software on the T1 kit
+
+| Render | What the phone shows | Label on the image |
+|---|---|---|
+| `renders/meyar-f3-intact-kit-software.png` | Kit `MYR-DEMO-0001`, events 4–6 and "Chain intact … (FHIR)" | Kit design — software working |
+| `renders/meyar-f3-tampered-kit-software.png` | The same kit after event 4 was edited without re-sealing: "Chain broken here" | Kit design — software working |
+
+The phone screen is a **real capture of the running F3 software** (`kit/`), with Verify reading the chain back from the local HAPI. It is not a drawing. The phone and the stand are generic, unbranded props, and the physical kit is a design. Only T1 appears; nothing is placed on T3 or T4. The kit ID on the phone is the same one printed on the mailer barcode.
+
+### Rebuild (Windows, from the repo root)
+
+```powershell
+docker compose up -d hapi
+cd kit; npm start                                    # leave running; kit MYR-DEMO-0001 must have its six events
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_art.py   # captures + captions (needs Edge)
+foreach ($v in "intact","tampered") { & "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_render.py -- --variant $v --samples 128 }
+```
+
+`make_f3_art.py` uses the kit's own demo control to edit event 4 for the tampered capture, then restores it and checks that the chain verifies again. `build_f3_render.py` reuses `build_t1()` from `build_renders.py`, adds the phone and stand, renders in Cycles at 3000 × 2000, and bakes on the caption strip.
+
+## F3 video — the six scans live on the T1 kit
+
+`renders/meyar-f3-kit-scans-live.mp4`: 1920 × 1080, 30 fps, H.264, 15 s (450 frames). `renders/meyar-f3-video-contact-sheet.jpg` shows one frame every 2 s.
+
+| Time | What moves | What the phone shows (a real capture after that scan) | Callout (Arabic first) |
+|---|---|---|---|
+| 0–4 s | Kit at rest, then the funnel docks on the tube and the sample fills | Scans 1 → 2 recorded | ١ صُرفت العُدّة · ٢ جُمعت العيّنة |
+| 4–7 s | The funnel goes back, the cap twists on | Scan 3 | ٣ خُتمت الأنبوبة |
+| 7–11 s | The tube goes into the mailer, the mailer leaves and comes back | Scans 4 → 5 | ٤ شُحنت · ٥ استلمها المختبر |
+| 12–13 s | — | Scan 6, chain intact (FHIR) | ٦ اكتمل التنميط · سُلِّم للمحرّك |
+| 13.3–15 s | — | Scan 4 edited after the fact: "Chain broken here" | ! السلسلة مكسورة هنا |
+
+"Kit design — software working" and the honesty note stay on screen for the whole clip. The phone screens come from the kit's own API: the art script resets the demo kit, records each scan, captures the screen after each one, then edits and restores scan 4.
+
+```powershell
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_video_art.py   # kit app + HAPI running
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video.py         # frames/f3 (EEVEE)
+uv run --no-project python hardware/blender/encode_f3_video.py                                       # MP4 + contact sheet
+```
+
+## F3 video v2 — paced chain-of-custody demo (replaces the 15 s cut for presentations)
+
+`renders/meyar-f3-kit-chain-of-custody.mp4`: 1920 × 1080, 30 fps, H.264, 57 s (1,710 frames). `renders/meyar-f3-video2-contact-sheet.jpg` shows one frame every 4 s.
+
+- **Wide opening:** arrow callouts name the phone, tube, funnel, bag and mailer.
+- **Phone close-up:** scan 1 is saved as a FHIR record.
+- **Tube close-up:** the funnel docks and the sample fills, then the funnel goes back and the cap twists shut. A live phone inset shows the real screen after scans 2 and 3.
+- **Packing:** the mailer lid opens, the capped tube is laid in the leak-proof bag on its absorbent pad, the bag goes into the mailer and the lid closes. Nothing disappears.
+- **Shipped, then received:** the mailer leaves frame and comes back.
+- **Phone close-ups:** the chain verifies from FHIR, then scan 4 is edited later and verify flags it.
+- **End card.**
+
+The callouts are pinned to 3D anchors that are projected on their hold frames (`anim/f3v2_anchors.json`). Arabic comes first; the Arabic is a draft for the C4 review.
+
+```powershell
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video2.py -- --no-render      # scene + anchors
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_video2_art.py                # overlays (after make_f3_video_art.py)
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video2.py                       # frames/f3v2_hd (EEVEE, ~2.5 h)
+uv run --no-project python hardware/blender/encode_f3_video2.py
+```
