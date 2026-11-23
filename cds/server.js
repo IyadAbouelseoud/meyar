@@ -17,8 +17,10 @@ import {
   loadClinicalTables,
   extractDraftMedications,
   matchDrugsInTable,
+  matchInhibitorsInTable,
   lookupCpic,
 } from './lib/cpic.js';
+import { simulateInhibitorShift } from './lib/phenoconvert.js';
 import {
   resolvePatientProfile,
   resolveCurrentMedications,
@@ -28,7 +30,12 @@ import {
   NonGermlineSampleError,
   PGX_OBSERVATION_QUERY,
 } from './lib/phenotypes.js';
-import { buildCpicCard, buildNotAssessedSvCard, buildNoResultCard } from './lib/cards.js';
+import {
+  buildCpicCard,
+  buildNotAssessedSvCard,
+  buildNoResultCard,
+  buildInhibitorBackwardSweepCard,
+} from './lib/cards.js';
 import {
   resolveAlertsLogPath,
   appendAlertEvents,
@@ -42,6 +49,7 @@ import {
   renderDashboardHtml,
 } from './lib/dashboard.js';
 import { renderCompareHtml } from './lib/compare.js';
+import { renderPreviewHtml } from './lib/preview.js';
 
 // Request-size guard (engineering limit, not a clinical number).
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
@@ -120,6 +128,15 @@ function sendJson(res, statusCode, payload, extraHeaders = {}) {
     ...extraHeaders,
   });
   res.end(body);
+}
+
+function sendHtml(res, html) {
+  res.writeHead(200, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Content-Length': Buffer.byteLength(html),
+    ...corsHeaders(),
+  });
+  res.end(html);
 }
 
 function readJsonBody(req) {
@@ -427,11 +444,30 @@ export async function handleHookRequest(serviceId, body, deps) {
     fetchImpl: deps.fetchImpl,
   });
 
-  const shouldRunBackwardSweep =
+  const orderedStrongInhibitors = [];
+  if (expectedHook === 'order-sign') {
+    const seenInhKeys = new Set();
+    for (const med of draftMeds) {
+      for (const inh of matchInhibitorsInTable(med, deps.tables)) {
+        if (inh.strength !== 'strong') continue;
+        const k = `${inh.drug}|${inh.enzyme}`;
+        if (seenInhKeys.has(k)) continue;
+        seenInhKeys.add(k);
+        orderedStrongInhibitors.push({ ...inh, medDisplay: med.display });
+      }
+    }
+  }
+
+  const shouldRunFirstSweep =
     expectedHook === 'order-sign' &&
     Boolean(profile) &&
     deps.sweptPatients &&
     !deps.sweptPatients.has(patientId);
+  const shouldRunInhibitorSweep =
+    expectedHook === 'order-sign' &&
+    Boolean(profile) &&
+    orderedStrongInhibitors.length > 0;
+  const shouldRunBackwardSweep = shouldRunFirstSweep || shouldRunInhibitorSweep;
 
   if (!profile || (draftMeds.length === 0 && !shouldRunBackwardSweep)) {
     return {
@@ -450,9 +486,11 @@ export async function handleHookRequest(serviceId, body, deps) {
   const cards = [];
   const logEntries = [];
 
-  const recordCard = (card, { drug, geneSymbol, geneRecord, isBackwardSweep }) => {
+  const recordCard = (card, { drug, geneSymbol, geneRecord, isBackwardSweep, phenoconversionOverride = null }) => {
     cards.push(card);
-    const phenoApplied = Boolean(geneRecord?.phenoconversion?.applied);
+    const phenoApplied = phenoconversionOverride !== null
+      ? Boolean(phenoconversionOverride)
+      : Boolean(geneRecord?.phenoconversion?.applied);
     const effective =
       phenoApplied && geneRecord?.effectivePhenotype
         ? geneRecord.effectivePhenotype
@@ -497,7 +535,7 @@ export async function handleHookRequest(serviceId, body, deps) {
   }
 
   if (shouldRunBackwardSweep) {
-    deps.sweptPatients.add(patientId);
+    if (shouldRunFirstSweep) deps.sweptPatients.add(patientId);
     const currentMedsResult = await resolveCurrentMedications(patientId, {
       prefetch: body.prefetch || null,
       fhirBase: deps.fhirBase,
@@ -505,27 +543,120 @@ export async function handleHookRequest(serviceId, body, deps) {
       contractCurrentMedications: profile.currentMedications || [],
       fetchImpl: deps.fetchImpl,
     });
-    for (const med of currentMedsResult.medications) {
-      for (const drug of matchDrugsInTable(med, deps.tables)) {
-        const genesForDrug = deps.tables.drugGenes.get(drug);
-        if (!genesForDrug) continue;
 
-        for (const geneSymbol of genesForDrug) {
-          const dedupeKey = `${drug}|${geneSymbol}`;
-          if (seenCardKeys.has(dedupeKey)) continue;
-          seenCardKeys.add(dedupeKey);
+    // B6: When a draft order is a strong inhibitor (tables/cyp_inhibitors.json),
+    // simulate A7 phenoconversion and emit one info card per (inhibitor, enzyme)
+    // listing existing substrates whose CPIC recommendation now changes.
+    for (const inh of orderedStrongInhibitors) {
+      const geneRecord = geneMap.get(inh.enzyme);
+      const svRow = deps.tables.svGenes.get(inh.enzyme);
+      const sim = simulateInhibitorShift({
+        geneRecord,
+        inhibitorDrug: inh.drug,
+        enzyme: inh.enzyme,
+        strength: inh.strength,
+        svRow,
+      });
+      if (!sim || (!sim.changed && !sim.flagged)) continue;
 
-          const geneRecord = geneMap.get(geneSymbol);
-          const card = buildCardForGene({
+      const affectedSubstrates = [];
+      // Existing medications, plus substrates co-signed in this same order set: their
+      // draft card was built from the pre-inhibitor phenotype, so they must be re-checked.
+      const sweepCandidates = [
+        ...currentMedsResult.medications.map((med) => ({ med, coSigned: false })),
+        ...draftMeds
+          .filter((med) => med.display !== inh.medDisplay)
+          .map((med) => ({ med, coSigned: true })),
+      ];
+      const listedHere = new Set();
+      for (const { med, coSigned } of sweepCandidates) {
+        for (const drug of matchDrugsInTable(med, deps.tables)) {
+          if (drug === inh.drug) continue;
+          const genesForDrug = deps.tables.drugGenes.get(drug);
+          if (!genesForDrug || !genesForDrug.has(inh.enzyme)) continue;
+
+          const dedupeKey = `${drug}|${inh.enzyme}`;
+          if (listedHere.has(dedupeKey)) continue;
+          if (!coSigned && seenCardKeys.has(dedupeKey)) continue;
+
+          const beforeMatch = lookupCpic(deps.tables, {
             drug,
-            geneSymbol,
-            geneRecord,
-            med,
-            patientId,
-            tables: deps.tables,
-            isBackwardSweep: true,
+            gene: inh.enzyme,
+            phenotype: sim.priorPhenotype,
+            activityScore: sim.priorActivityScore ?? null,
+            reasonText: med.reasonText,
           });
-          if (card) recordCard(card, { drug, geneSymbol, geneRecord, isBackwardSweep: true });
+          const afterMatch = lookupCpic(deps.tables, {
+            drug,
+            gene: inh.enzyme,
+            phenotype: sim.newPhenotype,
+            activityScore: sim.adjustedActivityScore ?? null,
+            reasonText: med.reasonText,
+          });
+          if (!afterMatch) continue;
+
+          const recChanged = sim.scored
+            ? !beforeMatch ||
+              beforeMatch.row.recommendation !== afterMatch.row.recommendation ||
+              beforeMatch.row.classification !== afterMatch.row.classification
+            : String(afterMatch.row.classification || '').trim().toLowerCase() !== 'no recommendation';
+
+          if (!recChanged) continue;
+          seenCardKeys.add(dedupeKey);
+          listedHere.add(dedupeKey);
+          affectedSubstrates.push({
+            drug,
+            drugDisplay: med.display,
+            coSigned,
+            beforeMatch,
+            afterMatch,
+          });
+        }
+      }
+
+      if (affectedSubstrates.length > 0) {
+        const card = buildInhibitorBackwardSweepCard({
+          inhibitorDisplay: inh.medDisplay,
+          inhibitorDrug: inh.drug,
+          enzyme: inh.enzyme,
+          strength: inh.strength,
+          geneRecord,
+          simulation: sim,
+          affectedSubstrates,
+        });
+        recordCard(card, {
+          drug: affectedSubstrates.map((s) => s.drug).join(', '),
+          geneSymbol: inh.enzyme,
+          geneRecord: { ...geneRecord, effectivePhenotype: sim.newPhenotype },
+          isBackwardSweep: true,
+          phenoconversionOverride: true,
+        });
+      }
+    }
+
+    if (shouldRunFirstSweep) {
+      for (const med of currentMedsResult.medications) {
+        for (const drug of matchDrugsInTable(med, deps.tables)) {
+          const genesForDrug = deps.tables.drugGenes.get(drug);
+          if (!genesForDrug) continue;
+
+          for (const geneSymbol of genesForDrug) {
+            const dedupeKey = `${drug}|${geneSymbol}`;
+            if (seenCardKeys.has(dedupeKey)) continue;
+            seenCardKeys.add(dedupeKey);
+
+            const geneRecord = geneMap.get(geneSymbol);
+            const card = buildCardForGene({
+              drug,
+              geneSymbol,
+              geneRecord,
+              med,
+              patientId,
+              tables: deps.tables,
+              isBackwardSweep: true,
+            });
+            if (card) recordCard(card, { drug, geneSymbol, geneRecord, isBackwardSweep: true });
+          }
         }
       }
     }
@@ -617,14 +748,12 @@ export function createCdsServer(options = {}) {
 
     if (req.method === 'GET' && pathname === '/compare') {
       const lang = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
-      const html = renderCompareHtml({ lang });
-      res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Length': Buffer.byteLength(html),
-        ...corsHeaders(),
-      });
-      res.end(html);
-      return;
+      return sendHtml(res, renderCompareHtml({ lang }));
+    }
+
+    if (req.method === 'GET' && pathname === '/preview') {
+      const lang = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
+      return sendHtml(res, renderPreviewHtml({ lang }));
     }
 
     if (req.method === 'GET' && pathname === '/dashboard') {
@@ -635,13 +764,7 @@ export function createCdsServer(options = {}) {
         watchFixtures: loadWatchFixtures(fixturesDir),
         coverageGrid: loadCoverageGrid(fixturesDir),
       });
-      res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Length': Buffer.byteLength(html),
-        ...corsHeaders(),
-      });
-      res.end(html);
-      return;
+      return sendHtml(res, html);
     }
 
     if (req.method === 'POST' && pathname === '/alerts/action') {

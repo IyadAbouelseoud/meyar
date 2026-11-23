@@ -1169,3 +1169,371 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && arHtml.includes('90%'));
   });
 });
+
+describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and styled preview', () => {
+  let tmpDir;
+  let server;
+  let baseUrl;
+
+  before(async () => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meyar-b6-test-'));
+
+    // Patient on no current medicines, CYP2D6 *1/*41 (activity score 1.25, Normal Metabolizer).
+    fs.writeFileSync(
+      path.join(tmpDir, 'b6-cosign-001.contract.json'),
+      JSON.stringify({
+        patientId: 'b6-cosign-001',
+        sampleOrigin: 'germline',
+        currentMedications: [],
+        genes: [
+          {
+            gene: 'CYP2D6',
+            diplotype: '*1/*41',
+            phenotype: 'Normal Metabolizer',
+            candidates: ['*1/*41'],
+            coverage: {
+              definingPositionsAssayed: 0,
+              definingPositionsTotal: 0,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: null,
+              saudiDataTier: 0,
+            },
+            guidelineVersion: 'CPIC 2021',
+            callability: {
+              method: 'outside-call',
+              svAssessed: true,
+              source: 'Mock CNV-aware caller v0.1-demo',
+            },
+          },
+        ],
+      })
+    );
+
+    // Patient on codeine + tramadol with assessed CYP2D6 *1/*1 Normal Metabolizer (not yet on paroxetine).
+    fs.writeFileSync(
+      path.join(tmpDir, 'b6-opioid-001.contract.json'),
+      JSON.stringify({
+        patientId: 'b6-opioid-001',
+        sampleOrigin: 'germline',
+        currentMedications: [
+          { name: 'codeine', source: 'hospital-record', mock: true },
+          { name: 'tramadol', source: 'hospital-record', mock: true },
+        ],
+        genes: [
+          {
+            gene: 'CYP2D6',
+            diplotype: '*1/*1',
+            phenotype: 'Normal Metabolizer',
+            candidates: ['*1/*1'],
+            coverage: {
+              definingPositionsAssayed: 0,
+              definingPositionsTotal: 0,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: null,
+              saudiDataTier: 0,
+              saudiDataNote: 'No A5 score (Tier 0): structural-variation gene owned by A8.',
+            },
+            guidelineVersion: 'CPIC 2021',
+            callability: {
+              method: 'outside-call',
+              svAssessed: true,
+              source: 'Mock CNV-aware caller v0.1-demo',
+            },
+          },
+          {
+            gene: 'CYP2C19',
+            diplotype: '*1/*1',
+            phenotype: 'Normal Metabolizer',
+            candidates: ['*1/*1'],
+            coverage: {
+              definingPositionsAssayed: 35,
+              definingPositionsTotal: 35,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: 0,
+              saudiDataTier: 1,
+            },
+            guidelineVersion: 'CPIC 2022-11',
+            callability: { method: 'vcf', svAssessed: false },
+          },
+        ],
+      })
+    );
+
+    // Patient on clopidogrel with CYP2C19 *1/*1 Normal Metabolizer for non-CYP2D6 strong inhibitor flag test.
+    fs.writeFileSync(
+      path.join(tmpDir, 'b6-cyp2c19-001.contract.json'),
+      JSON.stringify({
+        patientId: 'b6-cyp2c19-001',
+        sampleOrigin: 'germline',
+        currentMedications: [{ name: 'clopidogrel', source: 'hospital-record', mock: true }],
+        genes: [
+          {
+            gene: 'CYP2C19',
+            diplotype: '*1/*1',
+            phenotype: 'Normal Metabolizer',
+            candidates: ['*1/*1'],
+            coverage: {
+              definingPositionsAssayed: 35,
+              definingPositionsTotal: 35,
+              untestedLocalAlleles: [],
+              uninformativeNormalRisk: 0,
+              saudiDataTier: 1,
+            },
+            guidelineVersion: 'CPIC 2022-11',
+            callability: { method: 'vcf', svAssessed: false },
+          },
+        ],
+      })
+    );
+
+    server = createCdsServer({
+      fhirBase: 'http://127.0.0.1:1',
+      fhirTimeoutMs: 100,
+      contractsDir: tmpDir,
+      alertsLogPath: path.join(tmpDir, 'alerts.jsonl'),
+    });
+    baseUrl = await startServer(server);
+  });
+
+  after(async () => {
+    await stopServer(server);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('ordering paroxetine for a patient already on codeine and tramadol triggers one info backward-sweep card', async () => {
+    const warmup = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-opioid-001',
+          drugCode: '6809',
+          drugDisplay: 'Metformin 500 MG Oral Tablet',
+        })
+      ),
+    });
+    assert.equal(warmup.status, 200);
+    assert.equal((await warmup.json()).cards.length, 0);
+
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-opioid-001',
+          drugCode: '32937',
+          drugDisplay: 'Paroxetine 20 MG Oral Tablet',
+        })
+      ),
+    });
+    assert.equal(resp.status, 200);
+    assert.equal(resp.headers.get('x-meyar-backward-sweep'), 'true');
+    const data = await resp.json();
+    assert.equal(data.cards.length, 1, 'Expected one info card listing affected existing substrates');
+
+    const card = data.cards[0];
+    assert.equal(card.indicator, 'info');
+    assert.ok(card.summary.length < 140);
+    assert.match(card.summary, /Backward sweep/i);
+    assert.match(card.summary, /CYP2D6/);
+    assert.match(card.summary, /paroxetine/i);
+    assert.match(card.summary, /codeine/i);
+
+    assert.match(
+      card.detail,
+      /\*\*Genetic:\*\* CYP2D6 \*1\/\*1 \(Normal Metabolizer\) · \*\*Acting like:\*\* Poor Metabolizer because of paroxetine/
+    );
+    assert.match(card.detail, /Activity score: 2 × 0 = 0 /);
+    assert.match(card.detail, /\*\*Existing medication \(backward sweep\):\*\* codeine/);
+    assert.match(card.detail, /\*\*Existing medication \(backward sweep\):\*\* tramadol/);
+    assert.match(card.detail, /Avoid codeine use because of possibility of diminished analgesia/);
+    assert.match(card.detail, /non-tramadol opioid/);
+    assert.ok(Array.isArray(card.links) && card.links[0].url.includes('clinpgx.org'));
+    assert.equal(card.selectionBehavior, 'at-most-one');
+    assert.ok(card.suggestions.some((s) => s.label === 'Send to pharmacist'));
+  });
+
+  it('co-signing codeine with paroxetine in one order re-checks codeine and prints the exact 1.25 activity score', async () => {
+    const body = makeOrderSignBody({
+      patientId: 'b6-cosign-001',
+      drugCode: '2670',
+      drugDisplay: 'Codeine 30 MG Oral Tablet',
+    });
+    const parox = structuredClone(body.context.draftOrders.entry[0]);
+    parox.resource.id = 'medrx-2';
+    parox.resource.medicationCodeableConcept = {
+      coding: [{ system: 'http://www.nlm.nih.gov/research/umls/rxnorm', code: '32937', display: 'Paroxetine 20 MG Oral Tablet' }],
+      text: 'Paroxetine 20 MG Oral Tablet',
+    };
+    body.context.draftOrders.entry.push(parox);
+
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    const sweep = data.cards.find((c) => /Backward sweep/.test(c.summary));
+    assert.ok(sweep, 'co-signed strong inhibitor must re-check the co-signed codeine order');
+    assert.equal(sweep.indicator, 'info');
+    assert.match(sweep.detail, /\*\*Co-signed in this order \(re-checked with paroxetine\):\*\* codeine/);
+    assert.match(sweep.detail, /Acting like:\*\* Poor Metabolizer because of paroxetine/);
+    assert.match(sweep.detail, /Activity score: 1\.25 × 0 = 0 /);
+    assert.doesNotMatch(sweep.detail, /1\.3/);
+  });
+
+  it('CDS CYP2D6 activity table mirrors engine/phenoconvert.py exactly', async () => {
+    const { parseCyp2d6AlleleScore } = await import('../lib/phenoconvert.js');
+    const py = fs.readFileSync(new URL('../../engine/phenoconvert.py', import.meta.url), 'utf8');
+    const block = py.slice(py.indexOf('CYP2D6_ALLELE_ACTIVITY_VALUES'));
+    const body = block.slice(block.indexOf('{') + 1, block.indexOf('}'));
+    const pairs = [...body.matchAll(/"([^"]+)"\s*:\s*([0-9.]+)/g)];
+    assert.ok(pairs.length > 50, 'engine table parsed');
+    for (const [, allele, value] of pairs) {
+      assert.equal(parseCyp2d6AlleleScore(allele), Number(value), `CYP2D6 ${allele}`);
+    }
+  });
+
+  it('ordering paroxetine never fabricates phenoconversion when CYP2D6 is not-assessed (A8)', async () => {
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'demo-001',
+          drugCode: '32937',
+          drugDisplay: 'Paroxetine 20 MG Oral Tablet',
+          prefetch: {
+            currentMedications: {
+              resourceType: 'Bundle',
+              type: 'searchset',
+              entry: [
+                {
+                  resource: {
+                    resourceType: 'MedicationStatement',
+                    id: 'stmt-cod',
+                    status: 'active',
+                    subject: { reference: 'Patient/demo-001' },
+                    medicationCodeableConcept: {
+                      coding: [{ system: 'http://www.nlm.nih.gov/research/umls/rxnorm', code: '2670', display: 'codeine' }],
+                      text: 'codeine',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        })
+      ),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    for (const c of data.cards) {
+      assert.doesNotMatch(c.detail, /Acting like:/);
+      assert.doesNotMatch(c.detail, /Activity score:/);
+    }
+  });
+
+  it('ordering a strong CYP2C19 inhibitor flags existing CYP2C19 substrate without computing a score', async () => {
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-cyp2c19-001',
+          drugCode: '42355',
+          drugDisplay: 'Fluvoxamine 50 MG Oral Tablet',
+        })
+      ),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    assert.equal(data.cards.length, 1);
+    const card = data.cards[0];
+    assert.equal(card.indicator, 'info');
+    assert.match(card.detail, /may be affected by fluvoxamine/i);
+    assert.match(card.detail, /clopidogrel/i);
+    assert.doesNotMatch(card.detail, /Activity score:/);
+  });
+
+  it('a drug with no CPIC alternative shows no drug-alternative suggestion', async () => {
+    // 1. Info card (Normal Metabolizer clopidogrel): zero suggestions at all
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-cyp2c19-001',
+          drugCode: '32968',
+          drugDisplay: 'Clopidogrel 75 MG Oral Tablet',
+          reasonText: 'Acute coronary syndrome',
+        })
+      ),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    assert.equal(data.cards.length, 1);
+    const card = data.cards[0];
+    assert.equal(card.indicator, 'info');
+    assert.equal(card.suggestions, undefined);
+
+    // 2. Warning card with no CPIC alternative (pantoprazole + CYP2C19 Ultrarapid Metabolizer):
+    //    zero MedicationRequest / "Better matched" alternative suggestions.
+    const umResp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({
+          patientId: 'b6-um-001',
+          drugCode: '40790',
+          drugDisplay: 'Pantoprazole 40 MG Oral Tablet',
+          prefetch: {
+            pgxObservations: {
+              resourceType: 'Bundle',
+              type: 'searchset',
+              entry: [
+                {
+                  resource: makeGenomicsObservation({
+                    patientId: 'b6-um-001',
+                    gene: 'CYP2C19',
+                    diplotype: '*17/*17',
+                    phenotype: 'Ultrarapid Metabolizer',
+                  }),
+                },
+              ],
+            },
+          },
+        })
+      ),
+    });
+    assert.equal(umResp.status, 200);
+    const umCard = (await umResp.json()).cards[0];
+    assert.equal(umCard.indicator, 'warning');
+    assert.equal(
+      (umCard.suggestions || []).some((s) => /Better matched/i.test(s.label)),
+      false
+    );
+  });
+
+  it('GET /preview renders styled .m-cds prescriber preview using design/ in EN and AR RTL', async () => {
+    const enResp = await fetch(`${baseUrl}/preview`);
+    assert.equal(enResp.status, 200);
+    assert.match(enResp.headers.get('content-type') || '', /text\/html/);
+    const enHtml = await enResp.text();
+    assert.match(enHtml, /data-theme="paper"/);
+    assert.match(enHtml, /data-voice="clinician"/);
+    assert.match(enHtml, /class="m-body m-chartpaper"/);
+    assert.match(enHtml, /\/design\/fonts\/fonts\.css/);
+    assert.match(enHtml, /\/design\/tokens\.css/);
+    assert.match(enHtml, /\/design\/meyar\.css/);
+    assert.match(enHtml, /\/design\/meyar\.js/);
+    assert.match(enHtml, /scaleHTML\(gp, 'clinician'\)/);
+    assert.match(enHtml, /POST \/cds-services\/meyar-pgx/);
+
+    const arResp = await fetch(`${baseUrl}/preview?lang=ar`);
+    assert.equal(arResp.status, 200);
+    const arHtml = await arResp.text();
+    assert.match(arHtml, /lang="ar" dir="rtl"/);
+  });
+});
