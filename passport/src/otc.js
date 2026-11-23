@@ -280,7 +280,7 @@ export function lookupOtcProduct(query, contract, options = {}) {
           recommendation: row.recommendation,
           classification: row.classification,
           alternatives: Array.isArray(row.alternatives)
-            ? row.alternatives.map((a) => (typeof a === 'string' ? a : a?.drug)).filter(Boolean)
+            ? row.alternatives.map((a) => (typeof a === 'string' ? a : (a?.drug || a?.drugClass))).filter(Boolean)
             : [],
           guideline: row.guideline || null,
         });

@@ -61,6 +61,16 @@ function buildCopy(lang) {
     },
     phenoconversionLine: (genetic, acting, causes) =>
       fill(c.phenoconversionLine, { genetic, acting, causes }),
+    otcNoGuidelineBody: c.otcNoGuidelineBody,
+    otcNormalGuidelineBody: (gene, phenotype) =>
+      fill(c.otcNormalGuidelineBody, { gene, phenotype }),
+    otcAskGuidelineBody: (gene, phenotype) =>
+      fill(c.otcAskGuidelineBody, { gene, phenotype }),
+    otcStopGuidelineBody: (gene, phenotype) =>
+      fill(c.otcStopGuidelineBody, { gene, phenotype }),
+    otcNotAssessedBody: (gene) => fill(c.otcNotAssessedBody, { gene }),
+    otcMissingGeneBody: (gene) => fill(c.otcMissingGeneBody, { gene }),
+    otcNotFoundBody: (query) => fill(c.otcNotFoundBody, { query }),
   };
 }
 

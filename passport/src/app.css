@@ -30,7 +30,9 @@ body {
 .m-stack > *,
 .m-gene,
 .m-cover,
-.m-topbar {
+.m-topbar,
+.m-panel,
+.m-field {
   min-width: 0;
   max-inline-size: 100%;
   box-sizing: border-box;
@@ -133,8 +135,9 @@ body {
   font-family: var(--m-font-display);
   font-weight: 700;
   font-size: var(--m-size-xl);
+  line-height: 1.35;
   color: var(--m-text);
-  margin: 0;
+  margin: 0 0 var(--m-space-1);
 }
 
 .m-sec-sub {
@@ -236,7 +239,7 @@ body {
   inline-size: 100%;
   max-inline-size: 760px;
   margin-inline: auto;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   background: var(--m-surface);
   border-block-start: 1px solid var(--m-line);
   padding-block: var(--m-space-1);
@@ -620,4 +623,57 @@ body {
 
 [data-elder="on"] .m-topbar__controls {
   gap: var(--m-space-3);
+}
+
+/* OTC quick-check (C6) */
+.m-otc-box {
+  padding: var(--m-space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--m-space-3);
+}
+
+.m-otc-box .m-field {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.m-otc-inputrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-space-2);
+  align-items: stretch;
+}
+
+.m-otc-inputrow .m-input {
+  flex: 1 1 200px;
+  inline-size: 100%;
+  min-width: 0;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+}
+
+.m-otc-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--m-space-2);
+}
+
+.m-otc-examples__label {
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
+}
+
+.m-otc-match {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--m-space-2);
+  font-size: var(--m-size-sm);
+  color: var(--m-text);
+}
+
+.m-otc-fuzzy {
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
 }

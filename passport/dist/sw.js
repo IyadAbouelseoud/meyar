@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meyar-passport-offline-v1';
+const CACHE_NAME = 'meyar-passport-offline-v2';
 const CORE_URLS = [
   '/',
   '/index.html',
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request, { ignoreSearch: true }).then((cached) => {
       if (cached) return cached;
       return fetch(request)
         .then((response) => {
@@ -41,7 +41,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => caches.match('/scan.html'));
+        .catch(() => caches.match(url.pathname.includes('scan') ? '/scan.html' : '/index.html'));
     })
   );
 });
