@@ -7,7 +7,7 @@ import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
 import { getDrugsForGene } from './lookup.js';
 import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg } from './qr.js';
 import { isValidPin, normalizeDigits } from './pinguard.js';
-import { renderApp } from './render.js';
+import { renderApp, renderOtcResultHtml } from './render.js';
 import { COPY } from './i18n.js';
 import { hasSpeechVoice, selectVoiceForLang } from './speech.js';
 
@@ -45,7 +45,8 @@ const state = {
   elder: initialElder,
   caregiverMode: params.get('mode') === 'caregiver',
   caregiverCopied: false,
-  tab: ['genes', 'meds', 'doctor'].includes(params.get('tab')) ? params.get('tab') : 'genes',
+  tab: ['genes', 'meds', 'otc', 'doctor'].includes(params.get('tab')) ? params.get('tab') : 'genes',
+  otcQuery: params.get('q') || '',
   patientId: params.get('patient') || 'demo-001',
   devMode: params.get('dev') === '1',
   speechAvailable: hasSpeechVoice(initialLang),
@@ -156,8 +157,14 @@ root.addEventListener('change', (e) => {
 
 // Inputs only update state (no re-render while typing, so focus stays put).
 root.addEventListener('input', (e) => {
-  if (state.caregiverMode) return;
   const el = e.target;
+  if (el.dataset.action === 'otc-query') {
+    state.otcQuery = el.value;
+    const out = document.getElementById('otc-result');
+    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, state.contract, state.lang);
+    return;
+  }
+  if (state.caregiverMode) return;
   if (el.dataset.action === 'qr-pin' || el.dataset.action === 'qr-pin-confirm') {
     const clean = normalizeDigits(el.value).replace(/[^0-9]/g, '').slice(0, 6);
     if (clean !== el.value) el.value = clean;
@@ -200,6 +207,20 @@ root.addEventListener('click', async (e) => {
     state.speakingIndex = null;
     syncUrlMode();
     update();
+  } else if (action === 'otc-pick') {
+    state.otcQuery = btn.dataset.query || '';
+    const input = document.getElementById('otc-input');
+    const out = document.getElementById('otc-result');
+    if (input) input.value = state.otcQuery;
+    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, state.contract, state.lang);
+    input?.focus();
+  } else if (action === 'otc-clear') {
+    state.otcQuery = '';
+    const input = document.getElementById('otc-input');
+    const out = document.getElementById('otc-result');
+    if (input) input.value = '';
+    if (out) out.innerHTML = renderOtcResultHtml('', state.contract, state.lang);
+    input?.focus();
   } else if (action === 'tab') {
     state.tab = btn.dataset.tab;
     state.caregiverCopied = false;

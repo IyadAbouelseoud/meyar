@@ -23,7 +23,7 @@ export function getTierInfo(geneObj) {
   };
 }
 
-function classifyRow(row) {
+export function classifyRow(row) {
   const rec = (row.recommendation || '').toLowerCase();
   const hasAlts = Array.isArray(row.alternatives) && row.alternatives.length > 0;
   if (hasAlts || /\b(avoid|contraindicated|alternative|do not use)\b/.test(rec)) {
@@ -36,6 +36,29 @@ function classifyRow(row) {
 }
 
 /**
+ * Pick the best matching CPIC row from an array of rows for the same drug + gene + phenotype.
+ */
+export function pickBestCpicRow(matching, geneObj) {
+  const rawScore = geneObj?.phenoconversion?.applied ? geneObj?.phenoconversion?.adjustedActivityScore : null;
+  const targetScores = rawScore != null ? new Set([String(rawScore), rawScore.toFixed(1)]) : null;
+
+  let best = null;
+  for (const row of matching) {
+    if (!best) {
+      best = row;
+    } else if (
+      (targetScores && targetScores.has(String(row.activityScore)))
+      || (best.population && /pediatric/i.test(best.population) && !/pediatric/i.test(row.population || ''))
+      || (row.population === 'general' && best.population !== 'general')
+      || (row.population === 'CVI ACS PCI' && best.population !== 'general')
+    ) {
+      best = row;
+    }
+  }
+  return best;
+}
+
+/**
  * Look up CPIC recommendations for a gene using its effectivePhenotype (if present) or phenotype.
  * Returns [] if the gene is not-assessed or has no phenotype. Never invents recommendations.
  */
@@ -44,42 +67,32 @@ export function getDrugsForGene(geneObj) {
   const activePhenotype = geneObj.effectivePhenotype || geneObj.phenotype;
   if (!activePhenotype || /indeterminate|not assessed/i.test(activePhenotype)) return [];
 
-  const targetScore = geneObj.phenoconversion?.applied && geneObj.phenoconversion?.adjustedActivityScore != null
-    ? String(geneObj.phenoconversion.adjustedActivityScore.toFixed(1))
-    : null;
-
   const matching = cpicRows.filter(
     (r) => r.gene === geneObj.gene && r.phenotype === activePhenotype
   );
 
-  // Deduplicate by drug; prefer non-pediatric rows, general/CVI ACS PCI, and matching adjustedActivityScore.
-  const byDrug = new Map();
+  // Group by drug and pick best row per drug using shared helper.
+  const byDrugRows = new Map();
   for (const row of matching) {
-    const existing = byDrug.get(row.drug);
-    if (!existing) {
-      byDrug.set(row.drug, row);
-    } else if (
-      (targetScore && row.activityScore === targetScore)
-      || (existing.population && /pediatric/i.test(existing.population) && !/pediatric/i.test(row.population || ''))
-      || (row.population === 'general' && existing.population !== 'general')
-      || (row.population === 'CVI ACS PCI' && existing.population !== 'general')
-    ) {
-      byDrug.set(row.drug, row);
-    }
+    if (!byDrugRows.has(row.drug)) byDrugRows.set(row.drug, []);
+    byDrugRows.get(row.drug).push(row);
   }
 
-  return Array.from(byDrug.values()).map((row) => ({
-    drug: row.drug,
-    rxnorm: row.rxnorm,
-    status: classifyRow(row),
-    implication: row.implication,
-    recommendation: row.recommendation,
-    classification: row.classification,
-    alternatives: Array.isArray(row.alternatives)
-      ? row.alternatives.map((a) => (typeof a === 'string' ? a : a?.drug)).filter(Boolean)
-      : [],
-    guideline: row.guideline || null,
-  }));
+  return Array.from(byDrugRows.values()).map((rows) => {
+    const row = pickBestCpicRow(rows, geneObj);
+    return {
+      drug: row.drug,
+      rxnorm: row.rxnorm,
+      status: classifyRow(row),
+      implication: row.implication,
+      recommendation: row.recommendation,
+      classification: row.classification,
+      alternatives: Array.isArray(row.alternatives)
+        ? row.alternatives.map((a) => (typeof a === 'string' ? a : a?.drug)).filter(Boolean)
+        : [],
+      guideline: row.guideline || null,
+    };
+  });
 }
 
 /**

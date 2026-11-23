@@ -1,6 +1,7 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
 import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
 import { getDrugsForGene, getTierInfo, isMedCausingShift } from './lookup.js';
+import { lookupOtcProduct } from './otc.js';
 import { buildGeneSpeakText } from './speech.js';
 
 function esc(str) {
@@ -424,10 +425,138 @@ function renderDoctorView(contract, lang, t, state) {
   `;
 }
 
+function renderOtcDetailLine(detail, lang, t) {
+  const geneHtml = detail.gene ? `<span class="m-data">${esc(detail.gene)}</span>` : '';
+  if (detail.reasonType === 'no-cpic-guideline') {
+    return `<p class="m-answer__body">${esc(t.otcNoGuidelineBody)}</p>`;
+  }
+  if (detail.reasonType === 'not-assessed') {
+    return `<p class="m-answer__body">${t.otcNotAssessedBody(geneHtml)}</p>`;
+  }
+  if (detail.reasonType === 'gene-not-in-profile') {
+    return `<p class="m-answer__body">${t.otcMissingGeneBody(geneHtml)}</p>`;
+  }
+  const activePhen = detail.effectivePhenotype || 'Indeterminate';
+  const phenLabel = PHENOTYPE_SHORT[lang]?.[activePhen] || activePhen;
+  let mainLine = '';
+  if (detail.status === 'stop') {
+    mainLine = t.otcStopGuidelineBody(geneHtml, esc(phenLabel));
+  } else if (detail.status === 'ask') {
+    mainLine = t.otcAskGuidelineBody(geneHtml, esc(phenLabel));
+  } else {
+    mainLine = t.otcNormalGuidelineBody(geneHtml, esc(phenLabel));
+  }
+
+  const phenoShift = detail.phenoconversion?.applied
+    ? `<p class="m-gene__because">${t.phenoconversionLine(
+        esc(PHENOTYPE_SHORT[lang]?.[detail.geneticPhenotype] || detail.geneticPhenotype),
+        esc(phenLabel),
+        esc((detail.phenoconversion.cause || []).map((c) => drugLabel(c, lang)).join(', '))
+      )}</p>`
+    : '';
+
+  const altsHtml = detail.alternatives?.length > 0
+    ? `<div class="m-better">
+        <svg aria-hidden="true"><use href="#i-match"/></svg>
+        <span>${esc(t.betterMatch)} <strong>${esc(detail.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} <span dir="ltr">(${esc(detail.guideline?.pub || 'CPIC')})</span></span>
+      </div>`
+    : '';
+
+  const sourceLine = detail.guideline
+    ? `<p class="m-coverage__line">${esc(detail.guideline.name)} · ${esc(detail.guideline.pub)} (CPIC)</p>`
+    : '';
+
+  return `<p class="m-answer__body">${mainLine}</p>${phenoShift}${altsHtml}${sourceLine}`;
+}
+
+export function renderOtcResultHtml(query, contract, lang) {
+  const t = COPY[lang] || COPY.ar;
+  const trimmed = String(query || '').trim();
+  if (!trimmed) {
+    return `<div class="m-empty">${esc(t.otcIdle)}</div>`;
+  }
+
+  const res = lookupOtcProduct(trimmed, contract);
+  if (!res || res.status === 'unknown') {
+    return `
+      <div class="m-answer m-answer--ask" data-testid="otc-answer" data-otc-status="unknown">
+        <p class="m-answer__title">
+          <svg aria-hidden="true"><use href="#i-ask"/></svg>
+          <span>${esc(t.otcNotFoundTitle)}</span>
+        </p>
+        <p class="m-answer__body">${esc(t.otcNotFoundBody(trimmed))}</p>
+      </div>
+    `;
+  }
+
+  const sep = lang === 'ar' ? '، ' : ', ';
+  const brandName = lang === 'ar' ? res.product.brandAr : res.product.brandEn;
+  const ingList = (res.product.ingredients || []).map((i) => drugLabel(i, lang)).join(sep);
+
+  // Deduplicate detail lines if multiple genes aren't present; show actionable details first.
+  const sortedDetails = [...res.details].sort((a, b) => {
+    const rank = { stop: 2, ask: 1, none: 0 };
+    return (rank[b.status] ?? 0) - (rank[a.status] ?? 0);
+  });
+  const primaryDetails = sortedDetails.filter((d) => d.status === res.status);
+  const shownDetails = primaryDetails.length > 0 ? primaryDetails : sortedDetails.slice(0, 1);
+
+  return `
+    <div class="m-answer m-answer--${res.status}" data-testid="otc-answer" data-otc-status="${res.status}">
+      <p class="m-answer__title">
+        <svg aria-hidden="true"><use href="#${statusIcon(res.status)}"/></svg>
+        <span>${esc(statusText(res.status, t))}</span>
+      </p>
+      <p class="m-otc-match">
+        <strong>${esc(t.otcMatchedLabel)}</strong> ${esc(brandName)}
+        <span class="m-mock">${esc(t.demo)}</span>
+        · <span>${esc(t.otcIngredientLabel)} ${esc(ingList)}</span>
+        ${res.matchType === 'fuzzy' ? `<span class="m-otc-fuzzy">(${esc(t.otcFuzzyNote)})</span>` : ''}
+      </p>
+      ${shownDetails.map((d) => renderOtcDetailLine(d, lang, t)).join('')}
+    </div>
+  `;
+}
+
+function renderOtcView(contract, lang, t, state) {
+  const examples = lang === 'ar'
+    ? ['أوميبرازول', 'باراسيتامول', 'إيبوبروفين', 'سولبادين']
+    : ['omeprazole', 'paracetamol', 'ibuprofen', 'Solpadeine'];
+
+  return `
+    <section class="m-stack" aria-labelledby="otc-heading">
+      <div>
+        <h2 class="m-sec-title" id="otc-heading">${esc(t.otcTitle)}</h2>
+        <p class="m-sec-sub">${esc(t.otcSub)}</p>
+      </div>
+      <div class="m-panel m-otc-box">
+        <div class="m-field">
+          <label for="otc-input">${esc(t.otcLabel)}</label>
+          <div class="m-otc-inputrow">
+            <input id="otc-input" class="m-input" type="search" autocomplete="off" placeholder="${esc(t.otcPlaceholder)}" value="${esc(state.otcQuery)}" data-action="otc-query">
+            <button type="button" class="m-btn m-btn--secondary" data-action="otc-clear">${esc(t.otcClearBtn)}</button>
+          </div>
+        </div>
+        <div class="m-otc-examples" role="group" aria-label="${esc(t.otcExamplesLabel)}">
+          <span class="m-otc-examples__label">${esc(t.otcExamplesLabel)}</span>
+          ${examples.map((name) => `
+            <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="otc-pick" data-query="${esc(name)}">${esc(name)}</button>
+          `).join('')}
+        </div>
+      </div>
+      <div id="otc-result" role="status" aria-live="polite">
+        ${renderOtcResultHtml(state.otcQuery, contract, lang)}
+      </div>
+      <p class="m-coverage__line">${esc(t.otcOfflineNote)}</p>
+    </section>
+  `;
+}
+
 function renderTabs(activeTab, t) {
   const tabs = [
     { id: 'genes', icon: 'i-genes', label: t.tabGenes },
     { id: 'meds', icon: 'i-pill', label: t.tabMeds },
+    { id: 'otc', icon: 'i-search', label: t.tabOtc },
     { id: 'doctor', icon: 'i-qr', label: t.tabDoctor },
   ];
   return `
@@ -451,6 +580,8 @@ export function renderApp(root, state) {
     body = `<div class="m-empty">...</div>`;
   } else if (state.tab === 'meds') {
     body = renderMedsView(state.contract, state.lang, t);
+  } else if (state.tab === 'otc') {
+    body = renderOtcView(state.contract, state.lang, t, state);
   } else if (state.tab === 'doctor') {
     body = renderDoctorView(state.contract, state.lang, t, state);
   } else {

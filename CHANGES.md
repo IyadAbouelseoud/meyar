@@ -234,3 +234,18 @@ Run: `node design/build-tokens.mjs` (`62/62` pass); `node --test cds/test/cds.te
 Data contract unchanged. No new runtime dependency.
 
 B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on the sweep card (no 1-decimal rounding); strong inhibitor co-signed with a substrate re-checks it; engine/CDS CYP2D6 table parity test; outside-call source line always printed; preview scenario 3 labelled 'effect after signing'. Files: `cds/lib/cards.js`, `cds/server.js`, `cds/lib/preview.js`, `cds/README.md`, `cds/test/cds.test.js`, `handoff/B6.md`. Run: `node --test cds/test/cds.test.js` (39 pass).
+
+## C6 — OTC quick-check search (23 Nov 2026)
+- **Files added/changed:**
+  - `tables/otc_products.json` (16 mock Saudi/common OTC product rows with Arabic & English brand/generic names, active ingredients, `"mock": true`, and `"source"` per row)
+  - `passport/src/otc.js` (new: single reusable `lookupOtcProduct(query, contract, options)` + Arabic/English normalization & bounded Levenshtein fuzzy matcher `matchOtcProduct`, ready for C9 reuse)
+  - `passport/src/lookup.js` (exported `classifyRow` and `pickBestCpicRow` so OTC lookup shares CPIC classification logic)
+  - `passport/src/render.js`, `passport/src/main.js`, `passport/src/app.css` (added 4th Passport tab `Check medicine` / `افحص دواء`, `.m-field`/`.m-input` search, `.m-answer--none|ask|stop` answers with `#i-none|#i-ask|#i-stop`, no `"safe"`, no tick, no hard-coded colours/fonts)
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json`, `passport/src/i18n/index.js` (Arabic & English OTC strings + CPIC drug-class translations)
+  - `passport/public/sw.js` (offline navigation fallback and search-ignoring cache match for `/` and `/scan.html`)
+  - `passport/test/otc.test.mjs` (new: 9 unit tests for omeprazole/paracetamol/codeine/unknown/fuzzy/A7/A8/C9 hook), `passport/dist/` (rebuilt production bundle), `handoff/C6.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (62/62 contrast pairs pass)
+  - `cd passport && npm install && npm test` (28/28 pass)
+  - `cd passport && npm run build && npm run preview` (open `http://localhost:5173/?tab=otc`)
+- **Notes:** Strictly lookup-only from `tables/otc_products.json` and `tables/cpic_recommendations.json` using `effectivePhenotype || phenotype`, respecting A8 `not-assessed` safety (`ask`, never a false reassurance), zero LLM calls, works offline. Data contract unchanged. No new dependency.
