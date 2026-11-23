@@ -1,0 +1,19 @@
+{
+  "demo-001": {
+    "bytes": 481,
+    "qrVersion": 17,
+    "modules": 85,
+    "errorCorrectionLevel": "M",
+    "payloadJsonBytes": 540,
+    "compressedBytes": 295
+  },
+  "demo-001-tampered": {
+    "bytes": 481,
+    "qrVersion": 17,
+    "modules": 85,
+    "errorCorrectionLevel": "M",
+    "changedCiphertextByte": 155
+  },
+  "mock": true,
+  "note": "Demo data. Measured by docs/demo/make_qr.mjs with the qrcode package passport/ already uses."
+}

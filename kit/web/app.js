@@ -32,6 +32,14 @@ const T = {
     reasons: { 'content-changed': 'تغيّر المحتوى بعد الختم', 'prev-hash-mismatch': 'لا يطابق بصمة الحدث السابق', 'sequence-gap': 'خلل في الترتيب', 'out-of-order': 'حدث خارج ترتيبه', 'different-kit': 'عُدّة مختلفة' },
     footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · الأحداث محفوظة كـ FHIR Provenance على Specimen في خادم HAPI المحلي',
     chainAria: 'الجدول الزمني لسلسلة حفظ العيّنة',
+    gQc: 'ضبط الجودة في المختبر', gQcPass: 'اجتازت العيّنة ضبط الجودة', gQcFail: 'رُفضت العيّنة في ضبط الجودة',
+    gRecollect: 'أعد جمع عيّنة جديدة — لن تصدر أي نتيجة لهذه الأنبوبة',
+    gReview: 'مراجعة الصيدلي', gReviewDone: 'راجع الصيدلي النتيجة', gRelease: 'إرسال النتيجة إلى الجواز', gReleaseDone: 'النتيجة في جواز الدواء',
+    gGateNote: 'بوابة: لا تصل النتيجة إلى الجواز قبل مراجعة الصيدلي.', gWaiting: 'بانتظار', gBound: 'مرتبطة بالبصمة',
+    gateTitle: 'بوابات المختبر والصيدلي', qcPass: 'ضبط الجودة: ناجح', qcFail: 'ضبط الجودة: رفض (حمض نووي غير كافٍ)',
+    doReview: 'الصيدلي: علّم النتيجة كمراجَعة', doRelease: 'أرسل النتيجة إلى الجواز',
+    navTitle: 'شاشات العرض', navTracker: 'متابعة المريض', navUrgent: 'المسار العاجل (T3، خارطة طريق)', navReader: 'قارئ الجهاز الثاني (دون اتصال)',
+    navOther: (k) => `افتح العُدّة ${k}`, kitFirst: 'الأنبوبة الأولى (رُفضت في ضبط الجودة)', kitSecond: 'الأنبوبة المعادة',
   },
   en: {
     eyebrow: 'Staff screen · saliva kit', title: 'Specimen chain of custody', mock: 'Demo data',
@@ -54,6 +62,14 @@ const T = {
     reasons: { 'content-changed': 'content changed after sealing', 'prev-hash-mismatch': 'does not match the previous hash', 'sequence-gap': 'sequence gap', 'out-of-order': 'event out of order', 'different-kit': 'different kit' },
     footer: 'Meyar · research prototype, not for clinical use · demo data only · events stored as FHIR Provenance on a Specimen in the local HAPI server',
     chainAria: 'Specimen chain-of-custody timeline',
+    gQc: 'Lab quality check', gQcPass: 'Sample passed lab QC', gQcFail: 'Sample rejected at lab QC',
+    gRecollect: 'Recollect a new sample — no result will ever be issued for this tube',
+    gReview: 'Pharmacist review', gReviewDone: 'Pharmacist reviewed the result', gRelease: 'Release to the Passport', gReleaseDone: 'Result in the Medication Passport',
+    gGateNote: 'Gate: the result cannot reach the Passport before a pharmacist reviews it.', gWaiting: 'Waiting', gBound: 'bound to chain head',
+    gateTitle: 'Lab and pharmacist gates', qcPass: 'Lab QC: pass', qcFail: 'Lab QC: reject (not enough DNA)',
+    doReview: 'Pharmacist: mark reviewed', doRelease: 'Release to the Passport',
+    navTitle: 'Demo screens', navTracker: 'Patient tracker', navUrgent: 'Urgent path (T3, roadmap)', navReader: 'Second-device reader (offline)',
+    navOther: (k) => `Open kit ${k}`, kitFirst: 'First tube (rejected at QC)', kitSecond: 'Recollected tube',
   },
 };
 
@@ -122,9 +138,43 @@ function renderChain() {
         <div class="kit-ev__links"><span class="m-chain__hash" title="${esc(ev.hash)}"><span class="kit-hashlabel">${esc(t('hash'))}</span> <span class="m-data">${esc(ev.hash?.slice(0, 16))}…</span> · <span class="kit-hashlabel">${esc(t('prev'))}</span> <span class="m-data">${esc(ev.prevHash?.slice(0, 16))}…</span></span></div>
       </div></li>`;
   });
+  const g = state.gates || {};
+  const at = (x) => `<p class="kit-ev__meta">${esc(t('at'))} ${esc(x.place?.[lang])} · ${esc(t('by'))} ${esc(x.actor?.[lang])} · <span class="kit-hashlabel">${esc(t('gBound'))}</span> <span class="m-data">${esc(x.chainHead?.slice(0, 12))}…</span></p>`;
+  const gate = (cls, node, title, time, body) => `<li class="kit-gate ${cls}"><span class="m-chain__node" aria-hidden="true">${node}</span><div class="kit-ev"><div class="kit-ev__top"><span class="kit-ev__title">${esc(title)}</span><span class="kit-ev__time">${time}</span></div>${body}</div></li>`;
+  const qcRow = g.qc
+    ? (g.qc.result === 'pass'
+      ? gate('', 'QC', t('gQcPass'), fmtTime(g.qc.time), at(g.qc))
+      : gate('is-broken', '!', t('gQcFail'), fmtTime(g.qc.time), `${at(g.qc)}<span class="m-status m-status--stop"><svg aria-hidden="true"><use href="#i-stop"/></svg>${esc(t('gRecollect'))}</span>`))
+    : gate('is-pending', 'QC', t('gQc'), esc(t('pending')), '');
+  const reviewRow = g.review
+    ? gate('', 'Rx', t('gReviewDone'), fmtTime(g.review.time), at(g.review))
+    : gate('is-pending', 'Rx', t('gReview'), esc(t('pending')), `<p class="kit-note">${esc(t('gGateNote'))}</p>`);
+  const releaseRow = g.release
+    ? gate(state.passportReleased ? '' : 'is-broken', state.passportReleased ? '→' : '!', t('gReleaseDone'), fmtTime(g.release.time), at(g.release))
+    : gate('is-pending', '→', t('gRelease'), esc(t('pending')), '');
+  rows.splice(5, 0, qcRow); // after "received"
+  if (!(g.qc && g.qc.result === 'fail')) rows.push(reviewRow, releaseRow);
+  else rows.splice(6); // failed tube: nothing after QC, no "genotyped", no result
   const chain = document.getElementById('chain');
   chain.innerHTML = rows.join('');
   document.getElementById('progress').textContent = t('progress')(state.events.length);
+}
+
+function renderGates() {
+  const g = state.gates || {};
+  const n = state.events.length;
+  document.getElementById('qc-pass').disabled = !(n === 5 && !g.qc);
+  document.getElementById('qc-fail').disabled = !(n === 5 && !g.qc);
+  document.getElementById('do-review').disabled = !(n === 6 && g.qc?.result === 'pass' && !g.review);
+  document.getElementById('do-release').disabled = !(g.review && !g.release);
+  const other = KIT === 'MYR-DEMO-0002' ? 'MYR-DEMO-0001' : 'MYR-DEMO-0002';
+  const q = (extra) => `?${new URLSearchParams({ kit: KIT, lang, ...extra })}`;
+  document.getElementById('nav').innerHTML = `
+    <a class="m-btn m-btn--secondary" href="/tracker${q({})}">${esc(t('navTracker'))}</a>
+    <a class="m-btn m-btn--quiet" href="/urgent?lang=${lang}">${esc(t('navUrgent'))}</a>
+    <a class="m-btn m-btn--quiet" href="/reader/?lang=${lang}">${esc(t('navReader'))}</a>
+    <a class="m-btn m-btn--quiet" href="/${q({ kit: other })}">${esc(t('navOther')(other))}</a>`;
+  document.getElementById('kit-role').textContent = KIT === 'MYR-DEMO-0002' ? t('kitFirst') : t('kitSecond');
 }
 
 function renderVerify() {
@@ -139,10 +189,11 @@ function renderVerify() {
 }
 
 function renderScan() {
-  const next = state.next;
+  const failed = state.gates?.qc?.result === 'fail'; // F6: a rejected tube takes no more scans
+  const next = failed ? null : state.next;
   const nextLabel = next ? EVENT_LABELS[next][lang] : null;
-  document.getElementById('next').innerHTML = next ? t('nextIs')(esc(nextLabel)) : esc(t('complete'));
-  document.getElementById('record-label').textContent = next ? t('record')(nextLabel) : t('complete');
+  document.getElementById('next').innerHTML = failed ? esc(t('gRecollect')) : next ? t('nextIs')(esc(nextLabel)) : esc(t('complete'));
+  document.getElementById('record-label').textContent = next ? t('record')(nextLabel) : (failed ? t('gRecollect') : t('complete'));
   document.getElementById('record').disabled = !next;
   document.getElementById('scan-form').hidden = !next;
   const d = state.nextDefaults;
@@ -170,6 +221,7 @@ function render() {
   renderVerify();
   renderScan();
   renderHandoff();
+  renderGates();
   const src = source || (state.fhir.available ? 'fhir' : 'ledger');
   document.querySelectorAll('[data-source]').forEach((b) => {
     b.setAttribute('aria-pressed', String(b.dataset.source === src));
@@ -218,6 +270,15 @@ document.querySelectorAll('[data-source]').forEach((b) => b.addEventListener('cl
 document.getElementById('verify').addEventListener('click', () => runVerify());
 document.getElementById('tamper').addEventListener('click', async () => { await api('POST', '/tamper', { seq: 4 }).catch((e) => showError(e.message)); await refresh(); await runVerify(); });
 document.getElementById('restore').addEventListener('click', async () => { await api('POST', '/restore'); await refresh(); await runVerify(); });
+const gateAction = (id, path, body) => document.getElementById(id).addEventListener('click', async () => {
+  showError('');
+  try { await api('POST', path, body); } catch (e) { showError(e.message); }
+  await refresh();
+});
+gateAction('qc-pass', '/qc', { result: 'pass' });
+gateAction('qc-fail', '/qc', { result: 'fail', reason: 'insufficient-dna' });
+gateAction('do-review', '/review');
+gateAction('do-release', '/release');
 document.getElementById('reset').addEventListener('click', async () => { await api('POST', '/reset'); lastVerify = null; await refresh(); });
 
 initMotion();

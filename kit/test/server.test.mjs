@@ -33,6 +33,10 @@ async function scanAll(api) {
   const out = [];
   for (let i = 0; i < 6; i += 1) {
     const code = i % 2 ? `MEYAR-KIT:${DEMO_KIT_ID}` : DEMO_KIT_ID; // alternate tube barcode and mailer QR
+    if (i === 5) { // F6: lab QC must pass before "genotyped"
+      const qc = await api('POST', `/api/kits/${DEMO_KIT_ID}/qc`, { result: 'pass' });
+      assert.equal(qc.status, 200, JSON.stringify(qc.body));
+    }
     const r = await api('POST', `/api/kits/${DEMO_KIT_ID}/scan`, { code });
     assert.equal(r.status, 200, JSON.stringify(r.body));
     out.push(r.body);

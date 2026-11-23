@@ -212,6 +212,21 @@ Notes: Serves `GET /compare` (`?lang=ar` for Arabic RTL) on the chart-paper grou
 Run: `cd cds && npm start`, then open `http://localhost:3000/compare` (or `http://localhost:3000/compare?lang=ar`); test with `node --test cds/test/cds.test.js` (`32 pass, 0 fail`).
 Data contract unchanged. No new runtime dependency.
 
+## F5 — Cath-lab roadmap note (22 Nov 2026)
+- **Files:** `docs/roadmap-cathlab.md` (new), `handoff/F5.md`.
+- **Run:** open `docs/roadmap-cathlab.md` (renders the F1 T3 concept image from `hardware/blender/renders/`).
+- **Notes:** one paragraph on T3: feasibility from K220026 and RAPID GENE (Roberts, Lancet 2012), TAILOR-PCI (JAMA 2020) primary endpoint not significant, no outcome benefit claimed, label "Concept render — not built". No new number, no dependency, no contract change.
+## F3 video — six scans live on the T1 kit (22 Nov 2026)
+Files: `hardware/blender/build_f3_video.py`, `hardware/blender/encode_f3_video.py`, `hardware/blender/art/make_f3_video_art.py`, `hardware/blender/art/out/f3v_*.png`, `hardware/blender/meyar_f3_video.blend`, `hardware/blender/renders/meyar-f3-kit-scans-live.mp4`, `hardware/blender/renders/meyar-f3-video-contact-sheet.jpg`, `hardware/blender/README.md`.
+Notes: A 15 s clip (1920 × 1080, 30 fps, H.264, 2.8 MB). The kit acts out each scan (funnel, cap, mailer) while the phone swaps to a real capture of the kit software after that scan. It ends on a tampered scan caught by verify. Arabic-first callouts. "Kit design — software working" is on screen for the whole clip. T1 only. Rendered in EEVEE.
+
+## F6 — End-to-end staircase demo (22/23 Nov 2026)
+- **Builds on F3** (branch `claude/f3-chain-of-custody`, PR 13, merged into this branch because F3 is not on main yet).
+- **kit/:** `lib/gates.js` (lab QC pass/fail with reason, pharmacist review, release to Passport, patient status; gates bound to the chain head), `server.js` (endpoints `qc`, `review`, `release`, `status`, `/api/urgent/card`; pages `/tracker`, `/urgent`, `/card`, `/reader/`; second demo kit `MYR-DEMO-0002` = rejected first tube; "genotyped" refused unless QC passed), `web/app.js` + `index.html` + `kit.css` (QC, review and release rows in the timeline, gate buttons, demo-screen links), new `web/tracker.*`, `web/urgent.*`, `web/card.*`, `web/common.js`, `web/f6.css`, `test/gates.test.mjs`; `test/server.test.mjs` records QC before "genotyped".
+- **docs/demo/:** `run_e2e.sh`, `SCRIPT.md`, `README.md`, `make_qr.mjs`, `out/` (QR + tampered QR + measured `qr-meta.json`), `reader/` (offline reader + service worker + `pack.sh`), `screenshots/`.
+- **Run:** `bash docs/demo/run_e2e.sh` · `cd kit && npm test` (32 pass with HAPI up).
+- **Measured:** demo-001 QR 481 bytes, QR version 17, EC level M (from `make_qr.mjs`). No other new number. No change to `cds/`, `passport/`, `tables/`, `design/` or the data contract; no new dependency (reader reuses `passport/src/qr.js`, `pinguard.js` and the existing `jsqr` package read-only).
+- **Re-upload note:** `passport/` did not change, so the Netlify Passport snapshot stays valid. The reader can be hosted the same way via `docs/demo/reader/pack.sh`.
 ## B6 — Prescriber card: better-matched alternatives and current-medicine effects (22 Nov 2026)
 Files: `cds/lib/phenoconvert.js` (new), `cds/lib/preview.js` (new), `cds/lib/cpic.js`, `cds/lib/cards.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `handoff/B6.md`.
 Notes: Loads `tables/cyp_inhibitors.json` in `cds/lib/cpic.js` and simulates A7 phenoconversion shifts (`cds/lib/phenoconvert.js`, Thomas et al. 2020 `×0` strong / `×0.5` moderate for `CYP2D6`, non-scored flag for other CYP genes, respecting the A8 SV gate). When a signed order is a strong inhibitor (e.g. `paroxetine`), `order-sign` checks active `currentMedications` and emits one non-interruptive `info` backward-sweep card (`buildInhibitorBackwardSweepCard`) listing existing substrates whose CPIC recommendation changes (e.g. `codeine`, `tramadol`). Serves `GET /preview` (`?lang=ar` for Arabic RTL) on chart-paper ground (`data-theme="paper"`, `data-voice="clinician"`, `.m-chartpaper`), built strictly from `design/` (`scaleHTML(gene, 'clinician')`, `combHTML`, Genetic / Acting like list, `.m-btn` per CPIC alternative) and wired to live `POST /cds-services/meyar-pgx`.

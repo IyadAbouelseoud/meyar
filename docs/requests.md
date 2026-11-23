@@ -24,4 +24,6 @@ Write here instead of editing a table you do not own.
 - **Why:** `cds/lib/phenotypes.js` falls back to `docs/fixtures/<patientId>.contract.json` when `engine/data/out/` has no contract (fresh checkout, pipeline not run). Outside Docker that path resolves on its own; inside the container `docs/` is not in the build context, so the service now looks for `/data/fixtures` and finds nothing until this mount exists. Without it, a fresh-checkout `docker compose up` with an empty HAPI returns no cards.
 - **Status: DONE (22 Nov 2026).** Mount added to `docker-compose.yml` on `main`, at the team's request.
 
+## F6 → C7 (22 Nov 2026)
+F6's patient tracker links a printed card for patients without a smartphone. C7 is not built yet, so F6 ships an interim print view at `kit/web/card.html` (`/card` on the kit service, design `.m-id1`). When C7 lands a printable card in `passport/`, please tell F so the tracker link can point there instead.
 - **B6 → design/ owner (2026-11-23):** `scaleHTML(gene, 'clinician')` in `design/meyar.js` prints the Meyar Scale labels (Ultrarapid / Rapid / Normal / Intermediate / Poor, Genetic, Acting like) in English even on `lang=ar` pages. Please add Arabic labels (e.g. read `document.documentElement.lang`). Seen on `/preview?lang=ar`.
