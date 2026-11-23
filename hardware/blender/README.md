@@ -107,3 +107,24 @@ uv run --no-project --python 3.12 --with playwright python hardware/blender/art/
 & "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video.py         # frames/f3 (EEVEE)
 uv run --no-project python hardware/blender/encode_f3_video.py                                       # MP4 + contact sheet
 ```
+
+## F3 video v2 — paced chain-of-custody demo (replaces the 15 s cut for presentations)
+
+`renders/meyar-f3-kit-chain-of-custody.mp4`: 1920 × 1080, 30 fps, H.264, 57 s (1,710 frames). `renders/meyar-f3-video2-contact-sheet.jpg` shows one frame every 4 s.
+
+- **Wide opening:** arrow callouts name the phone, tube, funnel, bag and mailer.
+- **Phone close-up:** scan 1 is saved as a FHIR record.
+- **Tube close-up:** the funnel docks and the sample fills, then the funnel goes back and the cap twists shut. A live phone inset shows the real screen after scans 2 and 3.
+- **Packing:** the mailer lid opens, the capped tube is laid in the leak-proof bag on its absorbent pad, the bag goes into the mailer and the lid closes. Nothing disappears.
+- **Shipped, then received:** the mailer leaves frame and comes back.
+- **Phone close-ups:** the chain verifies from FHIR, then scan 4 is edited later and verify flags it.
+- **End card.**
+
+The callouts are pinned to 3D anchors that are projected on their hold frames (`anim/f3v2_anchors.json`). Arabic comes first; the Arabic is a draft for the C4 review.
+
+```powershell
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video2.py -- --no-render      # scene + anchors
+uv run --no-project --python 3.12 --with playwright python hardware/blender/art/make_f3_video2_art.py                # overlays (after make_f3_video_art.py)
+& "D:\blender.exe" --background --factory-startup --python hardware/blender/build_f3_video2.py                       # frames/f3v2_hd (EEVEE, ~2.5 h)
+uv run --no-project python hardware/blender/encode_f3_video2.py
+```
