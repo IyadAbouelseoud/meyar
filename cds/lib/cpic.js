@@ -19,11 +19,13 @@ export function resolveTablesDir(overrideDir) {
 }
 
 /**
- * Load and index `tables/cpic_recommendations.json` and `tables/sv_genes.json`.
+ * Load and index `tables/cpic_recommendations.json`, `tables/sv_genes.json`,
+ * and `tables/cyp_inhibitors.json`.
  */
 export function loadClinicalTables(tablesDir = resolveTablesDir()) {
   const cpicPath = path.join(tablesDir, 'cpic_recommendations.json');
   const svPath = path.join(tablesDir, 'sv_genes.json');
+  const inhibitorsPath = path.join(tablesDir, 'cyp_inhibitors.json');
 
   const cpicRaw = JSON.parse(fs.readFileSync(cpicPath, 'utf8'));
   const rows = Array.isArray(cpicRaw.rows) ? cpicRaw.rows : [];
@@ -59,6 +61,25 @@ export function loadClinicalTables(tablesDir = resolveTablesDir()) {
     }
   }
 
+  const inhibitorsByDrug = new Map();
+  if (fs.existsSync(inhibitorsPath)) {
+    const inhRaw = JSON.parse(fs.readFileSync(inhibitorsPath, 'utf8'));
+    for (const row of inhRaw.rows || []) {
+      const drug = String(row.drug || '').trim().toLowerCase();
+      const enzyme = String(row.enzyme || '').trim().toUpperCase();
+      const strength = String(row.strength || '').trim().toLowerCase();
+      if (!drug || !enzyme || !strength) continue;
+      if (!inhibitorsByDrug.has(drug)) inhibitorsByDrug.set(drug, []);
+      inhibitorsByDrug.get(drug).push({
+        drug,
+        enzyme,
+        strength,
+        source: row.source || '',
+        accessed: row.accessed || '',
+      });
+    }
+  }
+
   return {
     tablesDir,
     rows,
@@ -67,6 +88,8 @@ export function loadClinicalTables(tablesDir = resolveTablesDir()) {
     drugGenes,
     knownDrugs: [...byDrug.keys()],
     svGenes,
+    inhibitorsByDrug,
+    knownInhibitors: [...inhibitorsByDrug.keys()],
   };
 }
 
@@ -104,6 +127,30 @@ export function matchDrugsInTable(medInfo, tables) {
 /** First table drug named by the order, or null (kept for callers that need one). */
 export function matchDrugInTable(medInfo, tables) {
   return matchDrugsInTable(medInfo, tables)[0] ?? null;
+}
+
+/**
+ * Match a MedicationRequest against `tables/cyp_inhibitors.json`.
+ * Returns array of `{ drug, enzyme, strength, source, accessed }`.
+ */
+export function matchInhibitorsInTable(medInfo, tables) {
+  if (!tables?.inhibitorsByDrug || tables.inhibitorsByDrug.size === 0) return [];
+  const haystack = [medInfo.display, ...(medInfo.texts || [])]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  if (!haystack) return [];
+
+  const matches = [];
+  for (const drug of tables.knownInhibitors || []) {
+    const pattern = new RegExp(`\\b${escapeRegExp(drug)}\\b`, 'i');
+    if (pattern.test(haystack)) {
+      for (const row of tables.inhibitorsByDrug.get(drug) || []) {
+        matches.push(row);
+      }
+    }
+  }
+  return matches;
 }
 
 const ONCOLOGY_DRUGS = new Set([
