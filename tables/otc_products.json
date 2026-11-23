@@ -1,5 +1,182 @@
 {
   "_owner": "C6",
-  "_note": "Only the owner edits this file. Every row needs a source.",
-  "rows": []
+  "_note": "Only the owner edits this file. Every row needs a source. Mock product list for C6 OTC quick-check; every entry is marked mock: true.",
+  "rows": [
+    {
+      "id": "paracetamol",
+      "brandEn": "Paracetamol",
+      "brandAr": "باراسيتامول",
+      "aliasesEn": ["paracetamol", "acetaminophen", "apap"],
+      "aliasesAr": ["باراسيتامول", "اسيتامينوفين", "أسيتامينوفين"],
+      "ingredients": ["paracetamol"],
+      "otc": true,
+      "source": "WHO INN / standard generic active ingredient (no CPIC gene-drug guideline)",
+      "mock": true
+    },
+    {
+      "id": "panadol",
+      "brandEn": "Panadol",
+      "brandAr": "بنادول",
+      "aliasesEn": ["panadol", "panadol advance", "panadol extra"],
+      "aliasesAr": ["بنادول", "بانادول", "بنادول أدفانس", "بنادول إكسترا"],
+      "ingredients": ["paracetamol"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; standard paracetamol brand composition",
+      "mock": true
+    },
+    {
+      "id": "fevadol",
+      "brandEn": "Fevadol",
+      "brandAr": "فيفادول",
+      "aliasesEn": ["fevadol"],
+      "aliasesAr": ["فيفادول", "فيڤادول"],
+      "ingredients": ["paracetamol"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; standard paracetamol brand composition",
+      "mock": true
+    },
+    {
+      "id": "adol",
+      "brandEn": "Adol",
+      "brandAr": "أدول",
+      "aliasesEn": ["adol", "tylenol"],
+      "aliasesAr": ["أدول", "ادول", "تايلينول"],
+      "ingredients": ["paracetamol"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; standard paracetamol brand composition",
+      "mock": true
+    },
+    {
+      "id": "panadol-night",
+      "brandEn": "Panadol Night",
+      "brandAr": "بنادول نايت",
+      "aliasesEn": ["panadol night", "diphenhydramine"],
+      "aliasesAr": ["بنادول نايت", "بانادول نايت", "ديفينهيدرامين"],
+      "ingredients": ["paracetamol", "diphenhydramine"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; paracetamol + diphenhydramine (no CPIC guideline)",
+      "mock": true
+    },
+    {
+      "id": "omeprazole",
+      "brandEn": "Omeprazole",
+      "brandAr": "أوميبرازول",
+      "aliasesEn": ["omeprazole", "losec", "risek", "gasec", "omez"],
+      "aliasesAr": ["أوميبرازول", "اوميبرازول", "لوسيك", "ريسيك", "جاسيك", "أوميز"],
+      "ingredients": ["omeprazole"],
+      "otc": true,
+      "source": "CPIC CYP2C19/PPI guideline drug (Lima JJ et al., Clin Pharmacol Ther 2020); mock brand aliases",
+      "mock": true
+    },
+    {
+      "id": "lansoprazole",
+      "brandEn": "Lansoprazole",
+      "brandAr": "لانسوبرازول",
+      "aliasesEn": ["lansoprazole", "lanzor", "takepron"],
+      "aliasesAr": ["لانسوبرازول", "لانزور"],
+      "ingredients": ["lansoprazole"],
+      "otc": true,
+      "source": "CPIC CYP2C19/PPI guideline drug (Lima JJ et al., Clin Pharmacol Ther 2020); mock brand aliases",
+      "mock": true
+    },
+    {
+      "id": "pantoprazole",
+      "brandEn": "Pantoprazole",
+      "brandAr": "بانتوبرازول",
+      "aliasesEn": ["pantoprazole", "controloc", "pantozol"],
+      "aliasesAr": ["بانتوبرازول", "كونترولوك", "بانتوزول"],
+      "ingredients": ["pantoprazole"],
+      "otc": true,
+      "source": "CPIC CYP2C19/PPI guideline drug (Lima JJ et al., Clin Pharmacol Ther 2020); mock brand aliases",
+      "mock": true
+    },
+    {
+      "id": "ibuprofen",
+      "brandEn": "Ibuprofen",
+      "brandAr": "إيبوبروفين",
+      "aliasesEn": ["ibuprofen", "brufen", "advil", "nurofen", "sapofen"],
+      "aliasesAr": ["إيبوبروفين", "ايبوبروفين", "بروفين", "أدفيل", "ادفيل", "نوروفين", "سابوفين"],
+      "ingredients": ["ibuprofen"],
+      "otc": true,
+      "source": "CPIC CYP2C9/NSAIDs guideline drug (Theken KN et al., Clin Pharmacol Ther 2020); mock brand aliases",
+      "mock": true
+    },
+    {
+      "id": "solpadeine",
+      "brandEn": "Solpadeine (paracetamol + codeine)",
+      "brandAr": "سولبادين (باراسيتامول + كودايين)",
+      "aliasesEn": ["solpadeine", "solpadol"],
+      "aliasesAr": ["سولبادين", "سولبادول"],
+      "ingredients": ["paracetamol", "codeine"],
+      "otc": true,
+      "source": "CPIC CYP2D6/Opioids guideline drug codeine (Crews KR et al., Clin Pharmacol Ther 2021); mock combination product entry",
+      "mock": true
+    },
+    {
+      "id": "panadeine",
+      "brandEn": "Panadeine (paracetamol + codeine)",
+      "brandAr": "بنادين (باراسيتامول + كودايين)",
+      "aliasesEn": ["panadeine", "co-codamol", "cocodamol"],
+      "aliasesAr": ["بنادين", "بانادين", "كو-كودامول"],
+      "ingredients": ["paracetamol", "codeine"],
+      "otc": true,
+      "source": "CPIC CYP2D6/Opioids guideline drug codeine (Crews KR et al., Clin Pharmacol Ther 2021); mock combination product entry",
+      "mock": true
+    },
+    {
+      "id": "codeine",
+      "brandEn": "Codeine",
+      "brandAr": "كودايين",
+      "aliasesEn": ["codeine"],
+      "aliasesAr": ["كودايين", "كودين"],
+      "ingredients": ["codeine"],
+      "otc": false,
+      "source": "CPIC CYP2D6/Opioids guideline drug (Crews KR et al., Clin Pharmacol Ther 2021)",
+      "mock": true
+    },
+    {
+      "id": "cetirizine",
+      "brandEn": "Zyrtec (Cetirizine)",
+      "brandAr": "زيرتك (سيتريزين)",
+      "aliasesEn": ["zyrtec", "cetirizine", "artiz"],
+      "aliasesAr": ["زيرتك", "سيتريزين", "أرتيز"],
+      "ingredients": ["cetirizine"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; standard cetirizine brand composition (no CPIC guideline)",
+      "mock": true
+    },
+    {
+      "id": "loratadine",
+      "brandEn": "Claritine (Loratadine)",
+      "brandAr": "كلاريتين (لوراتادين)",
+      "aliasesEn": ["claritine", "claritin", "loratadine", "lorinase"],
+      "aliasesAr": ["كلاريتين", "لوراتادين", "لورينيز"],
+      "ingredients": ["loratadine"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; standard loratadine brand composition (no CPIC guideline)",
+      "mock": true
+    },
+    {
+      "id": "aspirin",
+      "brandEn": "Aspirin",
+      "brandAr": "أسبرين",
+      "aliasesEn": ["aspirin", "acetylsalicylic acid", "jusprin"],
+      "aliasesAr": ["أسبرين", "اسبرين", "جوسبرين"],
+      "ingredients": ["aspirin"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; WHO INN acetylsalicylic acid (no CPIC gene-drug guideline row)",
+      "mock": true
+    },
+    {
+      "id": "naproxen",
+      "brandEn": "Naproxen",
+      "brandAr": "نابروكسين",
+      "aliasesEn": ["naproxen", "aleve", "proxen", "naprosyn"],
+      "aliasesAr": ["نابروكسين", "بروكسين", "نابروسين"],
+      "ingredients": ["naproxen"],
+      "otc": true,
+      "source": "Mock OTC catalog entry; WHO INN naproxen (no CPIC gene-drug guideline row)",
+      "mock": true
+    }
+  ]
 }
