@@ -677,3 +677,246 @@ body {
   font-size: var(--m-size-xs);
   color: var(--m-text2);
 }
+
+/* Printable ID-1 card and A6 elder fold-out (C7) */
+.m-print-panel {
+  background: var(--m-surface);
+  border: 1px solid var(--m-line);
+  border-radius: var(--m-radius-card);
+  padding: var(--m-space-4);
+  display: grid;
+  gap: var(--m-space-4);
+  min-width: 0;
+}
+
+.m-print-panel__head {
+  display: grid;
+  gap: var(--m-space-1);
+}
+
+.m-print-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-space-2);
+}
+
+.m-print-sheets {
+  display: grid;
+  gap: var(--m-space-5);
+  justify-items: start;
+  min-width: 0;
+}
+
+.m-print-sheet {
+  margin: 0;
+  display: grid;
+  gap: var(--m-space-2);
+  max-inline-size: 100%;
+  overflow-x: auto;
+  padding: 2px;
+}
+
+.m-print-caption {
+  font-size: var(--m-size-xs);
+  color: var(--m-text2);
+  margin: 0;
+}
+
+.m-id1__qr {
+  align-self: start;
+}
+
+.m-id1__sub {
+  font-size: 3.2mm;
+  font-weight: 600;
+  color: var(--m-brand);
+  line-height: 1.25;
+}
+
+.m-id1__brand-pair {
+  font-weight: 600;
+  font-size: 4.5mm;
+}
+
+.m-id1__pin-pair {
+  font-weight: 400;
+  font-size: 2.4mm;
+}
+
+.m-print-sheet .m-a6 {
+  inline-size: min(105mm, 100%);
+  padding: 7.5mm;
+  font-size: 4.8mm;
+  line-height: 1.55;
+  box-sizing: border-box;
+  display: grid;
+  align-content: start;
+  gap: 2.5mm;
+}
+
+@media screen and (max-width: 420px) {
+  .m-print-sheet--id1 .m-id1 {
+    zoom: 0.9;
+  }
+}
+
+.m-a6__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 3mm;
+}
+
+.m-a6__title {
+  font-family: var(--m-font-display);
+  font-weight: 700;
+  font-size: 7mm;
+  color: var(--m-brand-strong);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.m-a6__brand {
+  font-family: var(--m-font-display);
+  font-weight: 800;
+  font-size: 5.2mm;
+  color: var(--m-brand);
+  line-height: 1;
+}
+
+.m-a6__rule {
+  margin-block: 0.5mm 1.5mm;
+}
+
+.m-a6__body {
+  display: grid;
+  gap: 2.5mm;
+}
+
+.m-a6__gene {
+  display: grid;
+  gap: 1.2mm;
+}
+
+.m-a6__summary,
+.m-a6__shift,
+.m-a6__line,
+.m-a6__reminder,
+.m-a6__foot {
+  margin: 0;
+}
+
+.m-a6__shift {
+  font-size: 4.1mm;
+  line-height: 1.45;
+  color: var(--m-text2);
+}
+
+.m-a6__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 2mm;
+  font-size: 4.2mm;
+  line-height: 1.45;
+}
+
+.m-a6__line svg {
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  flex: none;
+  margin-block-start: 0.2em;
+}
+
+.m-a6__line--stop {
+  color: var(--m-stop);
+}
+
+.m-a6__line--ask {
+  color: var(--m-ask);
+}
+
+.m-a6__reminder {
+  margin-block-start: 2mm;
+  font-weight: 600;
+}
+
+.m-a6__foot {
+  margin-block-start: 2mm;
+  font-size: 3mm;
+  color: var(--m-text2);
+}
+
+@page meyar-id1 {
+  size: 85.60mm 53.98mm;
+  margin: 0;
+}
+
+@page meyar-a6 {
+  size: 105mm 148mm;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body,
+  body.m-body,
+  body.m-body.m-grain {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--m-surface) !important;
+    background-image: none !important;
+    overflow: visible !important;
+  }
+
+  .m-app,
+  .m-stack,
+  .m-print-panel,
+  .m-print-sheets,
+  .m-print-sheet {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    max-inline-size: none !important;
+    inline-size: auto !important;
+    overflow: visible !important;
+  }
+
+  .m-print-sheet--id1 {
+    page: meyar-id1;
+  }
+
+  .m-print-sheet--a6 {
+    page: meyar-a6;
+  }
+
+  body[data-print="id1"] .m-print-sheet--a6 {
+    display: none !important;
+  }
+
+  body[data-print="a6"] .m-print-sheet--id1 {
+    display: none !important;
+  }
+
+  body[data-print="both"] .m-print-sheet--id1 {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .m-print-sheet .m-id1 {
+    inline-size: 85.60mm;
+    block-size: 53.98mm;
+    zoom: 1;
+    box-shadow: none;
+  }
+
+  .m-print-sheet .m-a6 {
+    inline-size: 105mm;
+    min-block-size: 148mm;
+    padding: 7.5mm;
+    box-shadow: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

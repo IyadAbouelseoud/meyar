@@ -260,6 +260,12 @@ root.addEventListener('click', async (e) => {
     update();
   } else if (action === 'issue-card') {
     issueCard();
+  } else if (action === 'print-id1' || action === 'print-a6' || action === 'print-both') {
+    if (!state.qrResult || !state.qrResult.encrypted) return;
+    const mode = action === 'print-id1' ? 'id1' : action === 'print-a6' ? 'a6' : 'both';
+    document.body.dataset.print = mode;
+    document.documentElement.dataset.print = mode;
+    window.print();
   } else if (action === 'speak' && 'speechSynthesis' in window) {
     const idx = Number(btn.dataset.geneIndex);
     if (state.speakingIndex === idx) {
@@ -308,6 +314,10 @@ if ('speechSynthesis' in window && typeof window.speechSynthesis.addEventListene
 }
 
 initMotion();
+window.addEventListener('afterprint', () => {
+  delete document.body.dataset.print;
+  delete document.documentElement.dataset.print;
+});
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
