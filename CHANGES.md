@@ -276,3 +276,21 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `npm.cmd --prefix passport run build && npm.cmd --prefix passport run preview` (open `http://localhost:5173/?patient=demo-002` or `?view=pharmacist`)
 - **Notes:** Strictly lookup-only from `tables/` (`cyp_inhibitors.json`, `cpic_recommendations.json`, `otc_products.json`, `sv_genes.json`, `saudi_frequencies.json`) with zero network calls and zero LLM usage. Data contract unchanged. No new dependency.
 
+
+## REVIEW — Final review and fix pass (24 Nov 2026)
+- **Branch:** `review/final-2026-11-24`. Report: `docs/REVIEW.md`. Paper evidence: `docs/report-verification.md`. Per-task audits: `docs/review-evidence/`.
+- **Files changed (main ones):**
+  - `passport/`: service-worker precache plugin in `vite.config.js`, `public/sw.js` install, `public/_headers`, `src/imagery.js`, the honesty lines, the scanner's `openScannedCard`, doctor-tab scale, i18n.
+  - `design/`: `meyar.css` (tap targets, `.m-figure`, safe areas), `meyar.js` (`clinicianScaleHTML`), `charts.js` (tooltip clamp), showcase.
+  - `cds/lib/`: compare, preview, dashboard, cards.
+  - `kit/web/`: images, footers, token.
+  - `engine/validation/run_validation.py`: concordance summary.
+  - `docs/`: sources, research, qr-envelope, structural-variants, requests.
+  - Handoffs, `README.md`, `tests/mobile/` (new).
+- **Run:**
+  - `npm --prefix passport test` (60 pass)
+  - `npm --prefix cds test` (45 pass)
+  - `npm --prefix kit test` (32 pass)
+  - `PYTHON="uv run --no-project --python 3.12 --with jsonschema --with pytest python" bash engine/run_pipeline.sh` then `... -m pytest engine/tests` (39 pass)
+  - `npm --prefix tests/mobile ci && npm --prefix tests/mobile test` (150/150 page states)
+- **Locked areas:** clinical logic, tables, contract and crypto are unchanged. Team-owned items (AGENTS.md provenance wording, A5 SLCO1B1 Tier 2 statement) are filed in `docs/requests.md`.

@@ -17,7 +17,7 @@ Everything built (A1–A8, B1–B6, C1–C9, F1–F6) now passes its Done-when b
 
 ## 2. Task table
 
-Reproduced counts this run: passport **57/57**, cds **44/44**, kit **32/32**, engine pytest **39 passed, 0 skipped**. The engine count follows `FHIR=1 bash engine/run_pipeline.sh`, which exited 0. Mobile regression **150/150**. axe **68/68** page states with 0 violations. Contrast **62/62** pairs pass. These replace every older count in the docs (26, 18, 30, 31, 34, 37, 38, 41).
+Reproduced counts this run: passport **60/60**, cds **45/45**, kit **32/32**, engine pytest **39 passed, 0 skipped**. The engine count follows `FHIR=1 bash engine/run_pipeline.sh`, which exited 0. Mobile regression **150/150** at phone widths, and the full review matrix **500/500** (it was 294/500). axe **68/68** page states with 0 violations. Contrast **62/62** pairs pass. These replace every older count in the docs (26, 18, 30, 31, 34, 37, 38, 41, 57).
 
 | Task | Status | Evidence |
 |---|---|---|
@@ -87,6 +87,16 @@ Reproduced counts this run: passport **57/57**, cds **44/44**, kit **32/32**, en
 10. **Fixed: handoff "Last commit" fields.** Missing, "pending" or non-existent hashes in A1–C8 and F1–F6, for example B4 `b14822c` and C5 `c208daa`. All now point to real commits (`45eae77`).
 11. **Fixed: the README run snippet failed on a clean clone,** because the VCF is generated and git-ignored. It also skipped the A6 and A8 gates. It now runs `engine/run_pipeline.sh`. The kit port 5174 row, the B2–B6 and C1–C9 ranges and the provenance are corrected (`e4f7f55`).
 
+### Independent code review of this branch (superpowers:requesting-code-review)
+A fresh reviewer read the full diff (`9784cfb..64a4543`) and called it "Ready to merge: With fixes". It found no critical issues. Every important and minor item was handled:
+- **#1, fixed: `truncateSummary` stripped a trailing "s" from the last word.** The regex had `s` where `s` was meant, so "Metabolizers" became "Metabolizer". Fixed, with a regression test (`a38567a`).
+- **#2, fixed: the committed `passport/dist` was stale against the source.** It is rebuilt. Netlify serves this folder, so always rebuild before uploading.
+- **#3, fixed: a failed precache could wipe offline mode.** The install now caches the pages, code, fonts and demo data all-or-nothing: if one fails, the install fails and the previous worker keeps its cache. Illustrations are cached best-effort, and `skipWaiting` runs only after success. Both behaviours are tested against the real `dist/sw.js` with fake caches.
+- **#4, fixed: a decrypted but malformed card threw in the scanner.** It now gets its own message and costs no PIN attempt.
+- **#5, #6, #7, fixed: Arabic on the clinician side.** The scanner's A8 line was English. The clinician scale showed patient wording ("جيناتك") in Arabic. The helper was copied three times. Now there is one `clinicianScaleHTML` in `design/meyar.js`.
+- **#8, fixed: `_headers`.** Images, `/` and the HTML revalidate, and the README now has a deploy note.
+- **#9, #10, left: minor labels** in `run_validation.py` and `CHANGES.md`. No effect on the current data.
+
 ### Minor
 12. **Open: F2 video.** At the 5.5–6.0 s crossfade the T1 and T3 status chips overlap and neither is readable. The F3 end card at 57 s has no chip. Smallest fix: hard-cut the chip at the crossfade midpoint and add "Kit design — software working" to the end card, then re-render (`hardware/blender`).
 13. **Open (A4): the card footer shows "CPIC PharmCAT 3.4.0" as the guideline version.** The B3 spec prints the contract's `guidelineVersion`, and A4 writes that value for every gene. The card's link names the guideline it quotes. Changing what A4 writes is a contract decision.
@@ -127,7 +137,28 @@ Reproduced counts this run: passport **57/57**, cds **44/44**, kit **32/32**, en
 
 ## 5. Mobile matrix, Lighthouse, design scores
 
-<!-- MOBILE_MATRIX -->
+**Mobile matrix** (tests/mobile, Chromium emulation with touch and mobile viewport). Each cell gives passing states (ar + en, and elder on/off on the Passport) **before → after**. A state passes with no horizontal scroll, no element wider than the viewport, every tap target ≥48 px (before was measured at 44 px; elder 48), inputs ≥16 px, the viewport meta present, no console or page error, and every image loaded. Totals: before **294/500**, after **500/500**. Screenshots: `docs/screenshots/final-review/{before,after}/<page>/<viewport>-<lang>-<state>.webp` (WebP q60, ≤1200 px wide; converted from PNG to keep the repo small). Per-state results: `before/results.json` and `after/results.json`.
+
+| Page | 320x568 | 360x740 | 375x667 | 390x844 | 412x915 | 430x932 | 844x390 | 768x1024 | 1024x1366 | 1440x900 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| passport-genes-001 | **1/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-genes-002 | **1/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-meds-002 | **1/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-otc-001 | **1/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-doctor-001 | **1/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-pharmacist-002 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-caregiver-001 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| passport-scan | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | **2/4** → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 | 4/4 → 4/4 |
+| kit-index | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| kit-card | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| kit-tracker | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| kit-urgent | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| cds-preview | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| cds-compare | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| cds-dashboard | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **1/2** → 2/2 | 2/2 → 2/2 |
+| design-showcase | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+| demo-reader | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | **0/2** → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 | 2/2 → 2/2 |
+
 
 **Lighthouse mobile, Passport** (Chromium 156; served gzip-compressed like Netlify; "before" is `origin/main`'s committed `passport/dist`):
 

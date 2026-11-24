@@ -88,6 +88,8 @@ npm --prefix kit start                                      # kit on 5174
 npm --prefix tests/mobile ci && npm --prefix tests/mobile test   # mobile regression (every page, 320-430 px)
 ```
 
+Deploy the Passport (static, offline-capable): `npm --prefix passport run build`, then publish the whole `passport/dist/` folder (Netlify publish directory `passport/dist`; `_headers` sets caching). The build regenerates `sw.js` with the full precache list, so always upload `dist` as one set.
+
 PharmCAT needs GRCh38 with `chr` prefixes. Never use the flags its docs label DANGEROUS.
 
 ## Data contract

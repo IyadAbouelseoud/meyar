@@ -2,6 +2,7 @@
 //
 //   npm --prefix tests/mobile test                     # assert mode: 320/375/430, ar+en, elder off/on (Passport)
 //   node tests/mobile/run.mjs --shots <dir> [--full]   # also save screenshots; --full = every review viewport
+//   node tests/mobile/run.mjs --full --results <file>  # full matrix, results as JSON, no screenshots
 //
 // Assert mode fails on: horizontal overflow, an element wider than the viewport (outside its own scroll
 // container), a tap target under 48 CSS px (--m-target), an input under 16 px (iOS zoom), a missing
@@ -15,6 +16,7 @@ const args = process.argv.slice(2);
 const shotsDir = args.includes('--shots') ? args[args.indexOf('--shots') + 1] : null;
 const full = args.includes('--full');
 const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
+const resultsPath = args.includes('--results') ? args[args.indexOf('--results') + 1] : null;
 
 const TEST_VIEWPORTS = [[320, 568], [375, 667], [430, 932]];
 const FULL_VIEWPORTS = [[320, 568], [360, 740], [375, 667], [390, 844], [412, 915], [430, 932], [844, 390], [768, 1024], [1024, 1366], [1440, 900]];
@@ -83,7 +85,8 @@ try {
   await close();
 }
 
-if (shotsDir) fs.writeFileSync(path.join(shotsDir, 'results.json'), JSON.stringify(rows, null, 2));
+if (shotsDir && !resultsPath) fs.writeFileSync(path.join(shotsDir, 'results.json'), JSON.stringify(rows, null, 2));
+if (resultsPath) fs.writeFileSync(resultsPath, JSON.stringify(rows, null, 2));
 const passed = rows.filter((r) => r.pass).length;
 console.log(`mobile: ${passed}/${rows.length} page states pass`);
 if (failures.length) {
