@@ -1,11 +1,4 @@
-import { scaleHTML, combHTML, SCALE, scaleKind } from '@design/meyar.js';
-
-// Clinician side: CPIC terms, in the page language (same labels as the cds prescriber pages).
-const CLIN_AR = {
-  metabolizer: ['مستقلِب بطيء', 'متوسط', 'طبيعي', 'سريع', 'فائق السرعة'],
-  function: ['وظيفة ضعيفة', 'منخفضة', 'طبيعية', 'مرتفعة', '—'],
-};
-const clinScale = (g, lang) => scaleHTML(g, lang, lang === 'ar' ? CLIN_AR[scaleKind(g.phenotype)] : SCALE[scaleKind(g.phenotype)].clinician);
+import { combHTML, clinicianScaleHTML } from '@design/meyar.js';
 import { formatNum, SCAN_COPY } from './i18n.js';
 
 function esc(str) {
@@ -180,9 +173,9 @@ function renderCdsCard(card, t, lang) {
           <dt>${esc(t.actingLike)}</dt>
           <dd>${esc(actingDisplay)}</dd>
         </dl>
-        ${clinScale(card.contractGene, lang)}
+        ${clinicianScaleHTML(card.contractGene, lang)}
         ${card.notAssessed
-          ? `<blockquote class="m-cds__rec">Copy number not assessed by this test — no result reported. An outside call from a CNV-aware caller is required.<cite>Meyar A8 structural-variant gate</cite></blockquote>`
+          ? `<blockquote class="m-cds__rec">${esc(t.svNotAssessedRec)}<cite>${esc(t.svGateCite)}</cite></blockquote>`
           : card.drugs.map((d) => `
               <blockquote class="m-cds__rec">
                 <strong>${esc(d.drug)}</strong>: ${esc(d.recommendation)}

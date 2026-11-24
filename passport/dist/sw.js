@@ -1,5 +1,5 @@
 // The build (vite.config.js, meyar-precache-sw) replaces CACHE_NAME and CORE_URLS with the real file list.
-const CACHE_NAME = 'meyar-passport-offline-5cfed6f7';
+const CACHE_NAME = 'meyar-passport-offline-b42003a3';
 const CORE_URLS = [
   '/',
   '/assets/Alexandria-100-900-arabic-BMWQQIfH.woff2',
@@ -17,10 +17,10 @@ const CORE_URLS = [
   '/assets/IBMPlexSansArabic-700-latin-BzSf6GNr.woff2',
   '/assets/ReadexPro-160-700-arabic-DiwT_uOQ.woff2',
   '/assets/ReadexPro-160-700-latin--ekFhJJC.woff2',
-  '/assets/index-DZGjdgCd.css',
-  '/assets/index-gMneZmmm.js',
-  '/assets/main-Cp-MRLgN.js',
-  '/assets/scan-CZigrLWr.js',
+  '/assets/index-BuPrZJPo.css',
+  '/assets/index-CC76xAkd.js',
+  '/assets/main-DY5TfttU.js',
+  '/assets/scan-DuN4lH5t.js',
   '/demo/demo-001.contract.json',
   '/demo/demo-002.contract.json',
   '/demo/demo-006.contract.json',
@@ -40,11 +40,19 @@ const CORE_URLS = [
   '/scan.html'
 ];
 
+// Install (REVIEW): the pages, code, fonts and demo data are cached all-or-nothing. If any of them fails,
+// the install fails and the previous worker keeps its working offline cache (activate would otherwise
+// delete it). Illustrations are cached best-effort, so a slow image never costs the patient offline access.
 self.addEventListener('install', (event) => {
+  const isMedia = (u) => u.startsWith('/imagery/');
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_URLS)).catch(() => {})
+    caches.open(CACHE_NAME)
+      .then(async (cache) => {
+        await cache.addAll(CORE_URLS.filter((u) => !isMedia(u)));
+        await Promise.allSettled(CORE_URLS.filter(isMedia).map((u) => cache.add(u)));
+      })
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

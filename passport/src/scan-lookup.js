@@ -191,7 +191,7 @@ export function buildCdsCardsFromPayload(payload, { cpicRows = [], freqRows = []
  * Decrypt a scanned card and build its cards, keeping the two failure kinds apart (REVIEW, A6):
  * a wrong PIN counts against the lock-out; a card that decrypts but is not germline is refused with its
  * own message and never costs the holder a PIN attempt.
- * @returns {Promise<{payload?: object, cards?: object[], error?: 'pin'|'not-germline'}>}
+ * @returns {Promise<{payload?: object, cards?: object[], error?: 'pin'|'not-germline'|'invalid'}>}
  */
 export async function openScannedCard(rawQrText, pin, tables) {
   let payload;
@@ -201,5 +201,10 @@ export async function openScannedCard(rawQrText, pin, tables) {
     return { error: 'pin' };
   }
   if (!payload || payload.o !== 'germline') return { error: 'not-germline' };
-  return { payload, cards: buildCdsCardsFromPayload(payload, tables) };
+  try {
+    return { payload, cards: buildCdsCardsFromPayload(payload, tables) };
+  } catch {
+    // Decrypted, so the PIN was right, but the card content is unusable: say so, do not count a PIN failure.
+    return { error: 'invalid' };
+  }
 }

@@ -9,11 +9,19 @@ const CORE_URLS = [
   '/demo/demo-006.contract.json',
 ];
 
+// Install (REVIEW): the pages, code, fonts and demo data are cached all-or-nothing. If any of them fails,
+// the install fails and the previous worker keeps its working offline cache (activate would otherwise
+// delete it). Illustrations are cached best-effort, so a slow image never costs the patient offline access.
 self.addEventListener('install', (event) => {
+  const isMedia = (u) => u.startsWith('/imagery/');
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_URLS)).catch(() => {})
+    caches.open(CACHE_NAME)
+      .then(async (cache) => {
+        await cache.addAll(CORE_URLS.filter((u) => !isMedia(u)));
+        await Promise.allSettled(CORE_URLS.filter(isMedia).map((u) => cache.add(u)));
+      })
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

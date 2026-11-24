@@ -292,6 +292,9 @@
     "pinDotsAria": "{n} of {max} digits entered",
     "pinKeypadAria": "PIN keypad",
     "notAssessedShort": "Not assessed",
-    "notAssessedNoResult": "Not assessed — no result reported"
+    "notAssessedNoResult": "Not assessed — no result reported",
+    "invalidCard": "This card opened, but its content could not be read. Ask the patient to make a new card.",
+    "svNotAssessedRec": "Copy number not assessed by this test — no result reported. An outside call from a CNV-aware caller is required.",
+    "svGateCite": "Meyar A8 structural-variant gate"
   }
 }

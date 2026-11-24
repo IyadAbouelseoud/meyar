@@ -229,6 +229,9 @@ async function submitPin() {
       state.pinError = t.pinError;
       limiter.recordFailure();
       startLockCountdown();
+    } else if (opened.error === 'invalid') {
+      state.pinError = t.invalidCard;
+      limiter.recordSuccess();
     } else if (opened.error === 'not-germline') {
       // The PIN was right: refuse the card (A6) without counting a failed attempt.
       state.pinError = t.notGermlineCard;

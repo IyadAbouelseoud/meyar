@@ -85,3 +85,11 @@ test('REVIEW: a non-germline card opened with the right PIN is reported as such,
   const somatic = await encodeQrEnvelope({ ...contract, sampleOrigin: 'somatic' }, { pin: '123456' });
   assert.equal((await openScannedCard(somatic.qrText, '123456', tables)).error, 'not-germline');
 });
+
+test('REVIEW code review #4: a decrypted but malformed card is reported as invalid, never thrown', async () => {
+  const { openScannedCard } = await import('../src/scan-lookup.js');
+  const contract = JSON.parse(await fs.readFile(demo001Path, 'utf8'));
+  const bad = await encodeQrEnvelope({ ...contract, genes: [{ gene: 'CYP2D6', diplotype: null, phenotype: 42 }] }, { pin: '123456' });
+  const r = await openScannedCard(bad.qrText, '123456', { cpicRows: null, freqRows: null });
+  assert.equal(r.error, 'invalid');
+});
