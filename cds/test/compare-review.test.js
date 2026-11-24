@@ -29,3 +29,13 @@ test('compare page uses design tokens, not hard-coded colours', () => {
   const src = fs.readFileSync(path.join(here, '..', 'lib', 'compare.js'), 'utf8');
   assert.deepEqual(src.match(/#[0-9a-fA-F]{3,8}\b(?![\w-])|rgb\(/g) || [], []);
 });
+
+test('a long card summary is cut at a word boundary and stays under 140 characters', async () => {
+  const { truncateSummary } = await import('../lib/cards.js');
+  const long = 'CYP2D6 Ultrarapid Metabolizer: codeine forms more active metabolite (morphine) faster than expected, which raises the risk of toxicity with standard doses today';
+  const out = truncateSummary(long);
+  assert.ok(out.length < 140, `length ${out.length}`);
+  assert.ok(out.endsWith('…'));
+  const kept = out.slice(0, -1);
+  assert.ok(long.startsWith(kept) && /\s/.test(long[kept.length]), `cut mid-word: "${out}"`);
+});

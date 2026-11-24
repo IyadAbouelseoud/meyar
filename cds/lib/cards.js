@@ -12,10 +12,14 @@ const MAX_SUMMARY_LENGTH = 139;
 const FOOTER_SUFFIX = 'Research prototype — not for clinical use.';
 const DEMO_LABEL = 'Demo data';
 
-function truncateSummary(text) {
+export function truncateSummary(text) {
   const clean = String(text || '').replace(/\s+/g, ' ').trim();
   if (clean.length <= MAX_SUMMARY_LENGTH) return clean;
-  return `${clean.slice(0, MAX_SUMMARY_LENGTH - 1).trimEnd()}…`;
+  // Cut at the last word boundary that fits, so a summary never ends mid-word (REVIEW).
+  const head = clean.slice(0, MAX_SUMMARY_LENGTH - 1);
+  const space = head.lastIndexOf(' ');
+  const cut = space > MAX_SUMMARY_LENGTH / 2 ? head.slice(0, space) : head;
+  return `${cut.replace(/[s,;:·—-]+$/, '')}…`;
 }
 
 function footer(guidelineVersion) {
