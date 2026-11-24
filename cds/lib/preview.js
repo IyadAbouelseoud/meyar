@@ -725,7 +725,13 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 </main>
 
 <script type="module">
-  import { scaleHTML, combHTML, calibrate, initMotion, setLang } from '/design/meyar.js';
+  import { scaleHTML, combHTML, calibrate, initMotion, setLang, SCALE, scaleKind } from '/design/meyar.js';
+  // Prescriber pages draw the scale with CPIC terms (SCALE.*.clinician); Arabic uses the same clinical terms.
+  const CLIN_AR = {
+    metabolizer: ['مستقلِب بطيء', 'متوسط', 'طبيعي', 'سريع', 'فائق السرعة'],
+    function: ['وظيفة ضعيفة', 'منخفضة', 'طبيعية', 'مرتفعة', '—'],
+  };
+  const clinScale = (g, lang) => scaleHTML(g, lang, lang === 'ar' ? CLIN_AR[scaleKind(g.phenotype)] : SCALE[scaleKind(g.phenotype)].clinician);
 
   const COPY = ${copyJson};
   const SCENARIOS = ${scenariosJson};
@@ -865,7 +871,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     }
 
     const gp = currentScenario.geneProfile;
-    const scaleMarkup = scaleHTML(gp, 'clinician');
+    const scaleMarkup = clinScale(gp, currentLang);
 
     host.innerHTML = cards
       .map((card, idx) => {

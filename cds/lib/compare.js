@@ -34,7 +34,9 @@ const COPY = {
     ddGenetic: 'Poor metaboliser',
     dtActing: 'Acting like',
     ddActing: 'Poor metaboliser (no shift)',
-    recQuote: 'Avoid standard-dose clopidogrel if possible. Use prasugrel or ticagrelor at standard dose if no contraindication.',
+    recQuote: 'Avoid clopidogrel if possible. Use prasugrel or ticagrelor at standard dose if no contraindication.',
+    dtIndication: 'Indication',
+    ddIndication: 'ACS/PCI (demo order). The CPIC row with prasugrel applies to this indication only.',
     recCite: 'CPIC CYP2C19–clopidogrel, 2022 update (Lee et al., Clin Pharmacol Ther 2022).',
     covLine: 'Assay covered <strong>9 of 11</strong> defining positions; did not test <span class="m-data">*35</span>.',
     tierLabel: 'Saudi frequency published',
@@ -67,7 +69,10 @@ const COPY = {
     ddGenetic: 'مستقلِب بطيء',
     dtActing: 'يتصرف كـ',
     ddActing: 'مستقلِب بطيء (دون تغيّر)',
-    recQuote: 'تجنّب الجرعة المعتادة من كلوبيدوقريل إن أمكن. استخدم براسوغريل أو تيكاقريلور بالجرعة المعتادة إذا لم يوجد مانع.',
+    // CPIC publishes no Arabic text, so the recommendation is quoted in its original English.
+    recQuote: 'Avoid clopidogrel if possible. Use prasugrel or ticagrelor at standard dose if no contraindication.',
+    dtIndication: 'الاستطباب',
+    ddIndication: 'ACS/PCI (طلب تجريبي). صفّ CPIC الذي يذكر براسوغريل ينطبق على هذا الاستطباب فقط.',
     recCite: 'إرشادات CPIC لـ CYP2C19–كلوبيدوقريل، تحديث 2022 (Lee et al., Clin Pharmacol Ther 2022).',
     covLine: 'غطّى الفحص <strong>9 من 11</strong> موضعاً محدِّداً؛ لم يفحص <span class="m-data">*35</span>.',
     tierLabel: 'تواتر سعودي منشور',
@@ -195,8 +200,8 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
   /* Deliberately generic grey interruptive modal (counter-example) */
   .cmp-modal {
     border-radius: var(--m-radius-card);
-    background: #d4d7d5;
-    border: 1px solid #b8bdb9;
+    background: var(--m-sunken);
+    border: 1px solid var(--m-line-strong);
     padding: var(--m-space-4);
     display: grid;
     place-items: center;
@@ -209,18 +214,18 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
     }
   }
   .cmp-modal__box {
-    background: #f5f5f5;
-    color: #1f2421;
-    border: 1px solid #9ea4a0;
+    background: var(--m-surface);
+    color: var(--m-text);
+    border: 1px solid var(--m-line-strong);
     border-radius: 4px;
     inline-size: 100%;
     max-inline-size: 360px;
     overflow: hidden;
-    box-shadow: 0 10px 28px rgb(0 0 0 / .22);
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--m-text) 22%, transparent);
   }
   .cmp-modal__box header {
-    background: #525754;
-    color: #ffffff;
+    background: var(--m-text2);
+    color: var(--m-surface);
     padding: 12px 14px;
     font-weight: 700;
     font-size: var(--m-size-sm);
@@ -243,15 +248,15 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
     font: inherit;
     min-block-size: var(--m-target);
     padding: 10px 12px;
-    border: 1px solid #8a908c;
-    background: #e3e5e4;
-    color: #1f2421;
+    border: 1px solid var(--m-line-strong);
+    background: var(--m-sunken);
+    color: var(--m-text);
     border-radius: 2px;
     text-align: start;
     cursor: pointer;
   }
   .cmp-modal__btn--confirm {
-    background: #d0d4d2;
+    background: var(--m-line);
     font-weight: 600;
     text-align: center;
   }
@@ -377,10 +382,11 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
             <dt data-t="dtGenotype">${c.dtGenotype}</dt><dd class="m-data">CYP2C19 *2/*2</dd>
             <dt data-t="dtGenetic">${c.dtGenetic}</dt><dd data-t="ddGenetic">${c.ddGenetic}</dd>
             <dt data-t="dtActing">${c.dtActing}</dt><dd data-t="ddActing">${c.ddActing}</dd>
+            <dt data-t="dtIndication">${c.dtIndication}</dt><dd data-t="ddIndication">${c.ddIndication}</dd>
           </dl>
           <div class="cmp-mini" id="cmp-scale"></div>
           <blockquote class="m-cds__rec">
-            <span data-t="recQuote">${c.recQuote}</span>
+            <span data-t="recQuote" lang="en" dir="ltr">${c.recQuote}</span>
             <cite data-t="recCite">${c.recCite}</cite>
           </blockquote>
           <div class="m-coverage">
@@ -411,7 +417,13 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
 </main>
 
 <script type="module">
-  import { scaleHTML, combHTML, calibrate, initMotion, setLang } from '/design/meyar.js';
+  import { scaleHTML, combHTML, calibrate, initMotion, setLang, SCALE, scaleKind } from '/design/meyar.js';
+  // Prescriber pages draw the scale with CPIC terms (SCALE.*.clinician); Arabic uses the same clinical terms.
+  const CLIN_AR = {
+    metabolizer: ['مستقلِب بطيء', 'متوسط', 'طبيعي', 'سريع', 'فائق السرعة'],
+    function: ['وظيفة ضعيفة', 'منخفضة', 'طبيعية', 'مرتفعة', '—'],
+  };
+  const clinScale = (g, lang) => scaleHTML(g, lang, lang === 'ar' ? CLIN_AR[scaleKind(g.phenotype)] : SCALE[scaleKind(g.phenotype)].clinician);
 
   const COPY = ${copyJson};
   const GENE = {
@@ -425,7 +437,7 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
     const scaleHost = document.getElementById('cmp-scale');
     const combHost = document.getElementById('cmp-comb');
     if (scaleHost) {
-      scaleHost.innerHTML = scaleHTML(GENE, 'clinician');
+      scaleHost.innerHTML = clinScale(GENE, document.documentElement.lang === 'ar' ? 'ar' : 'en');
       calibrate(scaleHost);
     }
     if (combHost) {
@@ -437,6 +449,7 @@ export function renderCompareHtml({ lang = 'en' } = {}) {
     const target = lang === 'ar' ? 'ar' : 'en';
     const c = COPY[target];
     setLang(target);
+    renderInstrument(); // scale labels follow the page language
     document.title = c.title;
     document.querySelectorAll('[data-t]').forEach((el) => {
       const key = el.dataset.t;
