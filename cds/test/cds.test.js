@@ -1705,6 +1705,34 @@ describe('DEMO-FIXES: structured extension, Arabic card, demo-006 scenario, comp
     assert.ok(html.includes('ar-SA-u-ca-islamic-umalqura'), 'Hijri (Umm al-Qura) date');
   });
 
+  it('DEMO-FIX-3: scenario 5 (demo-006 codeine on duloxetine) is the default and its hook body returns the phenoconverted card', async () => {
+    const { buildPreviewScenarios } = await import('../lib/preview.js');
+    const sc = buildPreviewScenarios().find((s) => s.id === 'demo-006-codeine');
+    assert.ok(sc, 'scenario 5 exists');
+    assert.equal(sc.patientId, 'demo-006');
+    assert.equal(sc.banner.kitId.value, 'MYR-DEMO-0006');
+    assert.equal(sc.banner.age.value, 58);
+
+    const html = await (await fetch(`${baseUrl}/preview`)).text();
+    assert.ok(html.includes("SCENARIOS.find((s) => s.id === 'demo-006-codeine')"), 'default scenario is demo-006');
+    assert.ok(html.includes('5. demo-006 · Codeine (on duloxetine)'));
+    assert.ok(html.includes('٥. demo-006 · كودايين (مع دولوكسيتين)'));
+
+    const data = await (
+      await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sc.hookBody),
+      })
+    ).json();
+    const card = data.cards.find((c) => /codeine/.test(c.summary));
+    assert.ok(card, 'codeine card');
+    assert.match(card.summary, /^CYP2D6 Ultrarapid Metabolizer, acting like Normal Metabolizer \(duloxetine\): codeine/);
+    assert.match(card.detail, /applies if duloxetine is stopped:\*\*\n\n> Avoid codeine use because of potential for serious toxicity/);
+    assert.match(card.detail, /Mock CNV-aware caller/);
+    assert.equal(card.extension.meyar.phenoconversion.adjustedActivityScore, 1.5);
+  });
+
   it('(d) /compare in both languages states no unverified figure', async () => {
     for (const q of ['', '?lang=ar']) {
       const html = await (await fetch(`${baseUrl}/compare${q}`)).text();

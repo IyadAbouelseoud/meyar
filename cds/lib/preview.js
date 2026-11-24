@@ -317,6 +317,7 @@ const COPY = {
     sc2Label: '2. demo-002 · Codeine (on paroxetine)',
     sc3Label: '3. Paroxetine order · Patient on codeine (effect after signing)',
     sc4Label: '4. Pantoprazole · No CPIC alternative',
+    sc5Label: '5. demo-006 · Codeine (on duloxetine)',
     bannerLabel: 'Patient (demo data)',
     bannerName: 'Name',
     bannerAge: 'Age',
@@ -364,6 +365,7 @@ const COPY = {
     sc2Label: '٢. demo-002 · كودايين (مع باروكسيتين)',
     sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين (الأثر بعد التوقيع)',
     sc4Label: '٤. بانتوبرازول · دون بديل في CPIC',
+    sc5Label: '٥. demo-006 · كودايين (مع دولوكسيتين)',
     bannerLabel: 'المريض (بيانات تجريبية)',
     bannerName: 'الاسم',
     bannerAge: 'العمر',
@@ -711,6 +713,103 @@ export function buildPreviewScenarios() {
                   phenotype: 'Ultrarapid Metabolizer',
                   guidelineVersion: 'CPIC 2020-08',
                 }),
+              },
+            ],
+          },
+        },
+      },
+    },
+    {
+      // DEMO-FIX-3: hero patient for the video. Prefetch built from docs/fixtures/demo-006.contract.json:
+      // CYP2D6 *1/*2x2 Ultrarapid (mock outside call), acting like Normal because of duloxetine
+      // (moderate inhibitor, tables/cyp_inhibitors.json): 3.0 × 0.5 = 1.5. Backend logic unchanged.
+      id: 'demo-006-codeine',
+      labelKey: 'sc5Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٦', en: 'Demo patient 006', mock: true },
+        age: { value: 58, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0006', mock: true },
+        resultDate: { value: '2026-11-22', mock: true },
+        mock: true,
+      },
+      patientId: 'demo-006',
+      drug: 'codeine',
+      orders: [
+        { name: 'Codeine 30 MG Oral Tablet', context: 'New analgesic order', status: 'Signing now', pending: true },
+        { name: 'Duloxetine', context: 'Patient-entered current medicine (CYP2D6 moderate inhibitor)', status: 'Active', pending: false },
+      ],
+      geneProfile: {
+        gene: 'CYP2D6',
+        diplotype: '*1/*2x2',
+        phenotype: 'Ultrarapid Metabolizer',
+        effectivePhenotype: 'Normal Metabolizer',
+        phenoconversion: { applied: true, cause: ['duloxetine'] },
+        callability: { method: 'outside-call', svAssessed: true },
+        coverage: { definingPositionsAssayed: 0, definingPositionsTotal: 0, saudiDataTier: 0 },
+      },
+      hookBody: {
+        hook: 'order-sign',
+        hookInstance: 'b6-preview-006',
+        context: {
+          userId: 'Practitioner/demo-clinician',
+          patientId: 'demo-006',
+          draftOrders: {
+            resourceType: 'Bundle',
+            type: 'collection',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'MedicationRequest',
+                  id: 'medrx-b6-6',
+                  status: 'draft',
+                  intent: 'order',
+                  subject: { reference: 'Patient/demo-006' },
+                  medicationCodeableConcept: {
+                    coding: [
+                      {
+                        system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
+                        code: '2670',
+                        display: 'Codeine 30 MG Oral Tablet',
+                      },
+                    ],
+                    text: 'Codeine 30 MG Oral Tablet',
+                  },
+                },
+              },
+            ],
+          },
+        },
+        prefetch: {
+          pgxObservations: {
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: makeObs({
+                  patientId: 'demo-006',
+                  gene: 'CYP2D6',
+                  diplotype: '*1/*2x2',
+                  phenotype: 'Ultrarapid Metabolizer',
+                  guidelineVersion: 'CPIC PharmCAT 3.4.0',
+                }),
+              },
+            ],
+          },
+          currentMedications: {
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'MedicationStatement',
+                  id: 'stmt-duloxetine-6',
+                  status: 'active',
+                  subject: { reference: 'Patient/demo-006' },
+                  informationSource: { reference: 'Patient/demo-006', display: 'patient-entered (mock)' },
+                  medicationCodeableConcept: { text: 'duloxetine' },
+                },
               },
             ],
           },
@@ -1099,7 +1198,8 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
   const COPY = ${copyJson};
   const SCENARIOS = ${scenariosJson};
   let currentLang = ${JSON.stringify(initialLang)};
-  let currentScenario = SCENARIOS[0];
+  // DEMO-FIX-3: the video opens on scenario 5 (demo-006 codeine on duloxetine).
+  let currentScenario = SCENARIOS.find((s) => s.id === 'demo-006-codeine') || SCENARIOS[0];
   let lastResponse = null;
 
   function esc(str) {
@@ -1183,6 +1283,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     'Hospital record (CYP2D6 strong inhibitor)': 'سجل المستشفى (مثبط قوي لـ CYP2D6)',
     'Strong CYP2D6 inhibitor': 'مثبط قوي لـ CYP2D6',
     'Existing active order': 'طلب حالي نشط',
+    'Patient-entered current medicine (CYP2D6 moderate inhibitor)': 'دواء حالي أدخله المريض (مثبط متوسط لـ CYP2D6)',
     'PPI dose adjustment (no CPIC alternative)': 'تعديل جرعة مثبط مضخة البروتون (لا بديل في CPIC)',
     'Signing now': 'قيد التوقيع',
     'Active': 'نشط',

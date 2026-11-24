@@ -10,14 +10,14 @@ Scope lock: `cds/lib/cards.js`, `cds/lib/preview.js`, `cds/lib/compare.js`, `cds
 - [x] DEMO-FIX-4: remove UF / PROGRESS figures from `/compare` — `cd cds && npm test` → 45 pass
 - [x] DEMO-FIX-1: `extension.meyar` on every card + Arabic card rendering on `/preview` and kit `/urgent` — `cd cds && npm test` → 50 pass; `cd kit && npm test` → 34 pass
 - [x] DEMO-FIX-2: mock patient banner on `/preview` — `cd cds && npm test` → 51 pass
-- [ ] DEMO-FIX-3: scenario 5 demo-006 codeine on duloxetine (default)
+- [x] DEMO-FIX-3: scenario 5 demo-006 codeine on duloxetine (default) — `cd cds && npm test` → 52 pass
 - [ ] Screenshots, design checks, PR
 
 ## In progress
 - nothing
 
 ## Next step (start here)
-1. DEMO-FIX-3 (scenario 5 demo-006 in cds/lib/preview.js, default selected)
+1. Playwright screenshots to docs/screenshots/demo-fixes/, design checks, CHANGES.md, PR
 
 ## Commands to verify current state
 ```
