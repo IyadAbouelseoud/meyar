@@ -314,7 +314,7 @@ a.m-wordmark { min-block-size: var(--m-target); align-items: center; }
 .m-cds__rec { margin: 0; padding: 12px 14px; background: var(--m-sunken); border-radius: var(--m-radius-hair); font-size: var(--m-size-sm); }
 .m-cds__rec cite { display: block; margin-block-start: 6px; font-style: normal; font-size: var(--m-size-xs); color: var(--m-text2); }
 .m-cds__suggest { display: grid; gap: 8px; }
-.m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: 44px; justify-content: flex-start; text-align: start; padding-block: 8px; }
+.m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: var(--m-target); justify-content: flex-start; text-align: start; padding-block: 8px; }
 .m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
 .m-cds__foot a { display: inline-flex; align-items: center; min-block-size: var(--m-target); }
 
@@ -388,7 +388,7 @@ a.m-wordmark { min-block-size: var(--m-target); align-items: center; }
 .m-motion .m-tip { transition: opacity var(--m-dur-state) var(--m-ease-settle), left var(--m-dur-tap) linear, top var(--m-dur-tap) linear; }
 /* bars */
 .m-bars { display: flex; align-items: stretch; gap: 10px; block-size: 200px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
-.m-bars__col { flex: 1; min-width: 44px; display: grid; grid-template-rows: 26px 1fr 22px; justify-items: center; gap: 6px; cursor: default; border-radius: 10px; outline-offset: 2px; }
+.m-bars__col { flex: 1; min-width: var(--m-target); display: grid; grid-template-rows: 26px 1fr 22px; justify-items: center; gap: 6px; cursor: default; border-radius: 10px; outline-offset: 2px; }
 .m-bars__bar { align-self: end; inline-size: min(100%, 34px); block-size: calc(var(--h) * 100%); min-block-size: 4px; border-radius: 10px; background: color-mix(in srgb, var(--m-data) 45%, var(--m-sunken)); transform-origin: bottom; }
 .m-bars__col.is-active .m-bars__bar { background: var(--m-data); box-shadow: none; }
 .m-bars__pill { align-self: end; padding: 2px 8px; border-radius: 7px; background: var(--m-text); color: var(--m-surface); font: 600 11px var(--m-font-data); opacity: 0; }

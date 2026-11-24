@@ -30,10 +30,10 @@ body.m-body { background: var(--m-bg); }
   background: repeating-radial-gradient(circle at 96% 115%, transparent 0 22px, var(--m-p-saffron-300) 22px 23px); }
 .hero .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); padding-block: var(--m-space-6) var(--m-space-8); display: grid; gap: var(--m-space-7); }
 .hero nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-.hero .m-wordmark { color: var(--m-p-saffron-300); }
+.hero .m-wordmark { color: var(--m-p-saffron-300); min-block-size: var(--m-target); }
 .hero .m-wordmark__en { color: var(--m-p-juniper-100); }
 .hero nav ul { display: flex; flex-wrap: wrap; gap: 4px 6px; list-style: none; margin: 0; padding: 4px; font-size: var(--m-size-sm); background: rgb(255 255 255 / .06); border-radius: 14px; }
-.hero nav a { display: flex; align-items: center; min-block-size: 44px; padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
+.hero nav a { display: flex; align-items: center; min-block-size: var(--m-target); padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
 .hero nav a:hover { color: var(--m-p-paper-0); background: rgb(255 255 255 / .08); }
 .hero__grid { display: grid; gap: var(--m-space-7); align-items: center; }
 @media (min-width: 980px) { .hero__grid { grid-template-columns: 1.1fr .9fr; } }
@@ -105,7 +105,7 @@ body.m-body { background: var(--m-bg); }
 .mini .m-scale__genetic::after { inset-block-start: 26px; inline-size: 18px; block-size: 18px; }
 .mini .m-scale__acting::before { inset-block-start: 12px; block-size: 32px; }
 details.json { font-size: var(--m-size-xs); }
-details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: 44px; display: flex; align-items: center; }
+details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: var(--m-target); display: flex; align-items: center; }
 details.json pre { overflow-x: auto; background: var(--m-sunken); padding: 12px; border-radius: var(--m-radius-hair); font-family: var(--m-font-data); font-size: 12px; line-height: 1.5; direction: ltr; text-align: left; }
 
 /* Compare */

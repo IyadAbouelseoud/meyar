@@ -4,7 +4,7 @@
 //   node tests/mobile/run.mjs --shots <dir> [--full]   # also save screenshots; --full = every review viewport
 //
 // Assert mode fails on: horizontal overflow, an element wider than the viewport (outside its own scroll
-// container), a tap target under 44 CSS px (48 in elder mode), an input under 16 px (iOS zoom), a missing
+// container), a tap target under 48 CSS px (--m-target), an input under 16 px (iOS zoom), a missing
 // viewport meta, a console error or page error, or an image that failed to load.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -54,7 +54,7 @@ try {
           // Scroll through so lazy images load, then back to the top.
           await tab.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)); } window.scrollTo(0, 0); });
           await tab.waitForTimeout(250);
-          const minTap = elder ? 48 : 44;
+          const minTap = 48; // design token --m-target (AGENTS 11); the review prompt asks for 44 (48 elder), so this is stricter
           const a = await tab.evaluate(auditInPage, minTap);
           const state = elder ? 'elder' : 'std';
           const id = `${page.name} ${w}x${h} ${lang} ${state}`;
