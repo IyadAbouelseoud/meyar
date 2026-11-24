@@ -1,4 +1,5 @@
-const CACHE_NAME = 'meyar-passport-offline-v2';
+// The build (vite.config.js, meyar-precache-sw) replaces CACHE_NAME and CORE_URLS with the real file list.
+const CACHE_NAME = 'meyar-passport-offline-dev';
 const CORE_URLS = [
   '/',
   '/index.html',

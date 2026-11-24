@@ -1,11 +1,31 @@
-const CACHE_NAME = 'meyar-passport-offline-v2';
+// The build (vite.config.js, meyar-precache-sw) replaces CACHE_NAME and CORE_URLS with the real file list.
+const CACHE_NAME = 'meyar-passport-offline-1196a115';
 const CORE_URLS = [
   '/',
-  '/index.html',
-  '/scan.html',
+  '/assets/Alexandria-100-900-arabic-BMWQQIfH.woff2',
+  '/assets/Alexandria-100-900-latin-9GNYQ01K.woff2',
+  '/assets/IBMPlexMono-400-latin-B6RhGwqP.woff2',
+  '/assets/IBMPlexMono-500-latin-DCk7SIos.woff2',
+  '/assets/IBMPlexMono-600-latin-BIgdCK9e.woff2',
+  '/assets/IBMPlexSansArabic-400-arabic-CyU-ddYS.woff2',
+  '/assets/IBMPlexSansArabic-400-latin-Bo5KPYvw.woff2',
+  '/assets/IBMPlexSansArabic-500-arabic-C4MQITzh.woff2',
+  '/assets/IBMPlexSansArabic-500-latin-Cd6jVIg7.woff2',
+  '/assets/IBMPlexSansArabic-600-arabic-0pRdybE_.woff2',
+  '/assets/IBMPlexSansArabic-600-latin-KrqB56Mw.woff2',
+  '/assets/IBMPlexSansArabic-700-arabic-DrtBj6UE.woff2',
+  '/assets/IBMPlexSansArabic-700-latin-BzSf6GNr.woff2',
+  '/assets/ReadexPro-160-700-arabic-DiwT_uOQ.woff2',
+  '/assets/ReadexPro-160-700-latin--ekFhJJC.woff2',
+  '/assets/index-Ck7y1dES.css',
+  '/assets/index-D-ryxec8.js',
+  '/assets/main-B6ctNwKn.js',
+  '/assets/scan-7bL4DDZ5.js',
   '/demo/demo-001.contract.json',
   '/demo/demo-002.contract.json',
   '/demo/demo-006.contract.json',
+  '/index.html',
+  '/scan.html'
 ];
 
 self.addEventListener('install', (event) => {
