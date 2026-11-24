@@ -287,7 +287,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
   </section>
 
   <footer class="dash-foot">
-    <span class="m-proto" id="t-proto">Research prototype — not for clinical use</span>
+    <span class="m-proto" id="t-proto">Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.</span>
     <span id="t-source">Source: cds/data/alerts.jsonl · Demo data only</span>
   </footer>
 </main>
@@ -331,7 +331,7 @@ const I18N = {
     heat: 'Coverage by patient',
     heatm: 'A5 · darker = more positions tested',
     heatnote: 'Hatched: CYP2D6 not called from VCF (A8). Shading is demo data.',
-    proto: 'Research prototype — not for clinical use',
+    proto: 'Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.',
     source: 'Source: cds/data/alerts.jsonl · Demo data only',
     vsToday: 'vs yesterday',
     vsWeek: 'vs prev 7d',
@@ -379,7 +379,7 @@ const I18N = {
     heat: 'التغطية حسب المريض',
     heatm: 'A5 · الأغمق = مواقع فحص أكثر',
     heatnote: 'المُظلل بخطوط: CYP2D6 لم يُقرأ من VCF (A8). التظليل بيانات تجريبية.',
-    proto: 'نموذج بحثي — غير مخصص للاستخدام السريري',
+    proto: 'نموذج بحثي — غير مخصص للاستخدام السريري. يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
     source: 'المصدر: cds/data/alerts.jsonl · بيانات تجريبية فقط',
     vsToday: 'مقارنة بالأمس',
     vsWeek: 'مقارنة بـ ٧ أيام سابقة',

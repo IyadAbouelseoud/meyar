@@ -27,7 +27,7 @@ const T = {
     broken: 'نراجع سجل العيّنة. ستعود النتيجة إلى جوازك بعد المراجعة.',
     nextTitle: 'ماذا يمكنك أن تفعل', openPassport: 'افتح جواز الدواء', printCard: 'اطبع بطاقتي', notYet: 'ستظهر هنا بعد أن يراجع الصيدلي نتيجتك.',
     newKit: 'افتح العُدّة الجديدة', printNote: 'لا تملك هاتفاً ذكياً؟ اطبع البطاقة واحملها معك؛ عليها رمز QR يقرؤه الصيدلي بعد أن تعطيه رقمك السري.',
-    footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط',
+    footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
   },
   en: {
     eyebrow: 'For the patient', title: 'Where your sample is', mock: 'Demo data',
@@ -48,7 +48,7 @@ const T = {
     broken: 'We are checking the sample record. The result returns to your Passport after the check.',
     nextTitle: 'What you can do', openPassport: 'Open my Medication Passport', printCard: 'Print my card', notYet: 'These appear once a pharmacist has reviewed your result.',
     newKit: 'Open the new kit', printNote: 'No smartphone? Print the card and carry it. Its QR is read by the pharmacist after you give them your PIN.',
-    footer: 'Meyar · research prototype, not for clinical use · demo data only',
+    footer: 'Meyar · research prototype, not for clinical use · demo data only · Runs on synthetic and GeT-RM reference data; no patient data was used.',
   },
 };
 

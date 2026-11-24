@@ -39,6 +39,7 @@ function renderTopbar(state, t) {
     <header class="m-topbar m-noprint">
       <div class="m-topbar__honesty">
         <span class="m-proto">${esc(t.proto)}</span>
+        <span class="m-proto" data-testid="honesty-data">${esc(t.noPatientData)}</span>
         <span class="m-mock">${esc(t.demo)}</span>
       </div>
       <div class="m-topbar__controls">
@@ -138,7 +139,7 @@ function renderGeneCard(gene, index, lang, t, state) {
     return `
       <article class="m-gene" aria-labelledby="${headingId}">
         <div class="m-gene__head">
-          <span class="m-gene__name m-data">${esc(gene.gene)} · VCF</span>
+          <span class="m-gene__name m-data">${esc(gene.gene)}</span>
           <div class="m-gene__actions">
             ${tierBadge}
             ${renderSpeakControl(naSpeakText, index, state, t)}
@@ -778,7 +779,7 @@ export function renderPharmacistView(contract, lang, t, state = {}) {
           return `
             <article class="m-pharmacist-gene">
               <div class="m-gene__head">
-                <span class="m-pharmacist-gene__name m-data">${esc(g.gene)}${g.diplotype ? ` · ${esc(g.diplotype)}` : ' · VCF'}</span>
+                <span class="m-pharmacist-gene__name m-data">${esc(g.gene)}${g.diplotype ? ` · ${esc(g.diplotype)}` : ''}</span>
                 <span class="m-tier" title="${esc(tierInfo.note)}">
                   <span class="m-tier__n">${formatNum(tierInfo.tier, lang)}</span>
                   <span>${esc(t.tierLabel(tierInfo.tier))}</span>

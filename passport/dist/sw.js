@@ -1,5 +1,5 @@
 // The build (vite.config.js, meyar-precache-sw) replaces CACHE_NAME and CORE_URLS with the real file list.
-const CACHE_NAME = 'meyar-passport-offline-1196a115';
+const CACHE_NAME = 'meyar-passport-offline-e87d7cd6';
 const CORE_URLS = [
   '/',
   '/assets/Alexandria-100-900-arabic-BMWQQIfH.woff2',
@@ -17,10 +17,10 @@ const CORE_URLS = [
   '/assets/IBMPlexSansArabic-700-latin-BzSf6GNr.woff2',
   '/assets/ReadexPro-160-700-arabic-DiwT_uOQ.woff2',
   '/assets/ReadexPro-160-700-latin--ekFhJJC.woff2',
+  '/assets/index-B_zjvcvJ.js',
   '/assets/index-Ck7y1dES.css',
-  '/assets/index-D-ryxec8.js',
-  '/assets/main-B6ctNwKn.js',
-  '/assets/scan-7bL4DDZ5.js',
+  '/assets/main-iHqoHtIo.js',
+  '/assets/scan-Cxa9RgLL.js',
   '/demo/demo-001.contract.json',
   '/demo/demo-002.contract.json',
   '/demo/demo-006.contract.json',

@@ -12,7 +12,7 @@ const COPY = {
     subtitle:
       'Non-interruptive CDS Hooks 2.0.1 side-rail preview wired to POST /cds-services/meyar-pgx. Shows genetic and acting-like phenotypes, current-medicine effects, and CPIC-named better-matched alternatives.',
     demo: 'Demo data',
-    proto: 'Research prototype — not for clinical use',
+    proto: 'Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.',
     navDash: 'Alert log',
     navCmp: 'Alert comparison',
     scenariosLabel: 'Clinical order-sign scenarios',
@@ -52,7 +52,7 @@ const COPY = {
     subtitle:
       'معاينة جانبية غير مقاطِعة متصلة بخدمة CDS Hooks 2.0.1 تعرض النمط الجيني والنمط الفعلي وتأثير الأدوية الحالية والبدائل الأنسب المنصوص عليها في إرشادات CPIC.',
     demo: 'بيانات تجريبية',
-    proto: 'نموذج بحثي — ليس للاستخدام السريري',
+    proto: 'نموذج بحثي — ليس للاستخدام السريري. يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
     navDash: 'سجل التنبيهات',
     navCmp: 'مقارنة التنبيهات',
     scenariosLabel: 'سيناريوهات توقيع الوصفة',

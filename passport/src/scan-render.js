@@ -14,6 +14,7 @@ function renderTopbar(state, t) {
     <header class="m-topbar">
       <div class="m-topbar__honesty">
         <span class="m-proto">${esc(t.proto)}</span>
+        <span class="m-proto" data-testid="honesty-data">${esc(t.noPatientData)}</span>
         <span class="m-mock">${esc(t.demo)}</span>
       </div>
       <div class="m-topbar__controls">

@@ -96,7 +96,7 @@
     "passportTitle": "Medication Passport",
     "coverSub": "Your gene–medicine results, ready offline.",
     "showDoctorBtn": "Show a doctor or pharmacist",
-    "proto": "Research prototype — not for clinical use",
+    "proto": "Research prototype — not for clinical use.",
     "demo": "Demo data",
     "langToggle": "العربية",
     "elderOn": "Elder mode: On",
@@ -233,10 +233,11 @@
     "id1PinEn": "Ask the holder for the PIN",
     "id1ProtoAr": "نموذج بحثي — ليس للاستخدام السريري",
     "id1ProtoEn": "Research prototype — not for clinical use",
-    "foldoutReminder": "Tell your doctor or pharmacist before any new medicine."
+    "foldoutReminder": "Tell your doctor or pharmacist before any new medicine.",
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used."
   },
   "scan": {
-    "proto": "Research prototype — not for clinical use",
+    "proto": "Research prototype — not for clinical use.",
     "demo": "Demo data",
     "langToggle": "العربية",
     "elderOn": "Elder mode: On",
@@ -280,6 +281,7 @@
     "holderNote": "Until the PIN is entered, this line is all the card shows.",
     "emergencyLabel": "Emergency line (chosen by the patient, not encrypted):",
     "pinLocked": "Too many wrong PINs. Wait {s} s, then try again, or ask the patient for the PIN.",
-    "patientNoId": "The QR carries no name and no ID number"
+    "patientNoId": "The QR carries no name and no ID number",
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used."
   }
 }
