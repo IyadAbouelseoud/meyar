@@ -31,4 +31,3 @@ npm run dev       # http://localhost:5173  (scanner: /scan.html)
 npm run build
 ```
 
-Build prompts: see `prompts/`.

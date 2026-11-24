@@ -2,7 +2,6 @@
 
 PharmCAT wrapper, A5 coverage flag, A6 germline guard, A7 phenoconversion, A8 structural-variant gate. `engine/data/` is mounted into the PharmCAT container. Tasks A1–A8.
 
-Build prompts: see `prompts/`.
 
 ## Run the whole chain (do this before the tests)
 
