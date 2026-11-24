@@ -19,7 +19,7 @@ export function truncateSummary(text) {
   const head = clean.slice(0, MAX_SUMMARY_LENGTH - 1);
   const space = head.lastIndexOf(' ');
   const cut = space > MAX_SUMMARY_LENGTH / 2 ? head.slice(0, space) : head;
-  return `${cut.replace(/[s,;:·—-]+$/, '')}…`;
+  return `${cut.replace(/[\s,;:·—-]+$/, '')}…`;
 }
 
 function footer(guidelineVersion) {

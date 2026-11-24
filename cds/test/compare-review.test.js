@@ -39,3 +39,13 @@ test('a long card summary is cut at a word boundary and stays under 140 characte
   const kept = out.slice(0, -1);
   assert.ok(long.startsWith(kept) && /\s/.test(long[kept.length]), `cut mid-word: "${out}"`);
 });
+
+test('truncation never strips letters from the last kept word (REVIEW code review #1)', async () => {
+  const { truncateSummary } = await import('../lib/cards.js');
+  const words = 'CYP2D6 Poor Metabolizers does this is alternatives drugs things words '.repeat(4);
+  const out = truncateSummary(words);
+  const kept = out.slice(0, -1);
+  assert.ok(words.startsWith(kept), `"${kept}" is not a prefix`);
+  const last = kept.split(' ').pop();
+  assert.ok(['CYP2D6', 'Poor', 'Metabolizers', 'does', 'this', 'is', 'alternatives', 'drugs', 'things', 'words'].includes(last), `last word mangled: ${last}`);
+});
