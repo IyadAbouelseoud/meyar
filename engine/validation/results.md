@@ -3,7 +3,7 @@
 - **Tool:** `pgkb/pharmcat:3.4.0` (`pharmcat_pipeline`, zero DANGEROUS reference-imputation flags)
 - **Assembly verification:** `chr10` length `133797422` (GRCh38, `chr`-prefixed; zero liftover)
 - **Samples evaluated:** 5 GeT-RM samples × 2 genes = 10 comparisons
-- **Exact concordance:** 9/10
+- **Concordance:** 7/10 exact single call; 2/10 published diplotype among tied PharmCAT candidates (all candidates shown, none re-picked); 1/10 mismatch
 
 ## Comparison Table
 

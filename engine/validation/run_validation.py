@@ -26,6 +26,28 @@ GENES = ("CYP2C19", "CYP2C9")
 SLICE_BASENAME = "getrm_5samples_chr10_cyp2c"
 
 
+
+def summarize_concordance(rows: List[dict]) -> dict:
+    """Count exact single calls, tied-candidate matches and mismatches separately (REVIEW).
+
+    A published diplotype that is only one of several tied PharmCAT candidates is not an exact call.
+    """
+    return {
+        "total": len(rows),
+        "exact": sum(1 for r in rows if r["match"] == "yes"),
+        "tied": sum(1 for r in rows if r["match"].startswith("yes (")),
+        "mismatch": sum(1 for r in rows if r["match"] == "no"),
+    }
+
+
+def concordance_line(s: dict) -> str:
+    n = s["total"]
+    return (
+        f"- **Concordance:** {s['exact']}/{n} exact single call; "
+        f"{s['tied']}/{n} published diplotype among tied PharmCAT candidates (all candidates shown, none re-picked); "
+        f"{s['mismatch']}/{n} mismatch"
+    )
+
 def to_docker_mount_path(path: Path) -> str:
     """Convert a host path into a Docker -v mount path (handles Windows)."""
     resolved = path.resolve()
@@ -234,14 +256,14 @@ def write_results_md(
                 }
             )
 
-    matches = sum(1 for r in rows if r["match"].startswith("yes"))
+    summary = summarize_concordance(rows)
     lines = [
         "# GeT-RM Reference Validation Results",
         "",
         f"- **Tool:** `{DOCKER_IMAGE}` (`pharmcat_pipeline`, zero DANGEROUS reference-imputation flags)",
         f"- **Assembly verification:** `{header_info['contig']}` length `{header_info['length']}` (GRCh38, `chr`-prefixed; zero liftover)",
         f"- **Samples evaluated:** {len(manifest['samples'])} GeT-RM samples × {len(GENES)} genes = {len(rows)} comparisons",
-        f"- **Exact concordance:** {matches}/{len(rows)}",
+        concordance_line(summary),
         "",
         "## Comparison Table",
         "",
@@ -268,7 +290,7 @@ def write_results_md(
     )
 
     results_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"[done] Wrote {results_path} ({matches}/{len(rows)} matched)")
+    print(f"[done] Wrote {results_path} ({summary['exact']}/{summary['total']} exact, {summary['tied']} tied, {summary['mismatch']} mismatch)")
     return all_match
 
 
