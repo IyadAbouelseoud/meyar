@@ -179,7 +179,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
 .m-tile { min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .dash-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-3); flex-wrap: wrap; }
 .m-seg { min-block-size: var(--m-target); }
-.m-seg button { min-block-size: calc(var(--m-target) - 8px); }
+.m-seg button { min-block-size: var(--m-target); }
 .m-seg button[aria-pressed="true"] { background: var(--m-data); color: var(--m-on-brand); box-shadow: none; }
 .dash-lang { min-block-size: var(--m-target); padding-inline: 14px; border-radius: var(--m-radius-pill); border: 1px solid var(--m-line); background: var(--m-surface); color: var(--m-text); font: inherit; font-size: var(--m-size-xs); font-weight: 600; cursor: pointer; }
 .dash-lang:hover { border-color: var(--m-line-strong); }

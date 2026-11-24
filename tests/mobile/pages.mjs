@@ -132,7 +132,7 @@ export function auditInPage(minTap) {
   }
   const taps = document.querySelectorAll('a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="tab"], [tabindex]:not([tabindex="-1"])');
   for (const el of taps) {
-    if (!visible(el) || el.closest('[aria-hidden="true"]')) continue;
+    if (!visible(el) || el.closest('[aria-hidden="true"], [inert]')) continue;
     let target = el;
     // A visually hidden checkbox/radio is tapped through its label.
     if ((el.type === 'checkbox' || el.type === 'radio') && el.closest('label')) target = el.closest('label');

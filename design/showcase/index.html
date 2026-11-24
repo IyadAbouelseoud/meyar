@@ -16,6 +16,7 @@
 body.m-body { background: var(--m-bg); }
 .band { padding-block: var(--m-space-8); }
 .band > .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); display: grid; gap: var(--m-space-6); }
+.band > .in > * { min-inline-size: 0; }
 .band--paper { background: var(--m-bg); color: var(--m-text); }
 .band--chart { background-color: var(--m-bg); }
 .band--instrument { background: var(--m-bg); color: var(--m-text); }
@@ -76,6 +77,8 @@ body.m-body { background: var(--m-bg); }
 .phone__bar { display: flex; flex-wrap: wrap; gap: 2px 8px; justify-content: space-between; align-items: center; font-size: var(--m-size-xs); color: var(--m-text2); padding-inline: 6px; }
 .phone__cap { font-family: var(--m-font-data); font-size: 11px; color: var(--m-text3); text-align: center; letter-spacing: .06em; direction: ltr; }
 .phone .stack { display: grid; gap: 14px; }
+.phone > *, .phone .stack > *, .phone .m-field > * { min-inline-size: 0; }
+.phone .m-input { inline-size: 100%; box-sizing: border-box; }
 .speak { display: inline-flex; gap: .5em; align-items: center; }
 
 /* Print */
@@ -102,7 +105,7 @@ body.m-body { background: var(--m-bg); }
 .mini .m-scale__genetic::after { inset-block-start: 26px; inline-size: 18px; block-size: 18px; }
 .mini .m-scale__acting::before { inset-block-start: 12px; block-size: 32px; }
 details.json { font-size: var(--m-size-xs); }
-details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: 40px; display: flex; align-items: center; }
+details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: 44px; display: flex; align-items: center; }
 details.json pre { overflow-x: auto; background: var(--m-sunken); padding: 12px; border-radius: var(--m-radius-hair); font-family: var(--m-font-data); font-size: 12px; line-height: 1.5; direction: ltr; text-align: left; }
 
 /* Compare */
@@ -427,7 +430,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
     </div>
     <div class="compare">
       <figure style="margin:0;display:grid;gap:10px">
-        <div class="modal-mock" aria-label="Example of an interruptive alert"><div class="modal-mock__box"><header>⚠ DRUG–GENE ALERT</header><div><span>CYP2C19 result on file. Review before continuing.</span><span>Override reason (required):</span><button type="button">Select reason…</button><button type="button">Override and continue</button></div></div></div>
+        <div class="modal-mock" inert aria-label="Example of an interruptive alert (illustration, not interactive)"><div class="modal-mock__box"><header>⚠ DRUG–GENE ALERT</header><div><span>CYP2C19 result on file. Review before continuing.</span><span>Override reason (required):</span><button type="button">Select reason…</button><button type="button">Override and continue</button></div></div></div>
         <figcaption class="m-caption">Interruptive modal of the kind others build. It stops the order until dismissed.</figcaption>
       </figure>
       <figure style="margin:0;display:grid;gap:10px;align-content:start">
