@@ -20,6 +20,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   .mx-cpic .m-cds__rec { text-align: left; }
   .mx-others { margin: 0; padding-inline-start: var(--m-space-4); font-size: var(--m-size-xs); color: var(--m-text2); }
   .m-cds .prv-mini { min-inline-size: 0; overflow-x: auto; }
+  .m-cds .m-coverage { grid-template-columns: minmax(0, 1fr); }
+  .m-cds .m-comb { max-inline-size: 100%; overflow: hidden; }
+  .m-cds bdi { overflow-wrap: anywhere; }
 </style>`);
 
 // Same renderer as renderCardAr in cds/lib/preview.js (kept identical; the kit cannot import cds/).
@@ -203,7 +206,7 @@ function renderCardAr(card, ctx) {
     covParts.push(`غطّى الفحص ${num(cov.definingPositionsAssayed || 0)} من ${num(cov.definingPositionsTotal)} موضعاً محدِّداً${untested.length ? `؛ لم يفحص ${ltr(untested.join(', '))}` : ''}.`);
   }
   if (tier === 0) covParts.push('لا توجد درجة A5 (المستوى 0): جين تغيّر بنيوي يتولاه A8.');
-  else if (tier === 1) covParts.push(`بيانات سعودية: تواتر سعودي منشور${/Goljan/.test(cov.saudiDataNote || '') ? ` (${ltr('Goljan et al., PLoS ONE 2022, Table 1')})` : ''}.`);
+  else if (tier === 1) covParts.push(`بيانات سعودية: تواتر سعودي منشور${/Goljan/.test(cov.saudiDataNote || '') ? ` ${ltr('(Goljan et al., PLoS ONE 2022, Table 1)')}` : ''}.`);
   else if (tier === 2) covParts.push('بيانات سعودية: لا يوجد تواتر سعودي منشور.');
   const tierWord = tier === 1 ? 'تواتر سعودي منشور' : tier === 0 ? 'جين تغيّر بنيوي (A8)' : tier === 2 ? 'لا يوجد تواتر سعودي منشور' : '';
   const comb = combHTML(cov);

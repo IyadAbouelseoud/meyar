@@ -294,3 +294,89 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `PYTHON="uv run --no-project --python 3.12 --with jsonschema --with pytest python" bash engine/run_pipeline.sh` then `... -m pytest engine/tests` (39 pass)
   - `npm --prefix tests/mobile ci && npm --prefix tests/mobile test` (150/150 page states)
 - **Locked areas:** clinical logic, tables, contract and crypto are unchanged. Team-owned items (AGENTS.md provenance wording, A5 SLCO1B1 Tier 2 statement) are filed in `docs/requests.md`.
+
+
+## DEMO-FIXES — Pre-recording fixes P0-1 to P0-4 (24 Nov 2026)
+- **Branch:** . Handoff: .
+- **DEMO-FIX-1:** every CDS card now carries a CDS Hooks 2.0  object (gene, diplotype, phenotype, effectivePhenotype, phenoconversion with activity-score factor, drug, indicator, cpicQuote, cpicQuoteIfStopped, implication, cpicIndication, alternatives, alternativeClass, coverage, callability, guidelineVersion, citation, backwardSweep, affectedDrugs, ).  and  are byte-for-byte unchanged.  and kit  render the card in Arabic from that object, with vocabulary from . CPIC text stays verbatim English in a block headed «نص CPIC الحرفي». Gene names, alleles, maths and citations sit in LTR isolates.
+- **DEMO-FIX-2:** mock patient banner (pseudonym, age, germline, kit ID, Hijri and Gregorian result date, Demo data chip) on , one per scenario, every value .
+- **DEMO-FIX-3:** scenario 5 «demo-006 · كودايين (مع دولوكسيتين)», selected by default. Backend logic unchanged.
+- **DEMO-FIX-4:**  caption no longer quotes the UF (20%) or PROGRESS (90%) figures. No other user-facing occurrence in cds/, kit/, passport/.
+- **Run:** Unknown command: "test"
+
+
+Did you mean this?
+  npm test # Test a package
+To see a list of supported npm commands, run:
+  npm help (52 pass), Unknown command: "test"
+
+
+Did you mean this?
+  npm test # Test a package
+To see a list of supported npm commands, run:
+  npm help (34 pass), PASS  paper      text          on bg        14.78:1  (min 7)  #14201B / #EDF2EC
+PASS  paper      text          on surface   16.11:1  (min 7)  #14201B / #F9FBF7
+PASS  paper      text          on sunken    13.54:1  (min 7)  #14201B / #E1E9E2
+PASS  paper      text2         on bg         8.22:1  (min 4.5)  #3C4A43 / #EDF2EC
+PASS  paper      text2         on surface    8.95:1  (min 4.5)  #3C4A43 / #F9FBF7
+PASS  paper      text2         on sunken     7.53:1  (min 4.5)  #3C4A43 / #E1E9E2
+PASS  paper      text3         on bg         5.48:1  (min 4.5)  #56645D / #EDF2EC
+PASS  paper      text3         on surface    5.97:1  (min 4.5)  #56645D / #F9FBF7
+PASS  paper      brand         on bg         7.11:1  (min 4.5)  #115A51 / #EDF2EC
+PASS  paper      brand         on surface    7.74:1  (min 4.5)  #115A51 / #F9FBF7
+PASS  paper      onBrand       on brand      7.74:1  (min 4.5)  #F9FBF7 / #115A51
+PASS  paper      brandStrong   on brandTint  9.98:1  (min 4.5)  #0A3D37 / #DCEDE8
+PASS  paper      stop          on stopTint   6.96:1  (min 4.5)  #8E1F18 / #F7DEDA
+PASS  paper      stop          on surface    8.55:1  (min 4.5)  #8E1F18 / #F9FBF7
+PASS  paper      ask           on askTint    6.62:1  (min 4.5)  #7A4300 / #FBE7CD
+PASS  paper      ask           on surface    7.67:1  (min 4.5)  #7A4300 / #F9FBF7
+PASS  paper      none          on noneTint   7.53:1  (min 4.5)  #3C4A43 / #E1E9E2
+PASS  paper      info          on infoTint   6.65:1  (min 4.5)  #115A51 / #DCEDE8
+PASS  paper      better        on surface    7.74:1  (min 4.5)  #115A51 / #F9FBF7
+PASS  paper      mockBadgeText on mockBadge  4.74:1  (min 4.5)  #8C5E00 / #F8EACB
+PASS  paper      scaleSlow2    on surface   10.55:1  (min 3)  #1F3A73 / #F9FBF7
+PASS  paper      scaleSlow1    on surface    6.33:1  (min 3)  #3A5BA0 / #F9FBF7
+PASS  paper      scaleNormal   on surface    4.57:1  (min 3)  #7A7262 / #F9FBF7
+PASS  paper      scaleFast1    on surface    4.43:1  (min 3)  #B85A36 / #F9FBF7
+PASS  paper      scaleFast2    on surface    8.33:1  (min 3)  #82321A / #F9FBF7
+PASS  paper      lineStrong    on surface    3.81:1  (min 3)  #738478 / #F9FBF7
+PASS  paper      focus         on surface   11.62:1  (min 3)  #0A3D37 / #F9FBF7
+PASS  paper      focus         on bg        10.67:1  (min 3)  #0A3D37 / #EDF2EC
+PASS  paper      data          on surface    4.18:1  (min 3)  #1E8A57 / #F9FBF7
+PASS  paper      data2         on surface    5.43:1  (min 3)  #8C5E00 / #F9FBF7
+PASS  paper      data3         on surface    6.33:1  (min 3)  #3A5BA0 / #F9FBF7
+PASS  instrument text          on bg        16.88:1  (min 7)  #EEF3EF / #0B1210
+PASS  instrument text          on surface   15.77:1  (min 7)  #EEF3EF / #121A17
+PASS  instrument text          on sunken    14.53:1  (min 7)  #EEF3EF / #18221F
+PASS  instrument text2         on bg        10.23:1  (min 4.5)  #B3C2BA / #0B1210
+PASS  instrument text2         on surface    9.56:1  (min 4.5)  #B3C2BA / #121A17
+PASS  instrument text2         on sunken     8.81:1  (min 4.5)  #B3C2BA / #18221F
+PASS  instrument text3         on bg         6.73:1  (min 4.5)  #8D9E96 / #0B1210
+PASS  instrument text3         on surface    6.29:1  (min 4.5)  #8D9E96 / #121A17
+PASS  instrument brand         on bg         7.78:1  (min 4.5)  #5DB5A6 / #0B1210
+PASS  instrument brand         on surface    7.27:1  (min 4.5)  #5DB5A6 / #121A17
+PASS  instrument onBrand       on brand      7.78:1  (min 4.5)  #0B1210 / #5DB5A6
+PASS  instrument brandStrong   on brandTint 11.82:1  (min 4.5)  #DCEDE8 / #06302B
+PASS  instrument stop          on stopTint   6.45:1  (min 4.5)  #F08A7E / #3A1A16
+PASS  instrument stop          on surface    7.29:1  (min 4.5)  #F08A7E / #121A17
+PASS  instrument ask           on askTint    7.41:1  (min 4.5)  #F4AE5C / #3A2812
+PASS  instrument ask           on surface    9.32:1  (min 4.5)  #F4AE5C / #121A17
+PASS  instrument none          on noneTint   7.91:1  (min 4.5)  #B3C2BA / #1F2B27
+PASS  instrument info          on infoTint   5.89:1  (min 4.5)  #5DB5A6 / #06302B
+PASS  instrument better        on surface    7.27:1  (min 4.5)  #5DB5A6 / #121A17
+PASS  instrument mockBadgeText on mockBadge  8.07:1  (min 4.5)  #F2C35A / #3A2E10
+PASS  instrument scaleSlow2    on surface    7.53:1  (min 3)  #93A9DA / #121A17
+PASS  instrument scaleSlow1    on surface   10.45:1  (min 3)  #B9C7E8 / #121A17
+PASS  instrument scaleNormal   on surface    7.77:1  (min 3)  #B3AB9A / #121A17
+PASS  instrument scaleFast1    on surface    8.34:1  (min 3)  #E9A184 / #121A17
+PASS  instrument scaleFast2    on surface   10.82:1  (min 3)  #F3BFA8 / #121A17
+PASS  instrument lineStrong    on surface    6.29:1  (min 3)  #8D9E96 / #121A17
+PASS  instrument focus         on surface   10.73:1  (min 3)  #F2C35A / #121A17
+PASS  instrument focus         on bg        11.49:1  (min 3)  #F2C35A / #0B1210
+PASS  instrument data          on surface    8.52:1  (min 3)  #3CCB8B / #121A17
+PASS  instrument data2         on surface   10.73:1  (min 3)  #F2C35A / #121A17
+PASS  instrument data3         on surface    7.53:1  (min 3)  #93A9DA / #121A17
+
+62/62 contrast pairs pass.
+Wrote design/tokens.css (62/62).
+- **Locked areas:** data contract, tables, ports, dependencies, design/ and passport/ are unchanged.
