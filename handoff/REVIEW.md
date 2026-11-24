@@ -1,55 +1,25 @@
 # Handoff — REVIEW Final review and fix pass (prompts/REVIEW-opus-5.5.md, FINAL version ba3549d)
 
-Status: IN PROGRESS
-Last updated: 2026-11-24 by Claude Code (Opus 5.5)
-Branch: review/final-2026-11-24 (from origin/main 9784cfb) · Last commit: see `git log -1`
+Status: IN PROGRESS (stopped at the usage limit, 2026-11-24)
+Branch: review/final-2026-11-24 (from origin/main 9784cfb). Not pushed, no PR yet.
 
-## Plan
-
-**Goal:** Every Done-when box and cross-cutting check 1–18 proven or fixed. Every page passes on mobile with a regression test. The image library is placed. The 36 research-report items each get a verdict. One PR.
-
-**Execution:** native, in this session. Read-only sweeps (per-task Done-when evidence, primary-source verification for Part C) go to parallel subagents, which write to the scratchpad. Fixes, commits and the report stay in the main session.
-
-### Global constraints (from AGENTS.md and the prompt)
-- Locked: clinical logic, `tables/*`, data contract, C8 crypto parameters. Change one only for a proven defect against the spec, and call the change out at the top of docs/REVIEW.md.
-- Visual work happens inside `design/` tokens. No new fonts or colours. Reem Kufi is banned.
-- Never push to main. Commit each logical fix separately. Open one PR.
-- No invented number or source. If a primary source cannot be opened, the verdict is DROPPED or STILL UNVERIFIED.
-
-### Tasks
-1. **Baseline:** run every test suite (passport, cds, kit, engine pytest), `docker compose up -d`, curl discovery and order-sign, `bash engine/run_pipeline.sh`. Record exact counts.
-2. **Part A sweep:** check the Done-when lists for A1–A8, B1–B6, C1–C9, D1–D5, E1–E3 and F1–F6 (subagents, read and run only), then run cross-cutting checks 1–18.
-3. **Known issue 5:** the demo contracts in docs/fixtures (only 001, 002 and 006 are committed). Confirm, then fix or document.
-4. **Part B, mobile:** a Playwright screenshot matrix (before), the overflow, tap-target and font-size audit, and the spacing-token sweep. Add `@media` to cds and kit. Add the regression test `tests/mobile/`. Screenshots after the fixes. Lighthouse before and after.
-5. **Images:** run `build_webp.py --check`. Place IMG-15, 02, 06 and 14 on the Passport, 04 and 11 on the kit, 05 on the clinician side, and 07/01 as section imagery. Use `<picture>` with srcset, set width and height, label each one, add them to the sw.js precache, and rebuild dist.
-6. **Part C:** write `docs/report-verification.md` with items 1–36 (subagent research, plus tests run in this repo).
-7. **Fixes found in steps 2–6:** TDD for code (failing test first), plus doc corrections.
-8. **Report:** archive the old docs/REVIEW.md to docs/REVIEW-C6-C7-C9-2026-11-24.md and write the new one with sections 1–8. Then request a code review of the full diff, push the branch and open the PR.
-
-### Review focus
-- RTL plus a 320 px width with long Latin genotype or citation strings: overflow.
-- Elder mode at 320 px: tap targets of 48 px or more, and no horizontal scroll.
-- PIN entry with the on-screen keyboard: `inputmode=numeric`, and the field stays in view.
-- Offline Passport after adding images: the sw precache includes them and nothing 404s.
-- Not-assessed CYP2D6 next to an image or empty state: the image is never inside clinical content.
-
-## Done (each with the proof command)
-- [x] Plan written
-
-## In progress
-- Task 1 baseline
+## Done
+- [x] Baseline counts reproduced: passport 41/41, cds 39/39, kit 32/32, engine pytest 37 passed (after `FHIR=1 PYTHON="uv run --no-project --python 3.12 --with jsonschema --with pytest python" bash engine/run_pipeline.sh`, exit 0)
+- [x] Read-only audits: docs/review-evidence/audit-B.md, audit-C.md, audit-DEF.md (complete). Part C research files verify-*.md are partial, where present.
+- [x] Mobile harness: tests/mobile (pages.mjs, run.mjs; `npm --prefix tests/mobile test`). Before: 47/150 phone states pass; full matrix 262/500 + kit 32/80 + reader 8/20. Before screenshots are in docs/screenshots/final-review/before (243 MB, NOT committed: convert to webp or a subset before committing)
+- [x] Fixes made (not yet re-verified): design/meyar.css (.m-seg button to the full target size, a.m-wordmark target, .m-tile__btn coarse pointer, .m-cds__foot a target), design/charts.js (tooltip clamped to its host), passport/src/app.css (safe-area insets, tab label wrap at 320 px, 16 px scan textarea), an empty favicon on kit, reader, showcase and cds pages
 
 ## Next step (start here)
-1. Task 1 baseline (see Plan)
+1. Showcase: make `.hero nav a` at least 44 px (design/showcase/index.html:34), and fix the `.phone__bar` overflow at 320 px in ar
+2. Fix the blockers from audit-C: add the mandatory line "Runs on synthetic and GeT-RM reference data; no patient data was used." to the Passport (render.js:41, scan-render.js:16, i18n), cds pages, kit pages and the F4 panel; precache dist/assets in passport/public/sw.js
+3. `npm --prefix passport run build`, then `npm --prefix tests/mobile test` until it passes, then the after-shots (`npm --prefix tests/mobile run shots`)
+4. Images (known issue 1), the wrong-in-front-of-judge items in the audit files, Lighthouse
+5. Resume Part C: the research agents were stopped. Re-run items 1–36, then docs/report-verification.md
+6. Archive docs/REVIEW.md to docs/REVIEW-C6-C7-C9-2026-11-24.md, write the new report, run a code review, push the branch, open one PR
 
-## Commands to verify current state
-```
-npm --prefix passport test; npm --prefix cds test; npm --prefix kit test; docker compose up -d; curl localhost:3000/cds-services
-```
-
-## Decisions made / open questions
-- The user chose the new FINAL fix-pass prompt from origin/main over the older read-only local copy (AskUserQuestion, 2026-11-24).
-- The untracked local `cds/data/alerts.jsonl` (23 lines, from the b6 checkout) was backed up to the session scratchpad before switching branches.
+## Key findings so far (details in docs/review-evidence)
+- BLOCKS: D1–D5 and E1–E3 are not built (no poster PDF, architecture diagram, demo MP4, brief, checklist or pitch). The mandatory "no patient data" line is missing on the Passport, cds, kit and poster. The Passport sw.js does not precache JS, CSS or fonts, so scan.html is blank offline.
+- JUDGE: /compare card is hand-written (compare.js:37-41,72,371) and has 11 hard-coded hex colours; 0/128 CPIC rows have human sign-off; provenance wording conflicts (AGENTS.md:49, README.md:93,100 vs the table); card footer shows "CPIC PharmCAT 3.4.0" as the guideline version; "CYP2D6 · VCF" label on a not-assessed gene; Doctor tab lacks the Meyar Scale; stale 360 B QR size (the app issues 480 B); handoff hashes invalid for B4, B5, C5 and F1–F6; README run snippet fails on a clean clone.
 
 ## Do not
-- Do not deploy to Netlify (the report lists the files to re-upload).
+- Do not stop the other `meyar` compose project's containers (the auto-mode classifier denied it). Test this branch's cds in-process; HAPI on 8080 is shared.

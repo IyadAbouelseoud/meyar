@@ -410,6 +410,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
 <title>${c.title}</title>
 <link rel="stylesheet" href="/design/fonts/fonts.css">
 <link rel="stylesheet" href="/design/tokens.css">

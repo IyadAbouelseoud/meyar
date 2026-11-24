@@ -75,7 +75,9 @@ export function area(el, { series, label, unit = '' }) {
     cross.querySelector('circle').setAttribute('cx', x); cross.querySelector('circle').setAttribute('cy', y);
     tip.textContent = `${series[i].x} · ${series[i].y}${unit}`;
     const box = svg.getBoundingClientRect(), host = el.getBoundingClientRect();
-    tip.style.left = `${(x / W) * box.width + (box.left - host.left)}px`;
+    // Keep the centred tip inside its host so it never pushes past a phone's edge.
+    const half = tip.offsetWidth / 2, px = (x / W) * box.width + (box.left - host.left);
+    tip.style.left = `${Math.min(Math.max(px, half + 4), host.width - half - 4)}px`;
     tip.style.top = `${(y / H) * box.height + (box.top - host.top)}px`;
     tip.classList.add('is-on');
   };

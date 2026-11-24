@@ -157,6 +157,7 @@ export function renderDashboardHtml({ initialSummary, watchFixtures, coverageGri
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
 <title>Meyar · Alert log</title>
 <link rel="stylesheet" href="/design/fonts/fonts.css">
 <link rel="stylesheet" href="/design/tokens.css">

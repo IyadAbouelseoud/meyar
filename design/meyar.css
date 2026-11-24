@@ -53,6 +53,8 @@ body.m-body {
 .m-wordmark__ar { font-family: var(--m-font-display); font-weight: 800; font-size: 1.6em; line-height: 1; letter-spacing: 0; }
 .m-wordmark__en { font-family: var(--m-font-data); font-size: .72em; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--m-text2); }
 .m-wordmark__tick { inline-size: .9em; block-size: .9em; flex: none; align-self: center; }
+/* A linked wordmark is a tap target: pad it to the shared target size without moving the type (WCAG 2.5.8). */
+a.m-wordmark { min-block-size: var(--m-target); align-items: center; }
 
 /* ---------- 2. Al-Qatt band (brand ornament, never inside clinical content) ---------- */
 .m-qatt {
@@ -191,7 +193,7 @@ body.m-body {
 [dir="rtl"] .m-switch input:checked::after { translate: -22px 0; }
 
 .m-seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: var(--m-radius-control); background: var(--m-sunken); }
-.m-seg button { min-block-size: calc(var(--m-target) - 6px); padding-inline: 1em; border: 0; border-radius: calc(var(--m-radius-control) - 3px); background: transparent; color: var(--m-text2); font: inherit; font-weight: 600; cursor: pointer; }
+.m-seg button { min-block-size: var(--m-target); padding-inline: 1em; border: 0; border-radius: calc(var(--m-radius-control) - 3px); background: transparent; color: var(--m-text2); font: inherit; font-weight: 600; cursor: pointer; }
 .m-seg button[aria-pressed="true"] { background: var(--m-surface); color: var(--m-text); box-shadow: 0 1px 0 var(--m-line), inset 0 0 0 1px var(--m-line); }
 
 .m-field { display: grid; gap: 6px; }
@@ -302,7 +304,8 @@ body.m-body {
 .m-cds__rec cite { display: block; margin-block-start: 6px; font-style: normal; font-size: var(--m-size-xs); color: var(--m-text2); }
 .m-cds__suggest { display: grid; gap: 8px; }
 .m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: 44px; justify-content: flex-start; text-align: start; padding-block: 8px; }
-.m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__foot a { display: inline-flex; align-items: center; min-block-size: var(--m-target); }
 
 /* ---------- 10. Instrument dashboard (B4) ----------
    Rounded tiles on deep juniper-black. One orchestrated moment: gauge ticks fill,
@@ -320,6 +323,7 @@ body.m-body {
 .m-tile__meta { font-size: var(--m-size-xs); color: var(--m-text3); }
 .m-tile__btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; min-block-size: 32px; border-radius: 10px; border: 1px solid var(--m-line); background: var(--m-sunken); color: var(--m-text2); font: inherit; font-size: var(--m-size-xs); cursor: pointer; }
 .m-tile__btn:hover { color: var(--m-text); border-color: var(--m-line-strong); }
+@media (pointer: coarse) { .m-tile__btn { min-block-size: var(--m-target); } }
 .m-kpi { display: grid; gap: 10px; }
 .m-kpi__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .m-kpi__num { font-family: var(--m-font-display); font-weight: 700; font-size: clamp(2.2rem, 3.4vw, 3.1rem); line-height: .95; letter-spacing: -.035em; color: var(--m-text); font-variant-numeric: tabular-nums; }

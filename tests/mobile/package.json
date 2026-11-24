@@ -1,0 +1,13 @@
+{
+  "name": "meyar-mobile-tests",
+  "private": true,
+  "type": "module",
+  "description": "Mobile regression test for every Meyar page (REVIEW Part B). Serves passport/dist, kit, cds and design in-process.",
+  "scripts": {
+    "test": "node run.mjs",
+    "shots": "node run.mjs --shots ../../docs/screenshots/final-review/after --full"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
+  }
+}
