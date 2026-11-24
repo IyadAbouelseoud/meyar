@@ -52,12 +52,12 @@ SPINE_AR = [
 STR = {
  "en": dict(eyebrow="MEYAR · F SERIES · TESTING FOR EVERY HOSPITAL", second="سُلَّم الفحص: من العيّنة إلى الوصفة الصحيحة",
             spine="One software spine on every step", tag="SOFTWARE PROTOTYPE · DEMO ON MOCK DATA",
-            why="Why it matters: in PREPARE, patients with an actionable result had 30% lower odds of clinically relevant side effects (21.0% vs 27.7%).",
-            disc="Research prototype, not for clinical use. T3 and T4 renders are concepts: not built, not validated.", mark="مِعيار"),
+            why="Why it matters: in PREPARE, patients with an actionable result had about 30% lower odds of clinically relevant side effects (21.0% vs 27.7%).",
+            disc="Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used. T3 and T4 renders are concepts: not built, not validated.", mark="مِعيار"),
  "ar": dict(eyebrow="مِعيار · سلسلة F · فحص لكل مستشفى", second="Four ways to test, one standard of care",
             spine="منظومة برمجية واحدة على كل درجة", tag="نموذج برمجي أولي · عرض ببيانات تجريبية",
-            why=f"لماذا يهم: في دراسة {L('PREPARE')} انخفضت احتمالات الآثار الجانبية المهمة سريرياً 30% لدى المرضى ذوي النتيجة القابلة للتطبيق ({L('21.0% vs 27.7%')}).",
-            disc=f"نموذج بحثي أولي، ليس للاستخدام السريري. صور {L('T3')} و{L('T4')} تصوّرات: لم تُصنع ولم يُتحقق منها.", mark="MEYAR"),
+            why=f"لماذا يهم: في دراسة {L('PREPARE')} انخفضت احتمالات الآثار الجانبية المهمة سريرياً بنحو 30% لدى المرضى ذوي النتيجة القابلة للتطبيق ({L('21.0% vs 27.7%')}).",
+            disc=f"نموذج بحثي — ليس للاستخدام السريري. يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى. صور {L('T3')} و{L('T4')} تصوّرات: لم تُصنع ولم يُتحقق منها.", mark="MEYAR"),
 }
 
 import re
