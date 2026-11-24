@@ -33,7 +33,16 @@ export function scaleKind(phenotype = '') { return /function/i.test(phenotype) ?
 
 // ---- Scale markup ----------------------------------------------------------------
 // labels (optional): five final strings from passport/src/i18n (C4 owns the wording).
-export function scaleHTML(gene, lang = 'ar', labelsOverride = null) {
+// Prescriber side (cds pages, scan-side reader): CPIC terms and clinical flag words, in the page language.
+export const SCALE_CLINICIAN_AR = {
+  metabolizer: ['مستقلِب بطيء', 'متوسط', 'طبيعي', 'سريع', 'فائق السرعة'],
+  function: ['وظيفة ضعيفة', 'منخفضة', 'طبيعية', 'مرتفعة', '—'],
+};
+export function clinicianScaleHTML(gene, lang = 'en') {
+  const kind = scaleKind(gene.phenotype);
+  return scaleHTML(gene, lang, lang === 'ar' ? SCALE_CLINICIAN_AR[kind] : SCALE[kind].clinician, 'clinician');
+}
+export function scaleHTML(gene, lang = 'ar', labelsOverride = null, voice = 'patient') {
   const notAssessed = gene.callability?.method === 'not-assessed';
   const g = notAssessed ? null : scaleIndex(gene.phenotype);
   const eff = gene.effectivePhenotype ?? gene.phenotype;
@@ -43,7 +52,9 @@ export function scaleHTML(gene, lang = 'ar', labelsOverride = null) {
   const converted = g != null && a != null && g !== a;
   const unassessed = g == null || a == null;
   const t = lang === 'ar'
-    ? { genetic: 'جيناتك', acting: 'الآن', none: 'لم يُفحص — لا توجد نتيجة' }
+    ? (voice === 'clinician'
+      ? { genetic: 'النتيجة الجينية', acting: 'يتصرف كـ', none: 'لم يُفحص — لا توجد نتيجة' }
+      : { genetic: 'جيناتك', acting: 'الآن', none: 'لم يُفحص — لا توجد نتيجة' })
     : { genetic: 'Genetic', acting: 'Acting like', none: 'Not assessed — no result reported' };
   const cls = ['m-scale', converted && 'is-converted', unassessed && 'is-unassessed'].filter(Boolean).join(' ');
   const aria = unassessed ? t.none
