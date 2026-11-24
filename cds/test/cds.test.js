@@ -1681,6 +1681,30 @@ describe('DEMO-FIXES: structured extension, Arabic card, demo-006 scenario, comp
     assert.deepEqual(stray, [], `English left in the Arabic card: ${stray.join(', ')}`);
   });
 
+  it('DEMO-FIX-2: every preview scenario has a mock patient banner (pseudonym, age 45–64, germline, kit ID, result date)', async () => {
+    const { buildPreviewScenarios } = await import('../lib/preview.js');
+    for (const sc of buildPreviewScenarios()) {
+      const b = sc.banner;
+      assert.ok(b, `${sc.id} has a banner`);
+      assert.equal(b.mock, true);
+      for (const key of ['pseudonym', 'age', 'sampleOrigin', 'kitId', 'resultDate']) {
+        assert.equal(b[key].mock, true, `${sc.id} banner.${key} is mock`);
+      }
+      assert.match(b.pseudonym.ar, /^مريض تجريبي [٠-٩]{3}$/);
+      assert.match(b.pseudonym.en, /^Demo patient \d{3}$/);
+      assert.ok(b.age.value >= 45 && b.age.value <= 64, `${sc.id} age in 45–64`);
+      assert.equal(b.sampleOrigin.value, 'germline');
+      assert.match(b.kitId.value, /^MYR-DEMO-\d{4}$/);
+      assert.match(b.resultDate.value, /^\d{4}-\d{2}-\d{2}$/);
+    }
+    const byPatient = Object.fromEntries(buildPreviewScenarios().map((s) => [s.patientId, s.banner.kitId.value]));
+    assert.equal(byPatient['demo-001'], 'MYR-DEMO-0001');
+    assert.equal(byPatient['demo-002'], 'MYR-DEMO-0002');
+    const html = await (await fetch(`${baseUrl}/preview?lang=ar`)).text();
+    assert.match(html, /id="patient-banner"/);
+    assert.ok(html.includes('ar-SA-u-ca-islamic-umalqura'), 'Hijri (Umm al-Qura) date');
+  });
+
   it('(d) /compare in both languages states no unverified figure', async () => {
     for (const q of ['', '?lang=ar']) {
       const html = await (await fetch(`${baseUrl}/compare${q}`)).text();

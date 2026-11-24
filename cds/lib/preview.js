@@ -317,6 +317,13 @@ const COPY = {
     sc2Label: '2. demo-002 · Codeine (on paroxetine)',
     sc3Label: '3. Paroxetine order · Patient on codeine (effect after signing)',
     sc4Label: '4. Pantoprazole · No CPIC alternative',
+    bannerLabel: 'Patient (demo data)',
+    bannerName: 'Name',
+    bannerAge: 'Age',
+    bannerSample: 'Sample type',
+    bannerSampleGermline: 'Germline',
+    bannerKit: 'Kit ID',
+    bannerDate: 'Result date',
   },
   ar: {
     title: 'مِعيار — معاينة بطاقة الطبيب',
@@ -357,6 +364,13 @@ const COPY = {
     sc2Label: '٢. demo-002 · كودايين (مع باروكسيتين)',
     sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين (الأثر بعد التوقيع)',
     sc4Label: '٤. بانتوبرازول · دون بديل في CPIC',
+    bannerLabel: 'المريض (بيانات تجريبية)',
+    bannerName: 'الاسم',
+    bannerAge: 'العمر',
+    bannerSample: 'نوع العيّنة',
+    bannerSampleGermline: 'وراثية (germline)',
+    bannerKit: 'معرّف العُدّة',
+    bannerDate: 'تاريخ النتيجة',
   },
 };
 
@@ -400,6 +414,15 @@ export function buildPreviewScenarios() {
     {
       id: 'demo-001-clopidogrel',
       labelKey: 'sc1Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠١', en: 'Demo patient 001', mock: true },
+        age: { value: 52, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0001', mock: true },
+        resultDate: { value: '2026-11-18', mock: true },
+        mock: true,
+      },
       patientId: 'demo-001',
       drug: 'clopidogrel',
       orders: [
@@ -456,6 +479,15 @@ export function buildPreviewScenarios() {
     {
       id: 'demo-002-codeine',
       labelKey: 'sc2Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٢', en: 'Demo patient 002', mock: true },
+        age: { value: 61, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0002', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-002',
       drug: 'codeine',
       orders: [
@@ -507,6 +539,15 @@ export function buildPreviewScenarios() {
     {
       id: 'paroxetine-backward-sweep',
       labelKey: 'sc3Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٢', en: 'Demo patient 002', mock: true },
+        age: { value: 61, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0002', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-002-sweep',
       drug: 'paroxetine',
       orders: [
@@ -599,6 +640,15 @@ export function buildPreviewScenarios() {
     {
       id: 'pantoprazole-no-alt',
       labelKey: 'sc4Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٤', en: 'Demo patient 004', mock: true },
+        age: { value: 47, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0004', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-cyp2c19-um',
       drug: 'pantoprazole',
       orders: [
@@ -819,6 +869,31 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     background: var(--m-ask-tint);
     color: var(--m-text);
   }
+  .prv-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--m-space-3) var(--m-space-4);
+    padding: var(--m-space-3) var(--m-space-4);
+    background: var(--m-surface);
+    border-block-end: 1px solid var(--m-line);
+    margin: 0;
+  }
+  .prv-banner__item { display: grid; gap: 2px; min-inline-size: 0; }
+  .prv-banner dt {
+    font-size: var(--m-size-xs);
+    color: var(--m-text2);
+    font-weight: 600;
+  }
+  .prv-banner dd {
+    margin: 0;
+    font-size: var(--m-size-sm);
+    font-weight: 700;
+    color: var(--m-text);
+    overflow-wrap: anywhere;
+  }
+  .prv-banner__date { display: grid; gap: 2px; }
+  .prv-banner__date span + span { font-weight: 500; color: var(--m-text2); }
+  .prv-banner__chip { align-self: center; justify-self: start; }
   .prv-ehr__actions {
     padding: var(--m-space-4);
     display: flex;
@@ -976,6 +1051,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
         <span><strong data-t="ordersTitle">${c.ordersTitle}</strong> · <span class="m-data" id="patient-label">demo-001</span></span>
         <span class="m-mock" data-t="demo">${c.demo}</span>
       </header>
+      <section class="prv-banner-host" id="patient-banner" aria-label="${c.bannerLabel}"></section>
       <div class="prv-table-wrap">
         <table class="prv-table">
           <thead>
@@ -1127,7 +1203,46 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     return \`<bdi dir="ltr">\${esc(s)}</bdi>\`;
   }
 
+  // DEMO-FIX-2: result date in Hijri (Umm al-Qura) and Gregorian, as cds/lib/dashboard.js does.
+  function formatResultDate(iso) {
+    const d = new Date(iso + 'T12:00:00Z');
+    const ar = currentLang === 'ar';
+    let hijri = '';
+    try {
+      hijri = new Intl.DateTimeFormat(ar ? 'ar-SA-u-ca-islamic-umalqura' : 'en-GB-u-ca-islamic-umalqura', {
+        day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+      }).format(d);
+    } catch { /* calendar unsupported */ }
+    const greg = new Intl.DateTimeFormat(ar ? 'ar-SA-u-ca-gregory' : 'en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+    }).format(d);
+    return { hijri, greg };
+  }
+
+  function renderBanner() {
+    const host = document.getElementById('patient-banner');
+    const b = currentScenario.banner;
+    if (!b) { host.innerHTML = ''; host.hidden = true; return; }
+    host.hidden = false;
+    const c = COPY[currentLang];
+    const ar = currentLang === 'ar';
+    const n = (v) => new Intl.NumberFormat(ar ? 'ar-SA' : 'en-GB').format(v);
+    const date = formatResultDate(b.resultDate.value);
+    const item = (label, value) =>
+      '<div class="prv-banner__item"><dt>' + esc(label) + '</dt><dd>' + value + '</dd></div>';
+    host.innerHTML =
+      '<dl class="prv-banner">' +
+      item(c.bannerName, esc(ar ? b.pseudonym.ar : b.pseudonym.en)) +
+      item(c.bannerAge, esc(n(b.age.value))) +
+      item(c.bannerSample, esc(b.sampleOrigin.value === 'germline' ? c.bannerSampleGermline : b.sampleOrigin.value)) +
+      item(c.bannerKit, '<bdi class="m-data" dir="ltr">' + esc(b.kitId.value) + '</bdi>') +
+      item(c.bannerDate, '<span class="prv-banner__date"><span>' + esc(date.hijri) + '</span><span>' + esc(date.greg) + '</span></span>') +
+      '<div class="prv-banner__chip"><span class="m-mock">' + esc(c.demo) + '</span></div>' +
+      '</dl>';
+  }
+
   function renderOrdersTable() {
+    renderBanner();
     document.getElementById('patient-label').textContent = currentScenario.patientId;
     const tbody = document.getElementById('orders-body');
     tbody.innerHTML = currentScenario.orders
@@ -1301,6 +1416,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
       btn.setAttribute('aria-pressed', btn.dataset.langBtn === currentLang ? 'true' : 'false');
     });
     renderScenarioButtons();
+    renderOrdersTable();
     if (lastResponse) renderCards(lastResponse);
   }
 
