@@ -249,3 +249,15 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `cd passport && npm install && npm test` (28/28 pass)
   - `cd passport && npm run build && npm run preview` (open `http://localhost:5173/?tab=otc`)
 - **Notes:** Strictly lookup-only from `tables/otc_products.json` and `tables/cpic_recommendations.json` using `effectivePhenotype || phenotype`, respecting A8 `not-assessed` safety (`ask`, never a false reassurance), zero LLM calls, works offline. Data contract unchanged. No new dependency.
+
+## C7 — Printable QR card (24 Nov 2026)
+- **Files added/changed:**
+  - `passport/src/print.js` (new: `renderId1CardHtml`, `renderA6FoldoutHtml`, `buildFoldoutEntries`, `buildMrzLine` for ISO/IEC 7810 ID-1 `85.60 × 53.98 mm` card and `105 × 148 mm` large-type A6 elder fold-out)
+  - `passport/src/render.js`, `passport/src/main.js`, `passport/src/app.css` (Doctor-tab print preview and `Print wallet card (ID-1)` / `Print elder fold-out (A6)` / `Print both` controls, named CSS `@page` rules `meyar-id1` `85.60mm 53.98mm` and `meyar-a6` `105mm 148mm`, zero hard-coded colours or fonts)
+  - `passport/src/i18n/ar.json`, `passport/src/i18n/en.json` (Arabic & English print UI strings; Arabic drafts flagged for C4 native-speaker review)
+  - `passport/test/print.test.mjs` (new: 4 unit tests for ID-1 privacy/elements, MRZ version+date strip, A6 C4/A7/A8 lines, and CSS token/page-size checks), `passport/dist/` (rebuilt production bundle), `handoff/C7.md` (`Status: DONE`)
+- **How to run:**
+  - `node design/build-tokens.mjs` (`62/62` contrast pairs pass)
+  - `npm.cmd --prefix passport test` (`32 pass, 0 fail`)
+  - `npm.cmd --prefix passport run build` and `npm.cmd --prefix passport run preview` (open `http://localhost:5173/?tab=doctor`, choose a 6-digit PIN, issue card, and use the print buttons)
+- **Notes:** ID-1 card face carries only the Meyar wordmark, bilingual PIN prompt, research-prototype line, C8 encrypted QR (`28 × 28 mm`), envelope-version/issue-date strip, and Al-Qatt band — no patient name, ID, or result. Verified printed PDF page dimensions (`85.68 × 54.02 mm` and `105.16 × 148.17 mm`) and decoded + decrypted the QR directly from the rendered ID-1 PDF using `jsqr` and `decodeQrEnvelope`. Data contract unchanged. No new dependency.

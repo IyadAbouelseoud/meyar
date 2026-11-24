@@ -168,7 +168,20 @@
     "qrEmergencyHint": "Write only what you want everyone to see. The full record is at the hospital.",
     "qrPinBrute": "A 6-digit PIN can be guessed on another device if the QR is copied. The card holds gene results only, never your genome or your name.",
     "qrPinErrSix": "The PIN must be exactly 6 digits.",
-    "qrPinErrMatch": "The two PINs do not match. Type it again."
+    "qrPinErrMatch": "The two PINs do not match. Type it again.",
+    "printTitle": "Printable card & elder fold-out",
+    "printSub": "Wallet-sized ID-1 card (85.60 × 53.98 mm) with no name or result on the face, plus a large-type A6 fold-out for elders.",
+    "printRequiresPin": "Choose a 6-digit PIN and press \"Make my card\" above to prepare the encrypted printable card.",
+    "printId1Btn": "Print wallet card (ID-1)",
+    "printA6Btn": "Print elder fold-out (A6)",
+    "printBothBtn": "Print both",
+    "printId1Caption": "Card front (85.60 × 53.98 mm, ISO/IEC 7810 ID-1) — no name, no ID number, no result.",
+    "printA6Caption": "A6 fold-out (105 × 148 mm) in large-type plain language for elders.",
+    "id1PinAr": "اطلب الرمز من صاحب البطاقة",
+    "id1PinEn": "Ask the holder for the PIN",
+    "id1ProtoAr": "نموذج بحثي — ليس للاستخدام السريري",
+    "id1ProtoEn": "Research prototype — not for clinical use",
+    "foldoutReminder": "Tell your doctor or pharmacist before any new medicine."
   },
   "scan": {
     "proto": "Research prototype — not for clinical use",

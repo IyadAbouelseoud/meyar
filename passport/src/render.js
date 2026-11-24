@@ -2,6 +2,7 @@ import { scaleHTML, combHTML } from '@design/meyar.js';
 import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
 import { getDrugsForGene, getTierInfo, isMedCausingShift } from './lookup.js';
 import { lookupOtcProduct } from './otc.js';
+import { renderId1CardHtml, renderA6FoldoutHtml } from './print.js';
 import { buildGeneSpeakText } from './speech.js';
 
 function esc(str) {
@@ -27,7 +28,7 @@ function statusText(status, t) {
 function renderTopbar(state, t) {
   const patients = ['demo-001', 'demo-002', 'demo-006'];
   return `
-    <header class="m-topbar">
+    <header class="m-topbar m-noprint">
       <div class="m-topbar__honesty">
         <span class="m-proto">${esc(t.proto)}</span>
         <span class="m-mock">${esc(t.demo)}</span>
@@ -52,7 +53,7 @@ function renderTopbar(state, t) {
       </div>
     </header>
     ${state.caregiverMode ? `
-      <div class="m-caregiver-bar" role="status" data-testid="caregiver-banner">
+      <div class="m-caregiver-bar m-noprint" role="status" data-testid="caregiver-banner">
         <div class="m-caregiver-bar__info">
           <span class="m-status m-status--info">
             <svg aria-hidden="true"><use href="#i-info"/></svg>
@@ -278,7 +279,7 @@ function renderQrCard(state, t) {
   const qr = state.qrResult;
   const isPlain = Boolean(state.devMode && state.qrPlaintext);
   return `
-    <section class="m-qr-card" aria-labelledby="qr-heading">
+    <section class="m-qr-card m-noprint" aria-labelledby="qr-heading">
       <div class="m-qr-card__head">
         <div>
           <h3 class="m-qr-card__title" id="qr-heading">${esc(t.qrTitle)}</h3>
@@ -314,7 +315,7 @@ function renderQrCard(state, t) {
       </div>
       ${state.qrPinError ? `<div class="m-status m-status--stop" role="alert"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(state.qrPinError)}</span></div>` : ''}
       <div class="m-qr-controls">
-        <button type="button" class="m-btn" data-action="issue-card">
+        <button type="button" class="m-btn${qr && qr.encrypted ? ' m-btn--secondary' : ''}" data-action="issue-card">
           <svg aria-hidden="true"><use href="#i-lock"/></svg>
           <span>${esc(state.qrIssued > 0 ? t.qrReissueBtn : t.qrIssueBtn)}</span>
         </button>
@@ -355,17 +356,50 @@ function renderQrCard(state, t) {
   `;
 }
 
+function renderPrintSection(contract, state, t) {
+  const qr = state.qrResult;
+  const ready = Boolean(qr && qr.encrypted);
+  return `
+    <section class="m-print-panel" aria-labelledby="print-heading" data-testid="print-section">
+      <div class="m-print-panel__head m-noprint">
+        <h3 class="m-qr-card__title" id="print-heading">${esc(t.printTitle)}</h3>
+        <p class="m-sec-sub">${esc(t.printSub)}</p>
+      </div>
+      ${ready ? `
+        <div class="m-print-controls m-noprint">
+          <button type="button" class="m-btn" data-action="print-id1">${esc(t.printId1Btn)}</button>
+          <button type="button" class="m-btn m-btn--secondary" data-action="print-a6">${esc(t.printA6Btn)}</button>
+          <button type="button" class="m-btn m-btn--secondary" data-action="print-both">${esc(t.printBothBtn)}</button>
+        </div>
+        <div class="m-print-sheets">
+          <figure class="m-print-sheet m-print-sheet--id1">
+            ${renderId1CardHtml({ qrSvg: qr.svg, lang: state.lang, t })}
+            <figcaption class="m-print-caption m-noprint">${esc(t.printId1Caption)}</figcaption>
+          </figure>
+          <figure class="m-print-sheet m-print-sheet--a6">
+            ${renderA6FoldoutHtml({ contract, lang: state.lang, t })}
+            <figcaption class="m-print-caption m-noprint">${esc(t.printA6Caption)}</figcaption>
+          </figure>
+        </div>
+      ` : `
+        <div class="m-empty m-noprint" data-testid="print-requires-pin">${esc(t.printRequiresPin)}</div>
+      `}
+    </section>
+  `;
+}
+
 function renderDoctorView(contract, lang, t, state) {
   const genes = contract.genes || [];
   const meds = contract.currentMedications || [];
   return `
     <section class="m-stack" aria-labelledby="doc-heading">
-      <div>
+      <div class="m-doctor-head m-noprint">
         <h2 class="m-sec-title" id="doc-heading">${esc(t.doctorTitle)}</h2>
         <p class="m-sec-sub">${esc(t.doctorSub)}</p>
       </div>
       ${renderQrCard(state, t)}
-      <div class="m-doctor-sheet m-chartpaper">
+      ${renderPrintSection(contract, state, t)}
+      <div class="m-doctor-sheet m-chartpaper m-noprint">
         <div class="m-doctor-meta">
           <div class="m-doctor-meta__item">
             <small>${esc(t.doctorPatientId)}</small>
@@ -560,7 +594,7 @@ function renderTabs(activeTab, t) {
     { id: 'doctor', icon: 'i-qr', label: t.tabDoctor },
   ];
   return `
-    <nav class="m-tabs m-tabs--fixed" aria-label="Passport navigation">
+    <nav class="m-tabs m-tabs--fixed m-noprint" aria-label="Passport navigation">
       ${tabs.map((tab) => `
         <button type="button" data-action="tab" data-tab="${tab.id}" aria-current="${activeTab === tab.id ? 'page' : 'false'}">
           <svg aria-hidden="true"><use href="#${tab.icon}"/></svg>
