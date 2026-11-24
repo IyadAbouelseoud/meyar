@@ -1157,16 +1157,17 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /class="m-caption"/);
     assert.ok(
       html.includes(
-        'University of Florida interruptive alerts — 63% accepted but only 20% of recommendations followed. UK PROGRESS, non-interruptive and pharmacist-mediated — 90% acted on.'
+        'University of Florida interruptive alerts — 63% of 557 accepted, but only 20% of recommendations followed (79 of 392; Lemke et al., Clin Pharmacol Ther 2023).'
       ),
-      'Exact UF and UK PROGRESS caption must appear'
+      'Exact UF caption (primary-sourced) must appear; the unsourced PROGRESS 90% is dropped'
     );
 
     const arResp = await fetch(`${baseUrl}/compare?lang=ar`);
     assert.equal(arResp.status, 200);
     const arHtml = await arResp.text();
     assert.match(arHtml, /lang="ar" dir="rtl"/);
-    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && arHtml.includes('90%'));
+    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && !arHtml.includes('90%'));
+    assert.ok(!html.includes('PROGRESS') && !html.includes('90%'));
   });
 });
 

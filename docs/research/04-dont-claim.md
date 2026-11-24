@@ -2,14 +2,14 @@
 
 ## Killed outright — never say, write or code
 1. Saudi mandatory premarital screening does **not** collect G6PD. It screens sickle cell, thalassaemia, HBV, HCV, HIV; G6PD appears only in the separate non-Saudi-spouse panel. The 1.87 million figure is sickle/thalassaemia screens. Two advisors in the project's own council round amplified this error without checking — it is the single most likely way to lose a clinical judge.
-2. **Sickle cell trait is not pharmacogenetically actionable.** There is no CPIC guideline for HBB; trait is a carrier state, not a drug-response phenotype.
+2. **Sickle cell trait is not pharmacogenetically actionable.** There is no CPIC or DPWG guideline for HBB (ClinPGx checked 24 Nov 2026); trait is a carrier state, not a drug-response phenotype.
 3. Co-trimoxazole is **low-to-no risk** in the 2022 G6PD update.
 4. The 25% G6PD figure is **Al-Ahsa**, not Aseer.
 5. **Star-allele callers do not generally use population allele frequency to resolve ambiguous diplotypes.** PharmCAT's docs call its tie-breaking "as arbitrary as sorting them alphabetically" and it reports all viable calls; Aldy 4, Cyrius and Astrolabe do not either. Never ship silent frequency-based diplotype selection: it swaps a visible uncertainty for an invisible guess. Show all candidates.
 6. **CPIC "Indeterminate" means alleles of uncertain function, not phase ambiguity.** Conflating the two in front of a clinical pharmacist destroys credibility. (KFSHRC's "indeterminate" was genuine phase ambiguity; they publish no count.)
 7. "The data already exists" — a premarital-screening cohort captures people at marriage age from ~2004 on, so most of a 45–64 cohort was never screened. And reading a national registry needs the same ministry and ethics route as obtaining genotypes.
 8. Do **not** use the ISPOR 2017 ~USD 61 bn/year drug-related-problem figure (extrapolated from 201 self-selected social-media respondents).
-9. Never assert a link between safety-code.org and U-PGx/PREPARE.
+9. PREPARE did give intervention patients a Medication Safety Code QR card (Swen et al. 2023, p. 350). Do not claim more than that, and note that its QR doubles as a URL while Meyar's encodes the payload itself.
 10. Never claim a targeted SNP panel is non-identifying. Say only: uninformative about disease risk, stores no sequence.
 11. A language model never generates dosing. JMIR 2025;27:e73486 documented GPT-4o (93.5%) and Gemini-1.5-Pro (92.7%) *classifying* 385 guideline recommendations while **inventing dose adjustments** for a guideline that specifies no treatment change.
 
