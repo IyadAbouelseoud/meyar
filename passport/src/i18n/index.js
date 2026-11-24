@@ -61,6 +61,16 @@ function buildCopy(lang) {
     },
     phenoconversionLine: (genetic, acting, causes) =>
       fill(c.phenoconversionLine, { genetic, acting, causes }),
+    genePhenoconversionLine: (genetic, acting, causes) =>
+      fill(c.genePhenoconversionLine, { genetic, acting, causes }),
+    geneTellDoctorBefore: (drugs) =>
+      fill(c.geneTellDoctorBefore, { drugs }),
+    geneMayBeAffected: (genetic, causes) =>
+      fill(c.geneMayBeAffected, { genetic, causes }),
+    medsShiftsGenes: (genes) =>
+      fill(c.medsShiftsGenes, { genes }),
+    otcInhibitorHitBody: (ingredient, strength, gene, meds) =>
+      fill(c.otcInhibitorHitBody, { ingredient, strength, gene, meds }),
     otcNoGuidelineBody: c.otcNoGuidelineBody,
     otcNormalGuidelineBody: (gene, phenotype) =>
       fill(c.otcNormalGuidelineBody, { gene, phenotype }),

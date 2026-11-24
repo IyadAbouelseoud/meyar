@@ -1,6 +1,7 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
 import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
-import { getDrugsForGene, getTierInfo, isMedCausingShift } from './lookup.js';
+import { getDrugsForGene, getShiftedGenesForMed, getTierInfo, isMedCausingShift } from './lookup.js';
+import { canonicalDrugName } from './phenoconvert.js';
 import { lookupOtcProduct } from './otc.js';
 import { renderId1CardHtml, renderA6FoldoutHtml } from './print.js';
 import { buildGeneSpeakText } from './speech.js';
@@ -148,21 +149,39 @@ function renderGeneCard(gene, index, lang, t, state) {
   const actionable = drugs.filter((d) => d.status === 'stop' || d.status === 'ask');
   const shownDrugs = actionable.length > 0 ? actionable : drugs.slice(0, 3);
 
-  const becausePlain = gene.phenoconversion?.applied
-    ? t.phenoconversionLine(
-        PHENOTYPE_SHORT[lang]?.[gene.phenotype] || gene.phenotype,
-        PHENOTYPE_SHORT[lang]?.[gene.effectivePhenotype] || gene.effectivePhenotype,
-        (gene.phenoconversion.cause || []).map((c) => drugLabel(c, lang)).join(', ')
-      ).replace(/<[^>]+>/g, '')
-    : '';
+  const sep = lang === 'ar' ? '، ' : ', ';
+  const shortWord = (p) => {
+    const w = PHENOTYPE_SHORT[lang]?.[p] || p || '';
+    return lang === 'en' ? w.toLowerCase() : w;
+  };
+  const causesLabel = (gene.phenoconversion?.cause || []).map((c) => drugLabel(c, lang)).join(sep);
+  const shiftedPhenotype = Boolean(
+    gene.phenoconversion?.applied
+    && gene.effectivePhenotype
+    && gene.effectivePhenotype !== gene.phenotype
+  );
 
-  const becauseHtml = gene.phenoconversion?.applied
-    ? `<p class="m-gene__because">${t.phenoconversionLine(
-        esc(PHENOTYPE_SHORT[lang]?.[gene.phenotype] || gene.phenotype),
-        esc(PHENOTYPE_SHORT[lang]?.[gene.effectivePhenotype] || gene.effectivePhenotype),
-        esc((gene.phenoconversion.cause || []).map((c) => drugLabel(c, lang)).join(', '))
-      )}</p>`
-    : '';
+  let becauseHtml = '';
+  let becausePlain = '';
+  if (gene.phenoconversion?.applied && shiftedPhenotype) {
+    const tellDoc = actionable.length > 0
+      ? ` ${esc(t.geneTellDoctorBefore(actionable.map((d) => drugLabel(d.drug, lang)).join(sep)))}`
+      : '';
+    const lineHtml = `${t.genePhenoconversionLine(
+      esc(shortWord(gene.phenotype)),
+      esc(shortWord(gene.effectivePhenotype)),
+      esc(causesLabel)
+    )}${tellDoc}`;
+    becauseHtml = `<p class="m-gene__because">${lineHtml}</p>`;
+    becausePlain = lineHtml.replace(/<[^>]+>/g, '');
+  } else if (gene.phenoconversion?.applied) {
+    const lineHtml = t.geneMayBeAffected(
+      esc(shortWord(gene.phenotype)),
+      esc(causesLabel)
+    );
+    becauseHtml = `<p class="m-gene__because">${lineHtml}</p>`;
+    becausePlain = lineHtml.replace(/<[^>]+>/g, '');
+  }
 
   const drugsHtml = shownDrugs.length > 0
     ? `<div class="m-gene__drugs">
@@ -218,7 +237,7 @@ function renderGeneCard(gene, index, lang, t, state) {
         </div>
       </div>
       <p class="m-gene__plain" id="${headingId}">${esc(plainSentence)}</p>
-      ${scaleHTML(gene, lang)}
+      ${scaleHTML(gene, lang, getScaleLabels(gene, lang))}
       ${becauseHtml}
       ${drugsHtml}
       ${coverageHtml}
@@ -230,47 +249,111 @@ function renderGenesView(contract, lang, t, state) {
   return `
     ${renderCover(t)}
     <section class="m-stack" aria-labelledby="genes-heading">
-      <div>
-        <h2 class="m-sec-title" id="genes-heading">${esc(t.myGenesTitle)}</h2>
-        <p class="m-sec-sub">${esc(t.myGenesSub)}</p>
+      <div class="m-sec-headrow">
+        <div>
+          <h2 class="m-sec-title" id="genes-heading">${esc(t.myGenesTitle)}</h2>
+          <p class="m-sec-sub">${esc(t.myGenesSub)}</p>
+        </div>
+        <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="open-pharmacist">
+          <svg aria-hidden="true"><use href="#i-qr"/></svg>
+          <span>${esc(t.showPharmacistBtn)}</span>
+        </button>
       </div>
       ${(contract.genes || []).map((g, i) => renderGeneCard(g, i, lang, t, state)).join('')}
     </section>
   `;
 }
 
-function renderMedsView(contract, lang, t) {
+function renderMedsView(contract, lang, t, state = {}) {
   const meds = contract.currentMedications || [];
   const genes = contract.genes || [];
+  const localNames = new Set((state.localMeds || []).map((m) => canonicalDrugName(m.name)));
+  const quickExamples = lang === 'ar'
+    ? [
+        { name: 'paroxetine', label: 'باروكسيتين' },
+        { name: 'duloxetine', label: 'دولوكسيتين' },
+        { name: 'fluvoxamine', label: 'فلوفوكسامين' },
+        { name: 'codeine', label: 'كودايين' },
+      ]
+    : [
+        { name: 'paroxetine', label: 'paroxetine' },
+        { name: 'duloxetine', label: 'duloxetine' },
+        { name: 'fluvoxamine', label: 'fluvoxamine' },
+        { name: 'codeine', label: 'codeine' },
+      ];
+  const suggestionPool = [
+    'paroxetine', 'fluoxetine', 'bupropion', 'duloxetine', 'fluvoxamine',
+    'fluconazole', 'voriconazole', 'omeprazole', 'codeine', 'tramadol', 'clopidogrel',
+  ];
+
   return `
     <section class="m-stack" aria-labelledby="meds-heading">
-      <div>
-        <h2 class="m-sec-title" id="meds-heading">${esc(t.myMedsTitle)}</h2>
-        <p class="m-sec-sub">${esc(t.myMedsSub)}</p>
+      <div class="m-sec-headrow">
+        <div>
+          <h2 class="m-sec-title" id="meds-heading">${esc(t.myMedsTitle)}</h2>
+          <p class="m-sec-sub">${esc(t.myMedsSub)}</p>
+        </div>
+        <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="open-pharmacist">
+          <svg aria-hidden="true"><use href="#i-qr"/></svg>
+          <span>${esc(t.showPharmacistBtn)}</span>
+        </button>
       </div>
-      ${meds.length === 0
-        ? `<div class="m-empty">${esc(t.noMeds)}</div>`
-        : `<div class="m-medlist">
-            ${meds.map((m) => {
+      <div class="m-medlist" data-testid="med-list">
+        ${meds.length === 0
+          ? `<div class="m-medlist__empty">${esc(t.noMeds)}</div>`
+          : meds.map((m) => {
               const shifts = isMedCausingShift(m.name, genes);
+              const shiftedGenes = getShiftedGenesForMed(m.name, genes);
               const srcText = m.source === 'hospital-record' ? t.sourceHospital : t.sourcePatient;
+              const canRemove = !state.caregiverMode && localNames.has(canonicalDrugName(m.name));
               return `
-                <div>
-                  <div>
+                <div class="m-medlist__row" data-testid="med-row">
+                  <div class="m-medlist__info">
                     <b>${esc(drugLabel(m.name, lang))}</b>
                     ${m.mock ? `<span class="m-mock">${esc(t.demo)}</span>` : ''}
                     <br>
-                    <small>${esc(srcText)}</small>
+                    <small>${esc(srcText)}${shiftedGenes.length ? ` · <span class="m-data">${esc(shiftedGenes.join(', '))}</span>` : ''}</small>
                   </div>
-                  <span class="m-status ${shifts ? 'm-status--info' : 'm-status--none'}">
-                    <svg aria-hidden="true"><use href="#${shifts ? 'i-info' : 'i-none'}"/></svg>
-                    <span>${esc(shifts ? t.changesGene : t.noGeneImpact)}</span>
-                  </span>
+                  <div class="m-medlist__actions">
+                    <span class="m-status ${shifts ? 'm-status--info' : 'm-status--none'}">
+                      <svg aria-hidden="true"><use href="#${shifts ? 'i-info' : 'i-none'}"/></svg>
+                      <span>${esc(shifts ? t.changesGene : t.noGeneImpact)}</span>
+                    </span>
+                    ${canRemove ? `
+                      <button type="button" class="m-btn m-btn--quiet m-ctrl-btn" data-action="remove-med" data-med="${esc(m.name)}">
+                        ${esc(t.medsRemoveBtn)}
+                      </button>
+                    ` : ''}
+                  </div>
                 </div>
               `;
-            }).join('')}
-          </div>`
-      }
+            }).join('')
+        }
+        ${state.caregiverMode ? '' : `
+          <form class="m-medlist__add" id="med-add-form" data-action="add-med-form">
+            <div class="m-medlist__addhead">
+              <b>${esc(t.medsAddTitle)}</b>
+              <small>${esc(t.medsAddSub)}</small>
+            </div>
+            <div class="m-field">
+              <label for="med-add-input">${esc(t.medsInputLabel)}</label>
+              <div class="m-otc-inputrow">
+                <input id="med-add-input" class="m-input" type="text" autocomplete="off" list="med-suggestions" placeholder="${esc(t.medsInputPlaceholder)}" value="${esc(state.medDraft || '')}" data-action="med-draft">
+                <button type="submit" class="m-btn m-btn--secondary">${esc(t.medsAddBtn)}</button>
+              </div>
+              <datalist id="med-suggestions">
+                ${suggestionPool.map((d) => `<option value="${esc(d)}"></option>`).join('')}
+              </datalist>
+            </div>
+            <div class="m-otc-examples" role="group" aria-label="${esc(t.medsQuickExamples)}">
+              <span class="m-otc-examples__label">${esc(t.medsQuickExamples)}</span>
+              ${quickExamples.map((ex) => `
+                <button type="button" class="m-btn m-btn--secondary m-ctrl-btn" data-action="med-pick" data-med="${esc(ex.name)}">${esc(ex.label)}</button>
+              `).join('')}
+            </div>
+          </form>
+        `}
+      </div>
     </section>
   `;
 }
@@ -393,9 +476,15 @@ function renderDoctorView(contract, lang, t, state) {
   const meds = contract.currentMedications || [];
   return `
     <section class="m-stack" aria-labelledby="doc-heading">
-      <div class="m-doctor-head m-noprint">
-        <h2 class="m-sec-title" id="doc-heading">${esc(t.doctorTitle)}</h2>
-        <p class="m-sec-sub">${esc(t.doctorSub)}</p>
+      <div class="m-sec-headrow m-doctor-head m-noprint">
+        <div>
+          <h2 class="m-sec-title" id="doc-heading">${esc(t.doctorTitle)}</h2>
+          <p class="m-sec-sub">${esc(t.doctorSub)}</p>
+        </div>
+        <button type="button" class="m-btn m-ctrl-btn" data-action="open-pharmacist">
+          <svg aria-hidden="true"><use href="#i-qr"/></svg>
+          <span>${esc(t.showPharmacistBtn)}</span>
+        </button>
       </div>
       ${renderQrCard(state, t)}
       ${renderPrintSection(contract, state, t)}
@@ -503,14 +592,14 @@ function renderOtcDetailLine(detail, lang, t) {
   return `<p class="m-answer__body">${mainLine}</p>${phenoShift}${altsHtml}${sourceLine}`;
 }
 
-export function renderOtcResultHtml(query, contract, lang) {
+export function renderOtcResultHtml(query, contract, lang, options = {}) {
   const t = COPY[lang] || COPY.ar;
   const trimmed = String(query || '').trim();
   if (!trimmed) {
     return `<div class="m-empty">${esc(t.otcIdle)}</div>`;
   }
 
-  const res = lookupOtcProduct(trimmed, contract);
+  const res = lookupOtcProduct(trimmed, contract, options);
   if (!res || res.status === 'unknown') {
     return `
       <div class="m-answer m-answer--ask" data-testid="otc-answer" data-otc-status="unknown">
@@ -535,6 +624,17 @@ export function renderOtcResultHtml(query, contract, lang) {
   const primaryDetails = sortedDetails.filter((d) => d.status === res.status);
   const shownDetails = primaryDetails.length > 0 ? primaryDetails : sortedDetails.slice(0, 1);
 
+  const inhibitorLines = (res.inhibitorHits || []).map((hit) => {
+    const strengthWord = hit.strength === 'strong' ? t.strengthStrong : t.strengthModerate;
+    const medNames = (hit.affectedMedications || []).map((m) => drugLabel(m, lang)).join(sep);
+    return `<p class="m-answer__body">${t.otcInhibitorHitBody(
+      esc(drugLabel(hit.ingredient, lang)),
+      esc(strengthWord),
+      `<span class="m-data">${esc(hit.enzyme)}</span>`,
+      esc(medNames)
+    )}</p>`;
+  }).join('');
+
   return `
     <div class="m-answer m-answer--${res.status}" data-testid="otc-answer" data-otc-status="${res.status}">
       <p class="m-answer__title">
@@ -548,6 +648,7 @@ export function renderOtcResultHtml(query, contract, lang) {
         ${res.matchType === 'fuzzy' ? `<span class="m-otc-fuzzy">(${esc(t.otcFuzzyNote)})</span>` : ''}
       </p>
       ${shownDetails.map((d) => renderOtcDetailLine(d, lang, t)).join('')}
+      ${inhibitorLines}
     </div>
   `;
 }
@@ -605,21 +706,181 @@ function renderTabs(activeTab, t) {
   `;
 }
 
+export function renderPharmacistView(contract, lang, t, state = {}) {
+  const genes = contract.genes || [];
+  const meds = contract.currentMedications || [];
+  const qr = state.qrResult;
+  const sep = lang === 'ar' ? '، ' : ', ';
+
+  return `
+    <section class="m-pharmacist-sheet" aria-labelledby="pharm-heading" data-testid="pharmacist-view">
+      <div class="m-pharmacist-head">
+        <div>
+          <h1 class="m-pharmacist-title" id="pharm-heading">${esc(t.pharmacistTitle)}</h1>
+          <p class="m-pharmacist-sub">${esc(t.pharmacistSub)}</p>
+        </div>
+        <button type="button" class="m-btn m-btn--secondary" data-action="close-pharmacist">
+          ${esc(t.pharmacistBackBtn)}
+        </button>
+      </div>
+
+      <div class="m-pharmacist-block">
+        <h2 class="m-pharmacist-h2">${esc(t.pharmacistMedsTitle)}</h2>
+        ${meds.length === 0
+          ? `<div class="m-empty">${esc(t.noMeds)}</div>`
+          : `<div class="m-medlist">
+              ${meds.map((m) => {
+                const shifts = isMedCausingShift(m.name, genes);
+                const shiftedGenes = getShiftedGenesForMed(m.name, genes);
+                const srcText = m.source === 'hospital-record' ? t.sourceHospital : t.sourcePatient;
+                return `
+                  <div class="m-medlist__row">
+                    <div class="m-medlist__info">
+                      <b>${esc(drugLabel(m.name, lang))}</b>
+                      ${m.mock ? `<span class="m-mock">${esc(t.demo)}</span>` : ''}
+                      <br>
+                      <small>${esc(srcText)}${shiftedGenes.length ? ` · <span class="m-data">${esc(shiftedGenes.join(', '))}</span>` : ''}</small>
+                    </div>
+                    <span class="m-status ${shifts ? 'm-status--info' : 'm-status--none'}">
+                      <svg aria-hidden="true"><use href="#${shifts ? 'i-info' : 'i-none'}"/></svg>
+                      <span>${esc(shifts ? t.changesGene : t.noGeneImpact)}</span>
+                    </span>
+                  </div>
+                `;
+              }).join('')}
+            </div>`
+        }
+      </div>
+
+      <div class="m-pharmacist-block">
+        <p class="m-pharmacist-legend">${esc(t.pharmacistScaleLegend)}</p>
+        ${genes.map((g) => {
+          const notAssessed = g.callability?.method === 'not-assessed';
+          const tierInfo = getTierInfo(g);
+          const drugs = getDrugsForGene(g).filter((d) => d.status !== 'none');
+          const geneticShort = PHENOTYPE_SHORT[lang]?.[g.phenotype] || g.phenotype;
+          const activePhenotype = g.effectivePhenotype || g.phenotype;
+          const actingShort = PHENOTYPE_SHORT[lang]?.[activePhenotype] || activePhenotype;
+          const causesLabel = (g.phenoconversion?.cause || []).map((c) => drugLabel(c, lang)).join(sep);
+
+          return `
+            <article class="m-pharmacist-gene">
+              <div class="m-gene__head">
+                <span class="m-pharmacist-gene__name m-data">${esc(g.gene)}${g.diplotype ? ` · ${esc(g.diplotype)}` : ' · VCF'}</span>
+                <span class="m-tier" title="${esc(tierInfo.note)}">
+                  <span class="m-tier__n">${formatNum(tierInfo.tier, lang)}</span>
+                  <span>${esc(t.tierLabel(tierInfo.tier))}</span>
+                </span>
+              </div>
+              ${notAssessed
+                ? `
+                  <p class="m-pharmacist-pheno">${esc(t.notAssessedTitle)}</p>
+                  ${scaleHTML(g, lang, getScaleLabels(g, lang))}
+                  <p class="m-pharmacist-note">${esc(t.notAssessedBody)}</p>
+                `
+                : `
+                  <div class="m-pharmacist-phenos">
+                    <p class="m-pharmacist-pheno">
+                      <strong>${esc(t.pharmacistGenetic)}</strong>
+                      <span>${esc(geneticShort)}</span>
+                      <span class="m-data m-pharmacist-cpic">(${esc(g.phenotype)})</span>
+                    </p>
+                    <p class="m-pharmacist-pheno">
+                      <strong>${esc(t.pharmacistActing)}</strong>
+                      <span>${esc(actingShort)}</span>
+                      ${g.phenoconversion?.applied
+                        ? `<span>(${esc(causesLabel)})</span>`
+                        : `<span class="m-pharmacist-note">(${esc(t.pharmacistNoShift)})</span>`
+                      }
+                    </p>
+                  </div>
+                  ${scaleHTML(g, lang, getScaleLabels(g, lang))}
+                  ${drugs.length > 0
+                    ? `<div class="m-gene__drugs">
+                        ${drugs.map((d) => `
+                          <div class="m-drugrow">
+                            <span class="m-drugrow__name">${esc(drugLabel(d.drug, lang))}</span>
+                            <span class="m-status m-status--${d.status}">
+                              <svg aria-hidden="true"><use href="#${statusIcon(d.status)}"/></svg>
+                              <span>${esc(statusText(d.status, t))}</span>
+                            </span>
+                          </div>
+                          ${d.alternatives.length > 0
+                            ? `<div class="m-better">
+                                <svg aria-hidden="true"><use href="#i-match"/></svg>
+                                <span>${esc(t.betterMatch)} <strong>${esc(d.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} (${esc(d.guideline?.pub || 'CPIC')})</span>
+                              </div>`
+                            : ''
+                          }
+                        `).join('')}
+                      </div>`
+                    : ''
+                  }
+                `
+              }
+            </article>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="m-pharmacist-qr">
+        <div class="m-qr-card__head">
+          <h2 class="m-pharmacist-h2">${esc(t.pharmacistQrTitle)}</h2>
+          <span class="m-status m-status--info">
+            <svg aria-hidden="true"><use href="#i-lock"/></svg>
+            <span>${esc(state.devMode && state.qrPlaintext ? t.qrPlainBadge : t.qrEncryptedBadge)}</span>
+          </span>
+        </div>
+        ${qr
+          ? `<div class="m-qr-box" data-testid="pharmacist-qr-box">${qr.svg}</div>`
+          : `<p class="m-pharmacist-note">${esc(t.pharmacistQrNeedPin)}</p>
+             ${state.caregiverMode ? '' : `
+               <div class="m-qr-controls">
+                 <div class="m-qr-pin-field m-field">
+                   <label for="qr-pin-input">${esc(t.qrPinLabel)}</label>
+                   <input id="qr-pin-input" class="m-input m-qr-pin-input m-data" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" value="${esc(state.qrPin || '')}" data-action="qr-pin">
+                 </div>
+                 <div class="m-qr-pin-field m-field">
+                   <label for="qr-pin-confirm">${esc(t.qrPinConfirmLabel)}</label>
+                   <input id="qr-pin-confirm" class="m-input m-qr-pin-input m-data" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" value="${esc(state.qrPinConfirm || '')}" data-action="qr-pin-confirm">
+                 </div>
+                 <button type="button" class="m-btn" data-action="issue-card">
+                   <svg aria-hidden="true"><use href="#i-lock"/></svg>
+                   <span>${esc(t.qrIssueBtn)}</span>
+                 </button>
+               </div>
+               ${state.qrPinError ? `<div class="m-status m-status--stop" role="alert"><svg aria-hidden="true"><use href="#i-stop"/></svg><span>${esc(state.qrPinError)}</span></div>` : ''}
+             `}`
+        }
+        <div class="m-pharmacist-qr__foot">
+          <a class="m-btn m-btn--secondary" href="/scan.html">${esc(t.openScannerBtn)}</a>
+          <p class="m-qr-honesty">${esc(t.qrPinBrute)}</p>
+        </div>
+      </div>
+
+      <p class="m-doctor-foot">${esc(t.doctorFooter)}</p>
+    </section>
+  `;
+}
+
 export function renderApp(root, state) {
   const t = COPY[state.lang] || COPY.ar;
+  const activeContract = state.effectiveContract || state.contract;
   let body = '';
   if (state.error) {
     body = `<div class="m-empty">${esc(state.error)}</div>`;
-  } else if (!state.contract) {
+  } else if (!activeContract) {
     body = `<div class="m-empty">...</div>`;
+  } else if (state.pharmacistView) {
+    body = renderPharmacistView(activeContract, state.lang, t, state);
   } else if (state.tab === 'meds') {
-    body = renderMedsView(state.contract, state.lang, t);
+    body = renderMedsView(activeContract, state.lang, t, state);
   } else if (state.tab === 'otc') {
-    body = renderOtcView(state.contract, state.lang, t, state);
+    body = renderOtcView(activeContract, state.lang, t, state);
   } else if (state.tab === 'doctor') {
-    body = renderDoctorView(state.contract, state.lang, t, state);
+    body = renderDoctorView(activeContract, state.lang, t, state);
   } else {
-    body = renderGenesView(state.contract, state.lang, t, state);
+    body = renderGenesView(activeContract, state.lang, t, state);
   }
 
   root.innerHTML = `
@@ -627,6 +888,6 @@ export function renderApp(root, state) {
       ${renderTopbar(state, t)}
       <main id="main-content">${body}</main>
     </div>
-    ${renderTabs(state.tab, t)}
+    ${state.pharmacistView ? '' : renderTabs(state.tab, t)}
   `;
 }

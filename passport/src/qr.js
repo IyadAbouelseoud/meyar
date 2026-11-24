@@ -68,12 +68,12 @@ export function buildCompactPayload(contract, getDrugsFn = () => []) {
     const drugs = getDrugsFn(g) || [];
     const rec = drugs
       .filter((d) => d.status === 'stop' || d.status === 'ask')
-      .map((d) => ({
-        d: d.drug,
-        rx: d.rxnorm || undefined,
-        s: d.status,
-        alts: d.alternatives && d.alternatives.length ? d.alternatives : undefined,
-      }));
+      .map((d) => {
+        const item = { d: d.drug, s: d.status };
+        if (d.rxnorm) item.rx = d.rxnorm;
+        if (d.alternatives && d.alternatives.length) item.alts = d.alternatives;
+        return item;
+      });
 
     const entry = {
       gene: g.gene,

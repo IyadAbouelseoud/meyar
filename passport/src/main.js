@@ -5,6 +5,7 @@ import './app.css';
 
 import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
 import { getDrugsForGene } from './lookup.js';
+import { applyPhenoconversion, canonicalDrugName } from './phenoconvert.js';
 import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg } from './qr.js';
 import { isValidPin, normalizeDigits } from './pinguard.js';
 import { renderApp, renderOtcResultHtml } from './render.js';
@@ -30,6 +31,29 @@ function writePref(key, value) {
   }
 }
 
+function readLocalMeds(patientId) {
+  const raw = readPref(`meyar:meds:${patientId}`);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed
+        .filter((m) => m && typeof m.name === 'string' && m.name.trim())
+        .map((m) => ({
+          name: m.name.trim(),
+          source: 'patient-entered',
+          mock: true,
+        }))
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeLocalMeds(patientId, meds) {
+  writePref(`meyar:meds:${patientId}`, JSON.stringify(meds));
+}
+
 const initialLang = params.get('lang') === 'en'
   ? 'en'
   : params.get('lang') === 'ar'
@@ -46,7 +70,9 @@ const state = {
   caregiverMode: params.get('mode') === 'caregiver',
   caregiverCopied: false,
   tab: ['genes', 'meds', 'otc', 'doctor'].includes(params.get('tab')) ? params.get('tab') : 'genes',
+  pharmacistView: params.get('view') === 'pharmacist' || params.get('tab') === 'pharmacist',
   otcQuery: params.get('q') || '',
+  medDraft: '',
   patientId: params.get('patient') || 'demo-001',
   devMode: params.get('dev') === '1',
   speechAvailable: hasSpeechVoice(initialLang),
@@ -63,14 +89,24 @@ const state = {
   qrDecoded: null,
   qrDecodeError: false,
   contract: null,
+  localMeds: [],
+  effectiveContract: null,
   error: null,
 };
+
+function recomputeEffectiveContract() {
+  state.effectiveContract = state.contract
+    ? applyPhenoconversion(state.contract, state.localMeds)
+    : null;
+}
 
 function syncUrlMode() {
   try {
     const url = new URL(window.location.href);
     if (state.caregiverMode) url.searchParams.set('mode', 'caregiver');
     else url.searchParams.delete('mode');
+    if (state.pharmacistView) url.searchParams.set('view', 'pharmacist');
+    else url.searchParams.delete('view');
     url.searchParams.set('patient', state.patientId);
     url.searchParams.set('lang', state.lang);
     url.searchParams.set('elder', state.elder ? 'on' : 'off');
@@ -92,7 +128,8 @@ function buildCaregiverUrl() {
 let qrSeq = 0;
 
 async function refreshQr() {
-  if (!state.contract) {
+  const activeContract = state.effectiveContract || state.contract;
+  if (!activeContract) {
     state.qrResult = null;
     return;
   }
@@ -103,7 +140,7 @@ async function refreshQr() {
   }
   const seq = ++qrSeq;
   // Every encode draws a fresh salt and nonce: a new card, never an edit of the old one.
-  const encoded = await encodeQrEnvelope(state.contract, {
+  const encoded = await encodeQrEnvelope(activeContract, {
     pin: state.qrPin,
     plaintext,
     getDrugsFn: getDrugsForGene,
@@ -128,12 +165,46 @@ async function loadPatient(patientId) {
     const res = await fetch(`/demo/${encodeURIComponent(patientId)}.contract.json`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     state.contract = await res.json();
+    state.localMeds = readLocalMeds(patientId);
+    recomputeEffectiveContract();
   } catch (err) {
     state.contract = null;
+    state.localMeds = [];
+    state.effectiveContract = null;
     state.error = state.lang === 'ar'
       ? `تعذّر تحميل الملف التجريبي (${patientId}).`
       : `Could not load demo profile (${patientId}).`;
   }
+  update();
+  refreshQr();
+}
+
+function addPatientMedication(rawName) {
+  if (state.caregiverMode || !state.contract) return;
+  const trimmed = String(rawName || '').trim();
+  if (!trimmed) return;
+  const canon = canonicalDrugName(trimmed);
+  const existing = (state.effectiveContract?.currentMedications || [])
+    .some((m) => canonicalDrugName(m.name) === canon);
+  if (!existing) {
+    state.localMeds = [
+      ...state.localMeds,
+      { name: canon, source: 'patient-entered', mock: true },
+    ];
+    writeLocalMeds(state.patientId, state.localMeds);
+    recomputeEffectiveContract();
+  }
+  state.medDraft = '';
+  update();
+  refreshQr();
+}
+
+function removePatientMedication(medName) {
+  if (state.caregiverMode || !state.contract) return;
+  const canon = canonicalDrugName(medName);
+  state.localMeds = state.localMeds.filter((m) => canonicalDrugName(m.name) !== canon);
+  writeLocalMeds(state.patientId, state.localMeds);
+  recomputeEffectiveContract();
   update();
   refreshQr();
 }
@@ -158,10 +229,15 @@ root.addEventListener('change', (e) => {
 // Inputs only update state (no re-render while typing, so focus stays put).
 root.addEventListener('input', (e) => {
   const el = e.target;
+  const activeContract = state.effectiveContract || state.contract;
   if (el.dataset.action === 'otc-query') {
     state.otcQuery = el.value;
     const out = document.getElementById('otc-result');
-    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, state.contract, state.lang);
+    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, activeContract, state.lang);
+    return;
+  }
+  if (el.dataset.action === 'med-draft') {
+    state.medDraft = el.value;
     return;
   }
   if (state.caregiverMode) return;
@@ -172,6 +248,14 @@ root.addEventListener('input', (e) => {
   } else if (el.dataset.action === 'qr-emergency') {
     state.qrEmergency = el.value;
   }
+});
+
+root.addEventListener('submit', (e) => {
+  const form = e.target.closest('form[data-action="add-med-form"]');
+  if (!form) return;
+  e.preventDefault();
+  const input = document.getElementById('med-add-input');
+  addPatientMedication(input ? input.value : state.medDraft);
 });
 
 root.addEventListener('change', (e) => {
@@ -208,22 +292,40 @@ root.addEventListener('click', async (e) => {
     syncUrlMode();
     update();
   } else if (action === 'otc-pick') {
+    const activeContract = state.effectiveContract || state.contract;
     state.otcQuery = btn.dataset.query || '';
     const input = document.getElementById('otc-input');
     const out = document.getElementById('otc-result');
     if (input) input.value = state.otcQuery;
-    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, state.contract, state.lang);
+    if (out) out.innerHTML = renderOtcResultHtml(state.otcQuery, activeContract, state.lang);
     input?.focus();
   } else if (action === 'otc-clear') {
+    const activeContract = state.effectiveContract || state.contract;
     state.otcQuery = '';
     const input = document.getElementById('otc-input');
     const out = document.getElementById('otc-result');
     if (input) input.value = '';
-    if (out) out.innerHTML = renderOtcResultHtml('', state.contract, state.lang);
+    if (out) out.innerHTML = renderOtcResultHtml('', activeContract, state.lang);
     input?.focus();
+  } else if (action === 'med-pick') {
+    addPatientMedication(btn.dataset.med || '');
+  } else if (action === 'remove-med') {
+    removePatientMedication(btn.dataset.med || '');
+  } else if (action === 'open-pharmacist') {
+    state.pharmacistView = true;
+    syncUrlMode();
+    update();
+    window.scrollTo({ top: 0 });
+  } else if (action === 'close-pharmacist') {
+    state.pharmacistView = false;
+    syncUrlMode();
+    update();
+    window.scrollTo({ top: 0 });
   } else if (action === 'tab') {
+    state.pharmacistView = false;
     state.tab = btn.dataset.tab;
     state.caregiverCopied = false;
+    syncUrlMode();
     update();
     window.scrollTo({ top: 0 });
   } else if (action === 'patient' && !state.caregiverMode) {

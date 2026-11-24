@@ -2,6 +2,7 @@ import otcTable from '@tables/otc_products.json';
 import cpicTable from '@tables/cpic_recommendations.json';
 import inhibitorsTable from '@tables/cyp_inhibitors.json';
 import { classifyRow, pickBestCpicRow } from './lookup.js';
+import { canonicalDrugName } from './phenoconvert.js';
 
 const DEFAULT_PRODUCTS = otcTable.rows || [];
 const DEFAULT_CPIC_ROWS = cpicTable.rows || [];
@@ -296,7 +297,7 @@ export function lookupOtcProduct(query, contract, options = {}) {
     if (strongMod.length > 0 && currentMedications.length > 0) {
       for (const inh of strongMod) {
         const affectedCurrent = currentMedications.filter((med) => {
-          const medName = String(med.name || '').toLowerCase();
+          const medName = canonicalDrugName(med?.name);
           return cpicRows.some(
             (r) => String(r.drug || '').toLowerCase() === medName && r.gene === inh.enzyme
           );
