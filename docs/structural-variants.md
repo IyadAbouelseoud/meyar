@@ -4,7 +4,7 @@
 
 ## The problem, in plain terms
 
-A genotyping array or an exome reads single letters of DNA. Some pharmacogenes are not defined by single letters. CYP2D6, which handles roughly a quarter of commonly prescribed medicines, can be present in two copies, three copies, deleted entirely, or fused with its neighbouring pseudogene CYP2D7 into a hybrid. A test that reads only single letters cannot see any of that, so a patient with an extra working copy, who clears a drug too fast for a standard dose to work, looks exactly like an ordinary patient.
+A genotyping array or an exome reads single letters of DNA. Some pharmacogenes are not defined by single letters. CYP2D6, which metabolises many commonly prescribed medicines, can be present in two copies, three copies, deleted entirely, or fused with its neighbouring pseudogene CYP2D7 into a hybrid. A test that reads only single letters cannot see any of that, so a patient with an extra working copy, who clears a drug too fast for a standard dose to work, looks exactly like an ordinary patient.
 
 This is the same failure as the one Meyar was built around, one level up. A5 catches the positions a panel never tested. A8 catches the whole class of change no VCF can carry.
 

@@ -46,7 +46,8 @@ A5 is a separate arithmetic step after interpretation. It never re-picks a diplo
 ## Layout
 
 ```
-engine/     PharmCAT wrapper, A5, A6. engine/data/ is mounted into the container
+engine/     PharmCAT wrapper, A5 coverage, A6 germline gate, A7 phenoconversion, A8 SV gate. engine/data/ is mounted into the container
+tests/      mobile regression test for every page (Playwright)
 cds/        CDS Hooks order-sign service
 passport/   Arabic patient app, QR, scanner, OTC check, print
 kit/        chain-of-custody saliva kit software (working)

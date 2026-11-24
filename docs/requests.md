@@ -33,3 +33,4 @@ F6's patient tracker links a printed card for patients without a smartphone. C7 
 - Smallest fix (owner only, since it changes the A5 tier and score): either promote SLCO1B1 to Tier 1 with that paper's table, or keep Tier 2 and reword the statement to "not yet loaded from the published Saudi SLCO1B1 study". Pick a different Tier 2 example in the sentence either way.
 - The "(2015-2019)" sequencing window in the same sentence has no row in `docs/sources.md`. Add the row or drop the years.
 - Status: OPEN. Not changed by the review: table owned by A5, and it feeds the score.
+- Also (same owner): the 16 Tier 2 rows' `source` objects carry Goljan's DOI and `"n": 11889`, which reads as if Goljan measured those genes. Rename the field to `checkedAgainst`, or drop `doi`/`n` from Tier 2 rows (REVIEW Part C item 26).
