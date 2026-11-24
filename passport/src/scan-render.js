@@ -1,4 +1,11 @@
-import { scaleHTML, combHTML } from '@design/meyar.js';
+import { scaleHTML, combHTML, SCALE, scaleKind } from '@design/meyar.js';
+
+// Clinician side: CPIC terms, in the page language (same labels as the cds prescriber pages).
+const CLIN_AR = {
+  metabolizer: ['مستقلِب بطيء', 'متوسط', 'طبيعي', 'سريع', 'فائق السرعة'],
+  function: ['وظيفة ضعيفة', 'منخفضة', 'طبيعية', 'مرتفعة', '—'],
+};
+const clinScale = (g, lang) => scaleHTML(g, lang, lang === 'ar' ? CLIN_AR[scaleKind(g.phenotype)] : SCALE[scaleKind(g.phenotype)].clinician);
 import { formatNum, SCAN_COPY } from './i18n.js';
 
 function esc(str) {
@@ -88,10 +95,10 @@ function renderPinStep(state, t) {
         <h2 class="m-sec-title" id="pin-heading">${esc(t.pinTitle)}</h2>
         <p class="m-sec-sub">${esc(t.pinSub)}</p>
       </div>
-      <div class="m-pin-dots" role="img" aria-label="${len} of ${maxLen} digits entered" data-testid="pin-dots">
+      <div class="m-pin-dots" role="img" aria-label="${esc(t.pinDotsAria.replace('{n}', formatNum(len, state.lang)).replace('{max}', formatNum(maxLen, state.lang)))}" data-testid="pin-dots">
         ${dots}
       </div>
-      <div class="m-pin" role="group" aria-label="PIN keypad"${locked ? ' aria-disabled="true"' : ''}>
+      <div class="m-pin" role="group" aria-label="${esc(t.pinKeypadAria)}"${locked ? ' aria-disabled="true"' : ''}>
         ${keys.map((d) => `
           <button type="button" data-action="pin-digit" data-digit="${d}">
             <b>${formatNum(d, 'ar')}</b>
@@ -167,13 +174,13 @@ function renderCdsCard(card, t, lang) {
         <p class="m-cds__summary">${esc(card.summary)}</p>
         <dl class="m-cds__pheno">
           <dt>${esc(t.genotype)}</dt>
-          <dd class="m-data">${esc(card.gene)}${card.diplotype ? ` ${esc(card.diplotype)}` : ' · Not assessed'}</dd>
+          <dd class="m-data">${esc(card.gene)}${card.diplotype ? ` ${esc(card.diplotype)}` : ` · ${esc(t.notAssessedShort)}`}</dd>
           <dt>${esc(t.genetic)}</dt>
-          <dd>${esc(card.geneticPhenotype || 'Not assessed — no result reported')}</dd>
+          <dd>${esc(card.geneticPhenotype || t.notAssessedNoResult)}</dd>
           <dt>${esc(t.actingLike)}</dt>
           <dd>${esc(actingDisplay)}</dd>
         </dl>
-        ${scaleHTML(card.contractGene, 'clinician')}
+        ${clinScale(card.contractGene, lang)}
         ${card.notAssessed
           ? `<blockquote class="m-cds__rec">Copy number not assessed by this test — no result reported. An outside call from a CNV-aware caller is required.<cite>Meyar A8 structural-variant gate</cite></blockquote>`
           : card.drugs.map((d) => `

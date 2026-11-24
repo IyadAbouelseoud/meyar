@@ -288,6 +288,10 @@
     "pinLocked": "Too many wrong PINs. Wait {s} s, then try again, or ask the patient for the PIN.",
     "patientNoId": "The QR carries no name and no ID number",
     "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used.",
-    "notGermlineCard": "This card opened, but it is not from an inherited (germline) sample, so Meyar does not show it. Tumour profiling is separate."
+    "notGermlineCard": "This card opened, but it is not from an inherited (germline) sample, so Meyar does not show it. Tumour profiling is separate.",
+    "pinDotsAria": "{n} of {max} digits entered",
+    "pinKeypadAria": "PIN keypad",
+    "notAssessedShort": "Not assessed",
+    "notAssessedNoResult": "Not assessed — no result reported"
   }
 }
