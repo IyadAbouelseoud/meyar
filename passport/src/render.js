@@ -5,6 +5,7 @@ import { canonicalDrugName } from './phenoconvert.js';
 import { lookupOtcProduct } from './otc.js';
 import { renderId1CardHtml, renderA6FoldoutHtml } from './print.js';
 import { buildGeneSpeakText } from './speech.js';
+import { renderFigure } from './imagery.js';
 
 function medGeneNote(fx, t) {
   const parts = [];
@@ -78,7 +79,7 @@ function renderTopbar(state, t) {
   `;
 }
 
-function renderCover(t) {
+function renderCover(t, lang) {
   return `
     <section class="m-cover" aria-labelledby="cover-title">
       <div>
@@ -86,6 +87,7 @@ function renderCover(t) {
         <h1 class="m-cover__title" id="cover-title">${esc(t.passportTitle)}</h1>
         <p class="m-cover__sub">${esc(t.coverSub)}</p>
       </div>
+      ${renderFigure('img-15', lang, { eager: true, className: 'm-figure--hero' })}
       <button type="button" class="m-btn m-cover__cta" data-action="tab" data-tab="doctor">
         <svg aria-hidden="true"><use href="#i-qr"/></svg>
         <span>${esc(t.showDoctorBtn)}</span>
@@ -255,7 +257,7 @@ function renderGeneCard(gene, index, lang, t, state) {
 
 function renderGenesView(contract, lang, t, state) {
   return `
-    ${renderCover(t)}
+    ${renderCover(t, lang)}
     <section class="m-stack" aria-labelledby="genes-heading">
       <div class="m-sec-headrow">
         <div>
@@ -295,6 +297,7 @@ function renderMedsView(contract, lang, t, state = {}) {
   ];
 
   return `
+    ${renderFigure('img-02', lang, { className: 'm-figure--band m-noprint' })}
     <section class="m-stack" aria-labelledby="meds-heading">
       <div class="m-sec-headrow">
         <div>
@@ -458,6 +461,7 @@ function renderPrintSection(contract, state, t) {
       <div class="m-print-panel__head m-noprint">
         <h3 class="m-qr-card__title" id="print-heading">${esc(t.printTitle)}</h3>
         <p class="m-sec-sub">${esc(t.printSub)}</p>
+        ${renderFigure('img-06', state.lang, { className: 'm-figure--band' })}
       </div>
       ${ready ? `
         <div class="m-print-controls m-noprint">
@@ -497,6 +501,7 @@ function renderDoctorView(contract, lang, t, state) {
           <span>${esc(t.showPharmacistBtn)}</span>
         </button>
       </div>
+      ${renderFigure('img-14', lang, { className: 'm-figure--band m-noprint' })}
       ${renderQrCard(state, t)}
       ${renderPrintSection(contract, state, t)}
       <div class="m-doctor-sheet m-chartpaper m-noprint">

@@ -1,5 +1,5 @@
 // The build (vite.config.js, meyar-precache-sw) replaces CACHE_NAME and CORE_URLS with the real file list.
-const CACHE_NAME = 'meyar-passport-offline-e87d7cd6';
+const CACHE_NAME = 'meyar-passport-offline-f349b199';
 const CORE_URLS = [
   '/',
   '/assets/Alexandria-100-900-arabic-BMWQQIfH.woff2',
@@ -17,13 +17,25 @@ const CORE_URLS = [
   '/assets/IBMPlexSansArabic-700-latin-BzSf6GNr.woff2',
   '/assets/ReadexPro-160-700-arabic-DiwT_uOQ.woff2',
   '/assets/ReadexPro-160-700-latin--ekFhJJC.woff2',
-  '/assets/index-B_zjvcvJ.js',
-  '/assets/index-Ck7y1dES.css',
-  '/assets/main-iHqoHtIo.js',
-  '/assets/scan-Cxa9RgLL.js',
+  '/assets/index-CSOzMB7K.js',
+  '/assets/index-DZGjdgCd.css',
+  '/assets/main-D-9cZCLn.js',
+  '/assets/scan-CEvXClPS.js',
   '/demo/demo-001.contract.json',
   '/demo/demo-002.contract.json',
   '/demo/demo-006.contract.json',
+  '/imagery/img-02-1920.webp',
+  '/imagery/img-02-640.webp',
+  '/imagery/img-02.webp',
+  '/imagery/img-06-1920.webp',
+  '/imagery/img-06-640.webp',
+  '/imagery/img-06.webp',
+  '/imagery/img-14-1920.webp',
+  '/imagery/img-14-640.webp',
+  '/imagery/img-14.webp',
+  '/imagery/img-15-1920.webp',
+  '/imagery/img-15-640.webp',
+  '/imagery/img-15.webp',
   '/index.html',
   '/scan.html'
 ];
