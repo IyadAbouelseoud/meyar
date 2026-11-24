@@ -124,7 +124,7 @@ import{a as De,c as ve,s as be,P as ye,b as R,d as S,C as H,f as $e,e as Q,g as 
     `}const u=((x=ye[e])==null?void 0:x[d])||d||"",m=F(n),h=m.filter(P=>P.status==="stop"||P.status==="ask"),v=h.length>0?h:m.slice(0,3),g=e==="ar"?"، ":", ",y=P=>{var Y;const _=((Y=R[e])==null?void 0:Y[P])||P||"";return e==="en"?_.toLowerCase():_},b=(((k=n.phenoconversion)==null?void 0:k.cause)||[]).map(P=>S(P,e)).join(g),$=!!((C=n.phenoconversion)!=null&&C.applied&&n.effectivePhenotype&&n.effectivePhenotype!==n.phenotype);let E="",T="";if((I=n.phenoconversion)!=null&&I.applied&&$){const P=h.length>0?` ${s(a.geneTellDoctorBefore(h.map(Y=>S(Y.drug,e)).join(g)))}`:"",_=`${a.genePhenoconversionLine(s(y(n.phenotype)),s(y(n.effectivePhenotype)),s(b))}${P}`;E=`<p class="m-gene__because">${_}</p>`,T=_.replace(/<[^>]+>/g,"")}else if((B=n.phenoconversion)!=null&&B.applied){const P=a.geneMayBeAffected(s(y(n.phenotype)),s(b));E=`<p class="m-gene__because">${P}</p>`,T=P.replace(/<[^>]+>/g,"")}const L=v.length>0?`<div class="m-gene__drugs">
         ${v.map(P=>{var Y;const _=P.alternatives.length>0?`<div class="m-better">
                 <svg aria-hidden="true"><use href="#i-match"/></svg>
-                <span>${s(a.betterMatch)} <strong>${s(P.alternatives.map(Ie=>S(Ie,e)).join(" / "))}</strong> — ${s(a.askYourDoctor)} (${s(((Y=P.guideline)==null?void 0:Y.pub)||"CPIC")})</span>
+                <span>${s(a.betterMatch)} <strong>${s(P.alternatives.map(Ie=>S(Ie,e)).join(" / "))}</strong> — ${s(a.askYourDoctor)} <span dir="ltr">(${s(((Y=P.guideline)==null?void 0:Y.pub)||"CPIC")})</span></span>
               </div>`:"";return`
             <div class="m-drugrow">
               <span class="m-drugrow__name">${s(S(P.drug,e))}</span>
@@ -519,7 +519,7 @@ import{a as De,c as ve,s as be,P as ye,b as R,d as S,C as H,f as $e,e as Q,g as 
                           </div>
                           ${w.alternatives.length>0?`<div class="m-better">
                                 <svg aria-hidden="true"><use href="#i-match"/></svg>
-                                <span>${s(e.betterMatch)} <strong>${s(w.alternatives.map(M=>S(M,t)).join(" / "))}</strong> — ${s(e.askYourDoctor)} (${s(((N=w.guideline)==null?void 0:N.pub)||"CPIC")})</span>
+                                <span>${s(e.betterMatch)} <strong>${s(w.alternatives.map(M=>S(M,t)).join(" / "))}</strong> — ${s(e.askYourDoctor)} <span dir="ltr">(${s(((N=w.guideline)==null?void 0:N.pub)||"CPIC")})</span></span>
                               </div>`:""}
                         `}).join("")}
                       </div>`:""}

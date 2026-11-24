@@ -189,7 +189,7 @@ function renderGeneCard(gene, index, lang, t, state) {
           const alts = d.alternatives.length > 0
             ? `<div class="m-better">
                 <svg aria-hidden="true"><use href="#i-match"/></svg>
-                <span>${esc(t.betterMatch)} <strong>${esc(d.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} (${esc(d.guideline?.pub || 'CPIC')})</span>
+                <span>${esc(t.betterMatch)} <strong>${esc(d.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} <span dir="ltr">(${esc(d.guideline?.pub || 'CPIC')})</span></span>
               </div>`
             : '';
           return `
@@ -808,7 +808,7 @@ export function renderPharmacistView(contract, lang, t, state = {}) {
                           ${d.alternatives.length > 0
                             ? `<div class="m-better">
                                 <svg aria-hidden="true"><use href="#i-match"/></svg>
-                                <span>${esc(t.betterMatch)} <strong>${esc(d.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} (${esc(d.guideline?.pub || 'CPIC')})</span>
+                                <span>${esc(t.betterMatch)} <strong>${esc(d.alternatives.map((a) => drugLabel(a, lang)).join(' / '))}</strong> — ${esc(t.askYourDoctor)} <span dir="ltr">(${esc(d.guideline?.pub || 'CPIC')})</span></span>
                               </div>`
                             : ''
                           }

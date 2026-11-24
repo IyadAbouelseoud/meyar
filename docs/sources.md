@@ -13,6 +13,7 @@
 | TAILOR-PCI primary endpoint not significant | Pereira et al., JAMA 2020 |
 | PBKDF2-SHA256 600,000 iterations | OWASP Password Storage Cheat Sheet |
 | ID-1 card 85.60 × 53.98 mm | ISO/IEC 7810 |
+| A6 sheet 105 × 148 mm | ISO 216 |
 | WCAG 2.2 SC 1.4.3, 1.4.4, 2.5.8 | W3C WCAG 2.2 |
 | Genomic source class | LOINC 48002-0 |
 | CYP2D6 phenoconversion: activity score ×0.5 moderate inhibitor, ×0 strong inhibitor | Thomas CD et al., CPT Pharmacometrics Syst Pharmacol 2020;9(12):678–685, doi:10.1002/psp4.12563 |
