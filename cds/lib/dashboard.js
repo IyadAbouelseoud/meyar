@@ -131,7 +131,9 @@ export function loadCoverageGrid(fixturesDir) {
           const g = byGene.get(gene);
           const assayed = Number(g?.coverage?.definingPositionsAssayed || 0);
           const total = Number(g?.coverage?.definingPositionsTotal || 0);
-          const ratio = total > 0 ? Math.max(0.2, Math.min(1, assayed / total)) : 0.25;
+          // No coverage data for this gene: show "no data", never an invented shade (REVIEW).
+          if (!(total > 0)) return { gene, ratio: null, sv: false, noData: true };
+          const ratio = Math.max(0.2, Math.min(1, assayed / total));
           return { gene, ratio, sv: false };
         }),
       });
@@ -157,6 +159,7 @@ export function renderDashboardHtml({ initialSummary, watchFixtures, coverageGri
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
 <title>Meyar · Alert log</title>
 <link rel="stylesheet" href="/design/fonts/fonts.css">
 <link rel="stylesheet" href="/design/tokens.css">
@@ -178,7 +181,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
 .m-tile { min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .dash-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-3); flex-wrap: wrap; }
 .m-seg { min-block-size: var(--m-target); }
-.m-seg button { min-block-size: calc(var(--m-target) - 8px); }
+.m-seg button { min-block-size: var(--m-target); }
 .m-seg button[aria-pressed="true"] { background: var(--m-data); color: var(--m-on-brand); box-shadow: none; }
 .dash-lang { min-block-size: var(--m-target); padding-inline: 14px; border-radius: var(--m-radius-pill); border: 1px solid var(--m-line); background: var(--m-surface); color: var(--m-text); font: inherit; font-size: var(--m-size-xs); font-weight: 600; cursor: pointer; }
 .dash-lang:hover { border-color: var(--m-line-strong); }
@@ -247,7 +250,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
       <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-pc" data-v="0">0</span><span class="m-delta" id="d-pc"></span></div><div id="s-pc"></div></div>
     </div>
     <div class="m-tile m-tile--3">
-      <div class="m-tile__head"><span class="m-tile__title" id="t-k4">Switched</span><span class="m-tile__meta" id="t-k4m">backward sweep</span></div>
+      <div class="m-tile__head"><span class="m-tile__title" id="t-k4">Backward-sweep cards</span><span class="m-tile__meta" id="t-k4m">existing orders re-checked</span></div>
       <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-sw" data-v="0">0</span><span class="m-delta" id="d-sw"></span></div><div id="s-sw"></div></div>
     </div>
 
@@ -286,7 +289,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
   </section>
 
   <footer class="dash-foot">
-    <span class="m-proto" id="t-proto">Research prototype — not for clinical use</span>
+    <span class="m-proto" id="t-proto">Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.</span>
     <span id="t-source">Source: cds/data/alerts.jsonl · Demo data only</span>
   </footer>
 </main>
@@ -311,8 +314,8 @@ const I18N = {
     k2: 'Accepted',
     k2m: 'better match',
     k3: 'Phenoconversion flags',
-    k4: 'Switched',
-    k4m: 'backward sweep',
+    k4: 'Backward-sweep cards',
+    k4m: 'existing orders re-checked',
     area: 'Cards fired over time',
     areaToday: 'per hour · hover or use arrow keys',
     areaWeek: 'per day · hover or use arrow keys',
@@ -330,7 +333,7 @@ const I18N = {
     heat: 'Coverage by patient',
     heatm: 'A5 · darker = more positions tested',
     heatnote: 'Hatched: CYP2D6 not called from VCF (A8). Shading is demo data.',
-    proto: 'Research prototype — not for clinical use',
+    proto: 'Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.',
     source: 'Source: cds/data/alerts.jsonl · Demo data only',
     vsToday: 'vs yesterday',
     vsWeek: 'vs prev 7d',
@@ -359,7 +362,7 @@ const I18N = {
     k2: 'المقبولة',
     k2m: 'البديل الأنسب',
     k3: 'تنبيهات التحوّل الظاهري',
-    k4: 'المُحوّلة',
+    k4: 'بطاقات المراجعة الرجعية',
     k4m: 'مراجعة الوصفات السابقة',
     area: 'البطاقات المُرسلة عبر الزمن',
     areaToday: 'في الساعة · مرّر أو استخدم الأسهم',
@@ -378,7 +381,7 @@ const I18N = {
     heat: 'التغطية حسب المريض',
     heatm: 'A5 · الأغمق = مواقع فحص أكثر',
     heatnote: 'المُظلل بخطوط: CYP2D6 لم يُقرأ من VCF (A8). التظليل بيانات تجريبية.',
-    proto: 'نموذج بحثي — غير مخصص للاستخدام السريري',
+    proto: 'نموذج بحثي — غير مخصص للاستخدام السريري. يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
     source: 'المصدر: cds/data/alerts.jsonl · بيانات تجريبية فقط',
     vsToday: 'مقارنة بالأمس',
     vsWeek: 'مقارنة بـ ٧ أيام سابقة',
@@ -598,6 +601,8 @@ function renderStaticFixtures() {
       .map((pt) => '<div class="m-heat__row" style="--n:' + g.genes.length + '"><span>' + esc(pt.patientId) + '</span>' +
         pt.cells.map((cell) => cell.sv
           ? '<span class="m-heat__cell is-na" title="Not called from VCF (A8)">SV</span>'
+          : cell.noData
+          ? '<span class="m-heat__cell is-na" title="No coverage data in this contract">—</span>'
           : '<span class="m-heat__cell" style="--v:' + Number(cell.ratio).toFixed(2) + '" title="Demo coverage shading"></span>'
         ).join('') + '</div>')
       .join('');

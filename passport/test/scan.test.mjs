@@ -69,3 +69,27 @@ test('C3: demo-006 preserves A7 phenoconversion dual-phenotype display after dec
   assert.equal(cyp2d6.effectivePhenotype, 'Normal Metabolizer');
   assert.deepEqual(cyp2d6.cause, ['duloxetine']);
 });
+
+test('REVIEW: a non-germline card opened with the right PIN is reported as such, not as a wrong PIN', async () => {
+  const { openScannedCard } = await import('../src/scan-lookup.js');
+  const contract = JSON.parse(await fs.readFile(demo001Path, 'utf8'));
+  const cpic = JSON.parse(await fs.readFile(cpicPath, 'utf8'));
+  const tables = { cpicRows: cpic.rows, freqRows: [] };
+
+  const good = await encodeQrEnvelope(contract, { pin: '123456' });
+  assert.equal((await openScannedCard(good.qrText, '000000', tables)).error, 'pin');
+  const ok = await openScannedCard(good.qrText, '123456', tables);
+  assert.equal(ok.error, undefined);
+  assert.ok(ok.cards.length > 0);
+
+  const somatic = await encodeQrEnvelope({ ...contract, sampleOrigin: 'somatic' }, { pin: '123456' });
+  assert.equal((await openScannedCard(somatic.qrText, '123456', tables)).error, 'not-germline');
+});
+
+test('REVIEW code review #4: a decrypted but malformed card is reported as invalid, never thrown', async () => {
+  const { openScannedCard } = await import('../src/scan-lookup.js');
+  const contract = JSON.parse(await fs.readFile(demo001Path, 'utf8'));
+  const bad = await encodeQrEnvelope({ ...contract, genes: [{ gene: 'CYP2D6', diplotype: null, phenotype: 42 }] }, { pin: '123456' });
+  const r = await openScannedCard(bad.qrText, '123456', { cpicRows: null, freqRows: null });
+  assert.equal(r.error, 'invalid');
+});

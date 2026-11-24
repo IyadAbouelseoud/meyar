@@ -1,0 +1,5283 @@
+[
+ {
+  "page": "passport-genes-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [278..349] | span \"Doctor view\" [284..343]",
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [264..332] | span \"Doctor view\" [270..326]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [278..349] | span \"Doctor view\" [284..343]",
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [264..332] | span \"Doctor view\" [270..326]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-genes-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [279..351] | span \"Doctor view\" [285..345]",
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [266..333] | span \"Doctor view\" [272..327]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-meds-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [279..350] | span \"Doctor view\" [285..344]",
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [265..333] | span \"Doctor view\" [271..327]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-otc-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [277..350] | span \"Doctor view\" [283..344]",
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [263..333] | span \"Doctor view\" [269..327]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-doctor-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"بطيء\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"demo-001\" 88x42 | button \"demo-002\" 88x42 | button \"demo-006\" 88x42"
+  ],
+  "smallText": [
+   "span \"Slow\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-pharmacist-002",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 10px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"بطيء\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [278..349] | span \"Doctor view\" [284..343]"
+  ],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"Slow\" 10px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"Slow\" 10.125px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"Slow\" 10.53px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"Slow\" 11.124px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span \"Slow\" 11.61px"
+  ]
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": false,
+  "problems": [
+   "wider than viewport: button \"Doctor view\" [264..332] | span \"Doctor view\" [270..326]"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-caregiver-001",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "input < 16px: textarea#scan-paste-input.m-data.m-scan-textarea \"\" 13px"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "passport-scan",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "elder",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19",
+   "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-preview",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"إرشاد CPIC\" 58x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px"
+  ]
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | a \"CPIC guideline\" 86x19"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-compare",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [212..334]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [251..372]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [265..387]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [280..402]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [302..424]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [320..442]",
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"اليوم\" 74x42 | button#btn-week \"٧ أيام\" 80x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [734..856]"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [658..780]"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.m-tip.is-on \"14 · 20 بطاقة\" [914..1036]"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button#btn-today \"Today\" 89x42 | button#btn-week \"7 days\" 92x42"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "horizontal scroll: scrollWidth 856 > 844",
+   "wider than viewport: div.m-tip.is-on \"14 · 20 cards\" [734..856]"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "horizontal scroll: scrollWidth 780 > 768",
+   "wider than viewport: div.m-tip.is-on \"14 · 20 cards\" [658..780]"
+  ],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "cds-dashboard",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "span.m-scale__flag \"Genetic\" 10px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.phone__bar \"نموذج بحثي — ليس للاستخدام السريري\nبيانا\" [-20..289] | span.m-mock \"بيانات تجريبية\" [-14..87] | div.stack \"قبل أن تشتري دواءً\nاكتب اسم الدواء\n\nلا ت\" [-20..289] | h3 \"قبل أن تشتري دواءً\" [-20..289] (+7)",
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)",
+   "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "horizontal scroll: scrollWidth 779 > 768",
+   "wider than viewport: div.scaler.scaler--x2 \"مِعيار\nجواز الدواء\nاطلب الرمز من صاحب ال\" [16..779]"
+  ],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span \"Poor\" 11.52px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "wider than viewport: div.phone__bar \"نموذج بحثي — ليس للاستخدام السريري\nبيانا\" [-20..289] | span.m-mock \"بيانات تجريبية\" [-14..87] | div.stack \"قبل أن تشتري دواءً\nاكتب اسم الدواء\n\nلا ت\" [-20..289] | h3 \"قبل أن تشتري دواءً\" [-20..289] (+7)",
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+15)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a \"Passport\" 91x38 | a \"Printed card\" 116x38 | a \"Prescriber\" 102x38 | a \"Alert log\" 90x38 (+9)"
+  ],
+  "smallText": [
+   "span \"Poor\" 11.52px",
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "horizontal scroll: scrollWidth 779 > 768",
+   "wider than viewport: div.scaler.scaler--x2 \"مِعيار\nجواز الدواء\nاطلب الرمز من صاحب ال\" [16..779]"
+  ],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span \"Poor\" 11.52px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "design-showcase",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": [
+   "small \"CPIC row, demo-001\" 11px",
+   "span \"بطيء\" 11.52px",
+   "span.m-id1__pin \"اطلب الرمز من صاحب البطاقة\nAsk the holde\" 10.9606px",
+   "span \"Ask the holder for the PIN\" 9.44882px",
+   "span.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري\nResea\" 7.55906px",
+   "p.m-id1__proto \"نموذج بحثي — ليس للاستخدام السريري · بيا\" 11.3386px",
+   "span.m-scale__flag \"Genetic\" 10px",
+   "span \"CYP2C19\" 9.5px"
+  ]
+ },
+ {
+  "page": "kit-index",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42",
+   "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"من FHIR\" 113x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"من FHIR\" 113x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"من FHIR\" 113x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"من FHIR\" 113x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"From FHIR\" 135x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42 | button \"From FHIR\" 135x42 (+1)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-index",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-card",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-tracker",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: a.m-wordmark \"مِعيار\nMEYAR\" 160x30 | button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "kit-urgent",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "320x568",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42",
+   "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "360x740",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "375x667",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "390x844",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "412x915",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "430x932",
+  "lang": "ar",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "844x390",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "768x1024",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "1024x1366",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "1440x900",
+  "lang": "ar",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "320x568",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "360x740",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "375x667",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "390x844",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "412x915",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "430x932",
+  "lang": "en",
+  "state": "std",
+  "pass": false,
+  "problems": [
+   "tap < 44px: button \"العربية\" 92x42 | button \"English\" 101x42"
+  ],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "844x390",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "768x1024",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "1024x1366",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ },
+ {
+  "page": "demo-reader",
+  "viewport": "1440x900",
+  "lang": "en",
+  "state": "std",
+  "pass": true,
+  "problems": [],
+  "smallText": []
+ }
+]

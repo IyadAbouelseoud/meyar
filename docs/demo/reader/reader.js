@@ -26,7 +26,7 @@ const T = {
     notAssessed: 'لم يُقيَّم عدد النسخ في هذا الفحص — لا توجد نتيجة',
     stop: 'لا يُوصف دون مراجعة', ask: 'راجع الدليل قبل الوصف', better: (a) => `أنسب لجيناته وفق CPIC: ${a}`,
     coverage: (a, t, u) => `غطّى الفحص ${a} من ${t} موضعاً محدِّداً${u ? `؛ لم يفحص ${u}` : ''}`,
-    meds: 'أدوية حالية (من البطاقة)', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · CPIC: البحث في الجداول فقط، لا يولّد أي نموذج لغوي جرعات',
+    meds: 'أدوية حالية (من البطاقة)', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · CPIC: البحث في الجداول فقط، لا يولّد أي نموذج لغوي جرعات · يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
   },
   en: {
     eyebrow: 'Another hospital · second device', title: 'Medication Passport reader', mock: 'Demo data',
@@ -47,7 +47,7 @@ const T = {
     notAssessed: 'copy number not assessed by this test — no result reported',
     stop: 'Do not prescribe without review', ask: 'Check the guideline before prescribing', better: (a) => `Better matched for these genes (CPIC): ${a}`,
     coverage: (a, t, u) => `Assay covered ${a} of ${t} defining positions${u ? `; did not test ${u}` : ''}`,
-    meds: 'Current medicines (from the card)', footer: 'Meyar · research prototype, not for clinical use · demo data only · CPIC lookup only, no model-generated dosing',
+    meds: 'Current medicines (from the card)', footer: 'Meyar · research prototype, not for clinical use · demo data only · CPIC lookup only, no model-generated dosing · Runs on synthetic and GeT-RM reference data; no patient data was used.',
   },
 };
 

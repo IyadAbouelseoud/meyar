@@ -104,7 +104,7 @@ Guideline page: https://www.clinpgx.org/guideline/PA166251454 · PMID 33387367 �
 | ☐ | codeine | CYP2D6 | Ultrarapid Metabolizer (≥3.5) | general | 8609206 | Strong | non-tramadol opioid | |
 | ☐ | codeine | CYP2D6 | Ultrarapid Metabolizer (≥4.0) | general | 8609207 | Strong | non-tramadol opioid | |
 
-## CYP2C19 and Proton Pump Inhibitors — Lima JJ et al., Clin Pharmacol Ther 2020
+## CYP2C19 and Proton Pump Inhibitors — Lima JJ et al., Clin Pharmacol Ther 2021;109(6):1417–1423
 Guideline page: https://www.clinpgx.org/guideline/PA166251441 · PMID 32770672 · doi:10.1002/cpt.2015 · CPIC DB version 69
 
 | ✓ | Drug | Gene | Phenotype (activity score) | Population | CPIC rec id | Classification | Alternatives named | Initials |

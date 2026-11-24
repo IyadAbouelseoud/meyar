@@ -28,7 +28,7 @@ Readers reject an envelope with any other field, a wrong salt or nonce length, o
 - **Cipher:** AES-GCM, 12-byte nonce, 128-bit tag.
 - **Additional authenticated data:** the UTF-8 string `meyar-e:` followed by the emergency line (or nothing). Editing, adding or removing `e` on a copied card makes decryption fail, so a forged emergency line cannot sit next to genuine results.
 - **Plaintext before encryption:** `deflate-raw` (native `CompressionStream`) of C2's compact payload JSON: per gene the symbol, diplotype, genetic and acting-like phenotype, callability method, coverage summary, Saudi data tier, guideline version and recommendation keys, plus current medicine names. **No name, no patient ID, no ID number, no raw genome, no URL.**
-- Measured for demo-001 (`npm test` prints it): raw 325 B → deflate 204 B → envelope 360 B, QR error correction M.
+- Measured for demo-001 (`npm test` prints it, contract only): raw 325 B → deflate 204 B → envelope 360 B, QR error correction M. As the Passport actually issues it (with the medicine-status rows): envelope 480 B, QR version 17. Worst case allowed by the app (demo-006, 4 medicines, 120-character emergency line): 815 B, version 23, 0.239 mm modules at 28 mm (REVIEW, 2026-11-24).
 
 ## What a scanner shows
 

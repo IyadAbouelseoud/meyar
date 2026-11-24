@@ -96,7 +96,7 @@
     "passportTitle": "Medication Passport",
     "coverSub": "Your gene–medicine results, ready offline.",
     "showDoctorBtn": "Show a doctor or pharmacist",
-    "proto": "Research prototype — not for clinical use",
+    "proto": "Research prototype — not for clinical use.",
     "demo": "Demo data",
     "langToggle": "العربية",
     "elderOn": "Elder mode: On",
@@ -218,7 +218,7 @@
     "qrEmergencyToggle": "Add an emergency line readable without the PIN",
     "qrEmergencyLabel": "Emergency line (anyone who scans the card sees it)",
     "qrEmergencyHint": "Write only what you want everyone to see. The full record is at the hospital.",
-    "qrPinBrute": "A 6-digit PIN can be guessed on another device if the QR is copied. The card holds gene results only, never your genome or your name.",
+    "qrPinBrute": "The PIN stops casual scanning only; a copied QR can be brute-forced offline. The card holds gene results only, never your genome or your name.",
     "qrPinErrSix": "The PIN must be exactly 6 digits.",
     "qrPinErrMatch": "The two PINs do not match. Type it again.",
     "printTitle": "Printable card & elder fold-out",
@@ -233,10 +233,16 @@
     "id1PinEn": "Ask the holder for the PIN",
     "id1ProtoAr": "نموذج بحثي — ليس للاستخدام السريري",
     "id1ProtoEn": "Research prototype — not for clinical use",
-    "foldoutReminder": "Tell your doctor or pharmacist before any new medicine."
+    "foldoutReminder": "Tell your doctor or pharmacist before any new medicine.",
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used.",
+    "doctorNotAssessed": "Not assessed",
+    "doctorPositions": "positions",
+    "doctorUntested": "untested",
+    "doctorNone": "none",
+    "doctorOutsideCall": "Outside call"
   },
   "scan": {
-    "proto": "Research prototype — not for clinical use",
+    "proto": "Research prototype — not for clinical use.",
     "demo": "Demo data",
     "langToggle": "العربية",
     "elderOn": "Elder mode: On",
@@ -280,6 +286,15 @@
     "holderNote": "Until the PIN is entered, this line is all the card shows.",
     "emergencyLabel": "Emergency line (chosen by the patient, not encrypted):",
     "pinLocked": "Too many wrong PINs. Wait {s} s, then try again, or ask the patient for the PIN.",
-    "patientNoId": "The QR carries no name and no ID number"
+    "patientNoId": "The QR carries no name and no ID number",
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used.",
+    "notGermlineCard": "This card opened, but it is not from an inherited (germline) sample, so Meyar does not show it. Tumour profiling is separate.",
+    "pinDotsAria": "{n} of {max} digits entered",
+    "pinKeypadAria": "PIN keypad",
+    "notAssessedShort": "Not assessed",
+    "notAssessedNoResult": "Not assessed — no result reported",
+    "invalidCard": "This card opened, but its content could not be read. Ask the patient to make a new card.",
+    "svNotAssessedRec": "Copy number not assessed by this test — no result reported. An outside call from a CNV-aware caller is required.",
+    "svGateCite": "Meyar A8 structural-variant gate"
   }
 }

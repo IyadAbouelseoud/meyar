@@ -3,6 +3,8 @@ __pycache__/
 .venv/
 *.pyc
 engine/data/in/*.vcf
+engine/data/in/*.vcf.bgz
+engine/data/in/*.vcf.bgz.csi
 engine/data/out/*
 !engine/data/out/.gitkeep
 .DS_Store
@@ -10,3 +12,4 @@ engine/data/out/*
 design/showcase/*.standalone.html
 design/imagery/raw/*
 !design/imagery/raw/.gitkeep
+docs/screenshots/final-review*.log

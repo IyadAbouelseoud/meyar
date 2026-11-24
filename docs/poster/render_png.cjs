@@ -6,7 +6,7 @@ const path = require('node:path');
 const dir = path.resolve('docs/poster');
 const jobs = [['f4-tier-panel-poster', 1600, 2000, 2], ['f4-tier-panel-slide', 1920, 1080, 1], ['f4-tier-panel-poster-ar', 1600, 2000, 2], ['f4-tier-panel-slide-ar', 1920, 1080, 1]];
 (async () => {
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 for (const [name, w, h, scale] of jobs) {
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: scale });
   await page.goto(pathToFileURL(path.join(dir, `${name}.svg`)).href);

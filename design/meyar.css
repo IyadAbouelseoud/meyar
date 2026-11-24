@@ -53,6 +53,8 @@ body.m-body {
 .m-wordmark__ar { font-family: var(--m-font-display); font-weight: 800; font-size: 1.6em; line-height: 1; letter-spacing: 0; }
 .m-wordmark__en { font-family: var(--m-font-data); font-size: .72em; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--m-text2); }
 .m-wordmark__tick { inline-size: .9em; block-size: .9em; flex: none; align-self: center; }
+/* A linked wordmark is a tap target: pad it to the shared target size without moving the type (WCAG 2.5.8). */
+a.m-wordmark { min-block-size: var(--m-target); align-items: center; }
 
 /* ---------- 2. Al-Qatt band (brand ornament, never inside clinical content) ---------- */
 .m-qatt {
@@ -191,7 +193,7 @@ body.m-body {
 [dir="rtl"] .m-switch input:checked::after { translate: -22px 0; }
 
 .m-seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: var(--m-radius-control); background: var(--m-sunken); }
-.m-seg button { min-block-size: calc(var(--m-target) - 6px); padding-inline: 1em; border: 0; border-radius: calc(var(--m-radius-control) - 3px); background: transparent; color: var(--m-text2); font: inherit; font-weight: 600; cursor: pointer; }
+.m-seg button { min-block-size: var(--m-target); padding-inline: 1em; border: 0; border-radius: calc(var(--m-radius-control) - 3px); background: transparent; color: var(--m-text2); font: inherit; font-weight: 600; cursor: pointer; }
 .m-seg button[aria-pressed="true"] { background: var(--m-surface); color: var(--m-text); box-shadow: 0 1px 0 var(--m-line), inset 0 0 0 1px var(--m-line); }
 
 .m-field { display: grid; gap: 6px; }
@@ -249,6 +251,17 @@ body.m-body {
 .m-cover__sub { font-size: var(--m-size-md); color: var(--m-p-juniper-100); }
 .m-cover .m-qatt { position: absolute; inset-inline: 0; inset-block-end: 0; }
 
+/* Image-library figure. Never inside clinical content; always labelled as generated (AGENTS.md section 11). */
+.m-figure { margin: 0; display: grid; gap: var(--m-space-1); min-inline-size: 0; }
+.m-figure picture { display: block; }
+.m-figure img { display: block; inline-size: 100%; block-size: auto; object-fit: cover; border-radius: var(--m-radius-card); background: var(--m-sunken); }
+.m-figure--band img { aspect-ratio: 16 / 9; }
+.m-figure--hero img { aspect-ratio: 3 / 2; object-position: 50% 62%; border-radius: var(--m-radius-control); }
+.m-figure__label { font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cover .m-figure__label { color: var(--m-p-juniper-100); }
+@media (min-width: 640px) { .m-figure--hero img { aspect-ratio: 2 / 1; } }
+@media print { .m-figure { display: none; } }
+
 .m-gene {
   display: grid; gap: var(--m-space-4);
   padding: var(--m-space-5); background: var(--m-surface); border-radius: var(--m-radius-card);
@@ -301,8 +314,9 @@ body.m-body {
 .m-cds__rec { margin: 0; padding: 12px 14px; background: var(--m-sunken); border-radius: var(--m-radius-hair); font-size: var(--m-size-sm); }
 .m-cds__rec cite { display: block; margin-block-start: 6px; font-style: normal; font-size: var(--m-size-xs); color: var(--m-text2); }
 .m-cds__suggest { display: grid; gap: 8px; }
-.m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: 44px; justify-content: flex-start; text-align: start; padding-block: 8px; }
-.m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__suggest .m-btn { font-size: var(--m-size-sm); min-block-size: var(--m-target); justify-content: flex-start; text-align: start; padding-block: 8px; }
+.m-cds__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 16px; border-block-start: 1px solid var(--m-line); font-size: var(--m-size-xs); color: var(--m-text2); }
+.m-cds__foot a { display: inline-flex; align-items: center; min-block-size: var(--m-target); }
 
 /* ---------- 10. Instrument dashboard (B4) ----------
    Rounded tiles on deep juniper-black. One orchestrated moment: gauge ticks fill,
@@ -320,6 +334,7 @@ body.m-body {
 .m-tile__meta { font-size: var(--m-size-xs); color: var(--m-text3); }
 .m-tile__btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; min-block-size: 32px; border-radius: 10px; border: 1px solid var(--m-line); background: var(--m-sunken); color: var(--m-text2); font: inherit; font-size: var(--m-size-xs); cursor: pointer; }
 .m-tile__btn:hover { color: var(--m-text); border-color: var(--m-line-strong); }
+@media (pointer: coarse) { .m-tile__btn { min-block-size: var(--m-target); } }
 .m-kpi { display: grid; gap: 10px; }
 .m-kpi__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .m-kpi__num { font-family: var(--m-font-display); font-weight: 700; font-size: clamp(2.2rem, 3.4vw, 3.1rem); line-height: .95; letter-spacing: -.035em; color: var(--m-text); font-variant-numeric: tabular-nums; }
@@ -372,8 +387,8 @@ body.m-body {
 .m-tip.is-on { opacity: 1; }
 .m-motion .m-tip { transition: opacity var(--m-dur-state) var(--m-ease-settle), left var(--m-dur-tap) linear, top var(--m-dur-tap) linear; }
 /* bars */
-.m-bars { display: flex; align-items: stretch; gap: 10px; block-size: 200px; }
-.m-bars__col { flex: 1; min-width: 0; display: grid; grid-template-rows: 26px 1fr 22px; justify-items: center; gap: 6px; cursor: default; border-radius: 10px; outline-offset: 2px; }
+.m-bars { display: flex; align-items: stretch; gap: 10px; block-size: 200px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.m-bars__col { flex: 1; min-width: var(--m-target); display: grid; grid-template-rows: 26px 1fr 22px; justify-items: center; gap: 6px; cursor: default; border-radius: 10px; outline-offset: 2px; }
 .m-bars__bar { align-self: end; inline-size: min(100%, 34px); block-size: calc(var(--h) * 100%); min-block-size: 4px; border-radius: 10px; background: color-mix(in srgb, var(--m-data) 45%, var(--m-sunken)); transform-origin: bottom; }
 .m-bars__col.is-active .m-bars__bar { background: var(--m-data); box-shadow: none; }
 .m-bars__pill { align-self: end; padding: 2px 8px; border-radius: 7px; background: var(--m-text); color: var(--m-surface); font: 600 11px var(--m-font-data); opacity: 0; }

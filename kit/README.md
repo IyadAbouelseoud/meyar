@@ -36,7 +36,7 @@ Hand-off goes to `kit/out/engine-handoff/` by default. To write straight into th
 ## Test
 
 ```bash
-cd kit && npm test                 # 27 tests; the HAPI test skips with "NOT A FULL PASS" if HAPI is down
+cd kit && npm test                 # 32 tests (reproduced 2026-11-24); the HAPI test skips with "NOT A FULL PASS" if HAPI is down
 ```
 
 The tests cover these cases:

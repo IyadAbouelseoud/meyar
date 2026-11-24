@@ -9,7 +9,7 @@ import saudiFreqs from '@tables/saudi_frequencies.json';
 import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
 import { decodeQrEnvelope, holderView } from './qr.js';
 import { createPinLimiter, PIN_LENGTH } from './pinguard.js';
-import { buildCdsCardsFromPayload } from './scan-lookup.js';
+import { openScannedCard } from './scan-lookup.js';
 import { renderScanApp, SCAN_COPY } from './scan-render.js';
 
 const root = document.getElementById('scan-app');
@@ -220,20 +220,28 @@ async function submitPin() {
   update();
 
   try {
-    const payload = await decodeQrEnvelope(state.rawQrText, { pin: state.pin });
-    state.decoded = payload;
-    state.cards = buildCdsCardsFromPayload(payload, {
+    const opened = await openScannedCard(state.rawQrText, state.pin, {
       cpicRows: cpicTable.rows || [],
       freqRows: saudiFreqs.rows || [],
     });
-    state.step = 'result';
     state.pin = '';
-    limiter.recordSuccess();
-  } catch {
-    state.pinError = t.pinError;
-    state.pin = '';
-    limiter.recordFailure();
-    startLockCountdown();
+    if (opened.error === 'pin') {
+      state.pinError = t.pinError;
+      limiter.recordFailure();
+      startLockCountdown();
+    } else if (opened.error === 'invalid') {
+      state.pinError = t.invalidCard;
+      limiter.recordSuccess();
+    } else if (opened.error === 'not-germline') {
+      // The PIN was right: refuse the card (A6) without counting a failed attempt.
+      state.pinError = t.notGermlineCard;
+      limiter.recordSuccess();
+    } else {
+      state.decoded = opened.payload;
+      state.cards = opened.cards;
+      state.step = 'result';
+      limiter.recordSuccess();
+    }
   } finally {
     state.decrypting = false;
     update();

@@ -8,7 +8,7 @@ Arabic-first Medication Passport (Vite, port 5173): screen, PIN-encrypted offlin
 - **Payload:** Compact contract summary (`sampleOrigin`, `genes[]` with diplotype, phenotype/effectivePhenotype, callability, coverage summary, guideline version, and CPIC recommendation keys). No raw genome, no patient name, no patient ID (removed in C8), no URL.
 - **Compression & Envelope:** `deflate-raw` + `base64url`, wrapped by default in the C8 WebCrypto envelope (`{ v: 1, s, n, c }`, PBKDF2-SHA256 600,000 iterations + AES-GCM-256). Plaintext mode (`{ v: 0, p }`) is available only behind `?dev=1`, on both the issuing and the scanning side.
 - **QR rendering:** SVG with `shape-rendering="crispEdges"`, `#14201B` ink on `#FFFFFF`, Error Correction `M`, and a 4-module quiet zone.
-- **Demo byte sizes (`demo-001`, after C8 removed the ID):** raw 325 B → deflate-raw 204 B → C8 envelope 360 B (EC M). `npm test` prints the current figures.
+- **Demo byte sizes (`demo-001`, after C8 removed the ID):** raw 325 B → deflate-raw 204 B → C8 envelope 360 B (EC M) for the contract alone; 480 B (QR version 17) as the app issues it with medicine rows. `npm test` prints the current figures.
 
 ## PIN-protected QR (C8)
 

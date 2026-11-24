@@ -30,4 +30,4 @@ Research prototype — not for clinical use. Everything on screen is demo data (
 | What happens on a failed sample? | The lab marks QC failed, the timeline and the patient both see "Recollect", and that tube can never issue a result. |
 | Who pays? | For scale: UK NICE DG59 (2024) lists a lab CYP2C19 test at £44–£139 per test depending on batch size, and point-of-care kits at £100 (Genedrive) and £125 (Genomadix Cube), ex-VAT; Saudi pricing and payer (NPHIES) are a future deployment step. |
 
-Do not quote any other figure. In particular, do not use the PREPARE, UF, PROGRESS or GeT-RM percentages flagged as unverified in the research report.
+Do not quote any other figure. PREPARE ("about 30% lower odds", 21.0% vs 27.7%) and UF Health (63% accepted, 20% followed) are now verified against the papers (docs/sources.md). Do not use the PROGRESS "90%" figure (unsourced) or any GeT-RM percentage.

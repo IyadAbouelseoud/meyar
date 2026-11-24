@@ -8,10 +8,10 @@ let lang = langFromURL();
 const T = {
   ar: { eyebrow: 'للمريض', title: 'بطاقتك المطبوعة', mock: 'بيانات تجريبية', proto: 'نموذج بحثي أولي — ليس للاستخدام السريري.',
     cardTitle: 'بطاقة بحجم البطاقة البنكية', print: 'اطبع البطاقة', notReleased: 'لا توجد بطاقة بعد: تصل النتيجة إلى جوازك بعد مراجعة الصيدلي.',
-    interim: 'عرض طباعة مؤقت لمهمة F6. البطاقة المطبوعة الكاملة هي مهمة C7 في جواز الدواء.', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط' },
+    interim: 'عرض طباعة مؤقت لمهمة F6. البطاقة المطبوعة الكاملة هي مهمة C7 في جواز الدواء.', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.' },
   en: { eyebrow: 'For the patient', title: 'Your printed card', mock: 'Demo data', proto: 'Research prototype — not for clinical use.',
     cardTitle: 'Bank-card size card', print: 'Print the card', notReleased: 'No card yet: the result reaches your Passport after a pharmacist reviews it.',
-    interim: 'Interim print view for F6. The full printable card is task C7 in the Passport.', footer: 'Meyar · research prototype, not for clinical use · demo data only' },
+    interim: 'Interim print view for F6. The full printable card is task C7 in the Passport.', footer: 'Meyar · research prototype, not for clinical use · demo data only · Runs on synthetic and GeT-RM reference data; no patient data was used.' },
 };
 
 async function render() {

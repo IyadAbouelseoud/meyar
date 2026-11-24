@@ -27,3 +27,10 @@ Write here instead of editing a table you do not own.
 ## F6 → C7 (22 Nov 2026)
 F6's patient tracker links a printed card for patients without a smartphone. C7 is not built yet, so F6 ships an interim print view at `kit/web/card.html` (`/card` on the kit service, design `.m-id1`). When C7 lands a printable card in `passport/`, please tell F so the tracker link can point there instead.
 - **B6 → design/ owner (2026-11-23):** `scaleHTML(gene, 'clinician')` in `design/meyar.js` prints the Meyar Scale labels (Ultrarapid / Rapid / Normal / Intermediate / Poor, Genetic, Acting like) in English even on `lang=ar` pages. Please add Arabic labels (e.g. read `document.documentElement.lang`). Seen on `/preview?lang=ar`.
+
+## REVIEW → A5 owner (2026-11-24): SLCO1B1 is not a "no published Saudi frequency" gene
+- `tables/saudi_frequencies.json` `_coverageStatement` names SLCO1B1 as the Tier 2 example of a gene "without published Saudi allele frequencies". A Saudi SLCO1B1 set is published: Goljan E, Abouelhoda M, Tahir A, ElKalioby M, Meyer B, Monies D, *Human Genomics* 2024;18:30, doi:10.1186/s40246-024-00594-9 (SLCO1B1*15 24.7%; 47.6% actionable). `docs/research/02-saudi-genetics.md` already cites it, so the repo contradicts itself.
+- Smallest fix (owner only, since it changes the A5 tier and score): either promote SLCO1B1 to Tier 1 with that paper's table, or keep Tier 2 and reword the statement to "not yet loaded from the published Saudi SLCO1B1 study". Pick a different Tier 2 example in the sentence either way.
+- The "(2015-2019)" sequencing window in the same sentence has no row in `docs/sources.md`. Add the row or drop the years.
+- Status: OPEN. Not changed by the review: table owned by A5, and it feeds the score.
+- Also (same owner): the 16 Tier 2 rows' `source` objects carry Goljan's DOI and `"n": 11889`, which reads as if Goljan measured those genes. Rename the field to `checkedAgainst`, or drop `doi`/`n` from Tier 2 rows (REVIEW Part C item 26).

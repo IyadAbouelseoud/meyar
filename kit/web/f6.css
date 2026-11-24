@@ -67,5 +67,5 @@
 @media print {
   .f6-bar, .f6-proto, .f6-noprint, .f6-note, .f6-sheet > h2 { display: none !important; }
   .f6-sheet { border: 0; padding: 0; background: none; }
-  .m-body { background: #fff; }
+  .m-body { background: var(--m-p-paper-0); }
 }

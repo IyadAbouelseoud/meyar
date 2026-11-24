@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
 <title>Meyar Design System</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="../fonts/fonts.css">
@@ -15,6 +16,7 @@
 body.m-body { background: var(--m-bg); }
 .band { padding-block: var(--m-space-8); }
 .band > .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); display: grid; gap: var(--m-space-6); }
+.band > .in > * { min-inline-size: 0; }
 .band--paper { background: var(--m-bg); color: var(--m-text); }
 .band--chart { background-color: var(--m-bg); }
 .band--instrument { background: var(--m-bg); color: var(--m-text); }
@@ -28,10 +30,10 @@ body.m-body { background: var(--m-bg); }
   background: repeating-radial-gradient(circle at 96% 115%, transparent 0 22px, var(--m-p-saffron-300) 22px 23px); }
 .hero .in { max-inline-size: var(--wrap); margin-inline: auto; padding-left: var(--gut); padding-right: var(--gut-r); padding-block: var(--m-space-6) var(--m-space-8); display: grid; gap: var(--m-space-7); }
 .hero nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-.hero .m-wordmark { color: var(--m-p-saffron-300); }
+.hero .m-wordmark { color: var(--m-p-saffron-300); min-block-size: var(--m-target); }
 .hero .m-wordmark__en { color: var(--m-p-juniper-100); }
 .hero nav ul { display: flex; flex-wrap: wrap; gap: 4px 6px; list-style: none; margin: 0; padding: 4px; font-size: var(--m-size-sm); background: rgb(255 255 255 / .06); border-radius: 14px; }
-.hero nav a { display: block; padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
+.hero nav a { display: flex; align-items: center; min-block-size: var(--m-target); padding: 8px 14px; border-radius: 10px; color: var(--m-p-juniper-100); text-decoration: none; }
 .hero nav a:hover { color: var(--m-p-paper-0); background: rgb(255 255 255 / .08); }
 .hero__grid { display: grid; gap: var(--m-space-7); align-items: center; }
 @media (min-width: 980px) { .hero__grid { grid-template-columns: 1.1fr .9fr; } }
@@ -72,9 +74,11 @@ body.m-body { background: var(--m-bg); }
 /* Phone frames */
 .phones { display: grid; gap: var(--m-space-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); align-items: start; }
 .phone { background: var(--m-bg); border: 1px solid var(--m-line); border-radius: 30px; padding: 14px; display: grid; gap: 14px; min-width: 0; }
-.phone__bar { display: flex; justify-content: space-between; align-items: center; font-size: var(--m-size-xs); color: var(--m-text2); padding-inline: 6px; }
+.phone__bar { display: flex; flex-wrap: wrap; gap: 2px 8px; justify-content: space-between; align-items: center; font-size: var(--m-size-xs); color: var(--m-text2); padding-inline: 6px; }
 .phone__cap { font-family: var(--m-font-data); font-size: 11px; color: var(--m-text3); text-align: center; letter-spacing: .06em; direction: ltr; }
 .phone .stack { display: grid; gap: 14px; }
+.phone > *, .phone .stack > *, .phone .m-field > * { min-inline-size: 0; }
+.phone .m-input { inline-size: 100%; box-sizing: border-box; }
 .speak { display: inline-flex; gap: .5em; align-items: center; }
 
 /* Print */
@@ -83,7 +87,7 @@ body.m-body { background: var(--m-bg); }
 .print-row figcaption { font-size: var(--m-size-xs); color: var(--m-text2); font-family: var(--m-font-data); }
 .scaler { transform-origin: top left; }
 [dir="rtl"] .scaler { transform-origin: top right; }
-@media (min-width: 720px) { .scaler--x2 { transform: scale(1.75); margin-block-end: calc(53.98mm * .75); margin-inline-end: calc(85.6mm * .75); } }
+@media (min-width: 860px) { .scaler--x2 { transform: scale(1.75); margin-block-end: calc(53.98mm * .75); margin-inline-end: calc(85.6mm * .75); } }
 
 /* Prescriber page */
 .ehr { display: grid; gap: var(--m-space-5); }
@@ -101,7 +105,7 @@ body.m-body { background: var(--m-bg); }
 .mini .m-scale__genetic::after { inset-block-start: 26px; inline-size: 18px; block-size: 18px; }
 .mini .m-scale__acting::before { inset-block-start: 12px; block-size: 32px; }
 details.json { font-size: var(--m-size-xs); }
-details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: 40px; display: flex; align-items: center; }
+details.json summary { cursor: pointer; color: var(--m-brand); font-weight: 600; min-block-size: var(--m-target); display: flex; align-items: center; }
 details.json pre { overflow-x: auto; background: var(--m-sunken); padding: 12px; border-radius: var(--m-radius-hair); font-family: var(--m-font-data); font-size: 12px; line-height: 1.5; direction: ltr; text-align: left; }
 
 /* Compare */
@@ -426,7 +430,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
     </div>
     <div class="compare">
       <figure style="margin:0;display:grid;gap:10px">
-        <div class="modal-mock" aria-label="Example of an interruptive alert"><div class="modal-mock__box"><header>⚠ DRUG–GENE ALERT</header><div><span>CYP2C19 result on file. Review before continuing.</span><span>Override reason (required):</span><button type="button">Select reason…</button><button type="button">Override and continue</button></div></div></div>
+        <div class="modal-mock" inert aria-label="Example of an interruptive alert (illustration, not interactive)"><div class="modal-mock__box"><header>⚠ DRUG–GENE ALERT</header><div><span>CYP2C19 result on file. Review before continuing.</span><span>Override reason (required):</span><button type="button">Select reason…</button><button type="button">Override and continue</button></div></div></div>
         <figcaption class="m-caption">Interruptive modal of the kind others build. It stops the order until dismissed.</figcaption>
       </figure>
       <figure style="margin:0;display:grid;gap:10px;align-content:start">
@@ -434,7 +438,7 @@ footer.foot .in { max-inline-size: var(--wrap); margin-inline: auto; padding-lef
           <span class="m-status m-status--ask" style="justify-self:start"><svg aria-hidden="true"><use href="#i-ask"/></svg>Meyar card in the side rail</span>
           <p style="font-size:var(--m-size-sm)">The order stays signable. The recommendation and its better-matched alternatives sit one click away.</p>
         </div>
-        <figcaption class="m-caption">University of Florida interruptive alerts — 63% accepted but only 20% of recommendations followed. UK PROGRESS, non-interruptive and pharmacist-mediated — 90% acted on.</figcaption>
+        <figcaption class="m-caption">University of Florida interruptive alerts — 63% of 557 accepted, but only 20% of recommendations followed (79 of 392; Lemke et al., Clin Pharmacol Ther 2023).</figcaption>
       </figure>
     </div>
   </div>

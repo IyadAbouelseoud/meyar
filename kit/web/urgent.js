@@ -16,7 +16,7 @@ const T = {
     t3Honest: 'الجدوى: Genomadix Cube (FDA 510(k) K220026) وتجربة RAPID GENE (Roberts وآخرون، Lancet 2012). تجربة TAILOR-PCI (JAMA 2020) لم تُظهر نتيجة ذات دلالة إحصائية في نقطتها الأولية؛ لا ندّعي فائدة على النتائج. التفاصيل: docs/roadmap-cathlab.md',
     orderTitle: 'طلب دواء', drug: 'كلوبيدوقريل ٧٥ ملغ', indication: 'متلازمة شريانية حادة، قسطرة', sign: 'وقّع الطلب (order-sign)',
     signNote: 'يُرسل الطلب نفسه الذي يرسله run_e2e.sh إلى خدمة CDS على المنفذ 3000.',
-    cdsErr: 'خدمة CDS غير متاحة', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · T3 وT4 غير مصنوعين',
+    cdsErr: 'خدمة CDS غير متاحة', footer: 'مِعيار · نموذج بحثي أولي، ليس للاستخدام السريري · بيانات تجريبية فقط · T3 وT4 غير مصنوعين · يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
     advises: 'تنصح ولا تصف', src: 'المصدر',
   },
   en: {
@@ -29,7 +29,7 @@ const T = {
     t3Honest: 'Feasibility: Genomadix Cube (FDA 510(k) K220026) and RAPID GENE (Roberts et al., Lancet 2012). TAILOR-PCI (JAMA 2020) did not show a statistically significant primary-endpoint result; we claim no outcome benefit. Details: docs/roadmap-cathlab.md',
     orderTitle: 'Medication order', drug: 'Clopidogrel 75 mg', indication: 'Acute coronary syndrome, PCI', sign: 'Sign the order (order-sign)',
     signNote: 'Sends the same request run_e2e.sh sends to the CDS service on port 3000.',
-    cdsErr: 'CDS service not reachable', footer: 'Meyar · research prototype, not for clinical use · demo data only · T3 and T4 are not built',
+    cdsErr: 'CDS service not reachable', footer: 'Meyar · research prototype, not for clinical use · demo data only · T3 and T4 are not built · Runs on synthetic and GeT-RM reference data; no patient data was used.',
     advises: 'Advises, does not prescribe', src: 'Source',
   },
 };

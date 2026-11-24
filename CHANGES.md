@@ -28,7 +28,7 @@ Data contract unchanged. No new runtime dependency.
 
 ## A3 — Validate against GeT-RM reference samples (21 Nov 2026)
 Files: `engine/validation/run_validation.py`, `engine/validation/README.md`, `engine/validation/results.md`, `engine/validation/data/consensus_getrm.json`, `engine/validation/.gitignore`, `engine/validation/data/out/.gitkeep`, `handoff/A3.md`.
-Notes: Checked ENA `PRJEB19931` (`ERR1955333`/`NA07348.bam`: Isaac-aligned GRCh37, no `chr` prefixes; not lifted over per A3 rule). Streamed only the `chr10:94760000-94995000` (`CYP2C19` + `CYP2C9`) slice for 5 GeT-RM samples (`NA07348`, `NA10831`, `NA11839`, `NA18564`, `NA19122`) from the 1000 Genomes / NYGC 30x GRCh38 phased panel (`chr10` length `133797422`) and ran `pgkb/pharmcat:3.4.0` with zero DANGEROUS reference-imputation flags. Concordance: 9/10 exact or co-equal candidate matches (`NA10831` `CYP2C9` and `NA11839` `CYP2C9` retain `Indeterminate` candidate ties due to absent polymorphic-panel sites remaining no-calls); 1 mismatch reported transparently (`NA11839` `CYP2C19`: published `*1/*1` vs PharmCAT `*1/*38` due to PharmVar's `*1`/`*38` split at `rs3758581` `chr10:94842866`, both Normal Metabolizer).
+Notes: Checked ENA `PRJEB19931` (`ERR1955333`/`NA07348.bam`: Isaac-aligned GRCh37, no `chr` prefixes; not lifted over per A3 rule). Streamed only the `chr10:94760000-94995000` (`CYP2C19` + `CYP2C9`) slice for 5 GeT-RM samples (`NA07348`, `NA10831`, `NA11839`, `NA18564`, `NA19122`) from the 1000 Genomes / NYGC 30x GRCh38 phased panel (`chr10` length `133797422`) and ran `pgkb/pharmcat:3.4.0` with zero DANGEROUS reference-imputation flags. Concordance: 9/10 exact or co-equal candidate matches (7 exact single calls, 2 tied candidates, 1 mismatch; REVIEW 2026-11-24) (`NA10831` `CYP2C9` and `NA11839` `CYP2C9` retain `Indeterminate` candidate ties due to absent polymorphic-panel sites remaining no-calls); 1 mismatch reported transparently (`NA11839` `CYP2C19`: published `*1/*1` vs PharmCAT `*1/*38` due to PharmVar's `*1`/`*38` split at `rs3758581` `chr10:94842866`, both Normal Metabolizer).
 Run: `python engine/validation/run_validation.py` (requires Docker `pgkb/pharmcat:3.4.0` and Python 3.12+).
 Data contract unchanged. No new runtime dependency.
 
@@ -87,7 +87,7 @@ Data contract unchanged. No new runtime dependency.
 ## B2 — CDS Hooks order-sign service (22 Nov 2026)
 Files: `cds/server.js`, `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/lib/cards.js`, `cds/test/cds.test.js`, `cds/package.json`, `cds/README.md`, `handoff/B2.md`.
 Notes: Zero-dependency Node 22 LTS CDS Hooks 2.0.1 service on port `3000` exposing `GET /cds-services` (`meyar-pgx` on `order-sign`, `meyar-pgx-select` on `order-select`; rejects deprecated `medication-prescribe`), `POST /cds-services/meyar-pgx`, `POST /cds-services/meyar-pgx-select`, `GET /health`, `OPTIONS` CORS for `sandbox.cds-hooks.org` / local `8081`, and read-only `/design/*`. Resolves phenotypes in priority order: CDS Hooks `prefetch.pgxObservations` → local HAPI FHIR (`FHIR_BASE`, bounded timeout, never public `hapi.fhir.org`) → `engine/data/out/*.contract.json` (and `docs/fixtures/*.contract.json` fallback), enforcing A6 germline-only guard, A8 SV-gene not-assessed safety, A7 phenoconversion dual-phenotype display, and strict verbatim CPIC lookup from `tables/cpic_recommendations.json`.
-Run: `docker compose up -d --build hapi cds` (or `cd cds && node server.js`), test with `cd cds && node --test test/*.test.js`, verify `curl http://localhost:3000/cds-services` and `POST http://localhost:3000/cds-services/meyar-pgx` (`demo-001` clopidogrel returns a `CYP2C19 Poor Metabolizer` card via HAPI in about 0.1 s, and via contract fallback with HAPI stopped in about 0.42 s).
+Run: `docker compose up -d --build hapi cds` (or `cd cds && node server.js`), test with `cd cds && node --test test/*.test.js`, verify `curl http://localhost:3000/cds-services` and `POST http://localhost:3000/cds-services/meyar-pgx` (`demo-001` clopidogrel returns a `CYP2C19 Poor Metabolizer` card via HAPI in about 0.1 s, and via contract fallback with HAPI stopped in about 0.42 s (when HAPI does not answer and the 400 ms timeout runs out; under 0.02 s when the connection is refused, REVIEW 2026-11-24)).
 Review fixes (`prompts/REVIEW-opus-5.5.md` applied to B2, 22 Nov 2026), files `cds/lib/cards.js`, `cds/lib/cpic.js`, `cds/lib/phenotypes.js`, `cds/server.js`, `cds/test/cds.test.js`, `cds/README.md`, `docs/requests.md`, `handoff/B2.md`:
 - Clopidogrel with no indication on the order no longer silently uses the ACS/PCI row and offers prasugrel (contraindicated after stroke/TIA, per the table's own CPIC comment). The row is marked assumed, the other indications' rows are listed verbatim, and only alternatives valid under every indication are offered. "Ischemic heart disease" no longer maps to the neurovascular row.
 - Cards with suggestions now carry `selectionBehavior: "at-most-one"` (CDS Hooks 2.0 MUST). Suggestions carry `subject`. Drug-class alternatives are text only, not fake `create` orders.
@@ -276,3 +276,21 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `npm.cmd --prefix passport run build && npm.cmd --prefix passport run preview` (open `http://localhost:5173/?patient=demo-002` or `?view=pharmacist`)
 - **Notes:** Strictly lookup-only from `tables/` (`cyp_inhibitors.json`, `cpic_recommendations.json`, `otc_products.json`, `sv_genes.json`, `saudi_frequencies.json`) with zero network calls and zero LLM usage. Data contract unchanged. No new dependency.
 
+
+## REVIEW — Final review and fix pass (24 Nov 2026)
+- **Branch:** `review/final-2026-11-24`. Report: `docs/REVIEW.md`. Paper evidence: `docs/report-verification.md`. Per-task audits: `docs/review-evidence/`.
+- **Files changed (main ones):**
+  - `passport/`: service-worker precache plugin in `vite.config.js`, `public/sw.js` install, `public/_headers`, `src/imagery.js`, the honesty lines, the scanner's `openScannedCard`, doctor-tab scale, i18n.
+  - `design/`: `meyar.css` (tap targets, `.m-figure`, safe areas), `meyar.js` (`clinicianScaleHTML`), `charts.js` (tooltip clamp), showcase.
+  - `cds/lib/`: compare, preview, dashboard, cards.
+  - `kit/web/`: images, footers, token.
+  - `engine/validation/run_validation.py`: concordance summary.
+  - `docs/`: sources, research, qr-envelope, structural-variants, requests.
+  - Handoffs, `README.md`, `tests/mobile/` (new).
+- **Run:**
+  - `npm --prefix passport test` (60 pass)
+  - `npm --prefix cds test` (45 pass)
+  - `npm --prefix kit test` (32 pass)
+  - `PYTHON="uv run --no-project --python 3.12 --with jsonschema --with pytest python" bash engine/run_pipeline.sh` then `... -m pytest engine/tests` (39 pass)
+  - `npm --prefix tests/mobile ci && npm --prefix tests/mobile test` (150/150 page states)
+- **Locked areas:** clinical logic, tables, contract and crypto are unchanged. Team-owned items (AGENTS.md provenance wording, A5 SLCO1B1 Tier 2 statement) are filed in `docs/requests.md`.

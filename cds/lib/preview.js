@@ -12,7 +12,7 @@ const COPY = {
     subtitle:
       'Non-interruptive CDS Hooks 2.0.1 side-rail preview wired to POST /cds-services/meyar-pgx. Shows genetic and acting-like phenotypes, current-medicine effects, and CPIC-named better-matched alternatives.',
     demo: 'Demo data',
-    proto: 'Research prototype — not for clinical use',
+    proto: 'Research prototype — not for clinical use. Runs on synthetic and GeT-RM reference data; no patient data was used.',
     navDash: 'Alert log',
     navCmp: 'Alert comparison',
     scenariosLabel: 'Clinical order-sign scenarios',
@@ -52,7 +52,7 @@ const COPY = {
     subtitle:
       'معاينة جانبية غير مقاطِعة متصلة بخدمة CDS Hooks 2.0.1 تعرض النمط الجيني والنمط الفعلي وتأثير الأدوية الحالية والبدائل الأنسب المنصوص عليها في إرشادات CPIC.',
     demo: 'بيانات تجريبية',
-    proto: 'نموذج بحثي — ليس للاستخدام السريري',
+    proto: 'نموذج بحثي — ليس للاستخدام السريري. يعمل على بيانات اصطناعية وبيانات GeT-RM المرجعية؛ لم تُستخدم أي بيانات لمرضى.',
     navDash: 'سجل التنبيهات',
     navCmp: 'مقارنة التنبيهات',
     scenariosLabel: 'سيناريوهات توقيع الوصفة',
@@ -410,6 +410,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
 <title>${c.title}</title>
 <link rel="stylesheet" href="/design/fonts/fonts.css">
 <link rel="stylesheet" href="/design/tokens.css">
@@ -672,6 +673,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
   <section class="prv-intro">
     <h1 data-t="heading">${c.heading}</h1>
     <p data-t="subtitle">${c.subtitle}</p>
+    <figure class="m-figure m-figure--band prv-figure" data-image="img-05"><picture><img src="/design/imagery/img-05.webp" srcset="/design/imagery/img-05-640.webp 640w, /design/imagery/img-05.webp 1280w, /design/imagery/img-05-1920.webp 1920w" sizes="(min-width: 960px) 900px, 100vw" width="1280" height="800" alt="يدا طبيب بجانب جهاز لوحي على مكتب العيادة — A clinician's hands beside a tablet at a consulting desk" loading="lazy" decoding="async"></picture><figcaption class="m-figure__label">صورة توضيحية مولَّدة · AI-generated illustration</figcaption></figure>
   </section>
 
   <section aria-label="${c.scenariosLabel}">
@@ -723,7 +725,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 </main>
 
 <script type="module">
-  import { scaleHTML, combHTML, calibrate, initMotion, setLang } from '/design/meyar.js';
+  import { scaleHTML, combHTML, calibrate, initMotion, setLang, clinicianScaleHTML } from '/design/meyar.js';
 
   const COPY = ${copyJson};
   const SCENARIOS = ${scenariosJson};
@@ -863,7 +865,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     }
 
     const gp = currentScenario.geneProfile;
-    const scaleMarkup = scaleHTML(gp, 'clinician');
+    const scaleMarkup = clinicianScaleHTML(gp, currentLang);
 
     host.innerHTML = cards
       .map((card, idx) => {
