@@ -294,3 +294,13 @@ B6 review fixes (23 Nov 2026, docs/REVIEW-B6-PR16.md): exact activity scores on 
   - `PYTHON="uv run --no-project --python 3.12 --with jsonschema --with pytest python" bash engine/run_pipeline.sh` then `... -m pytest engine/tests` (39 pass)
   - `npm --prefix tests/mobile ci && npm --prefix tests/mobile test` (150/150 page states)
 - **Locked areas:** clinical logic, tables, contract and crypto are unchanged. Team-owned items (AGENTS.md provenance wording, A5 SLCO1B1 Tier 2 statement) are filed in `docs/requests.md`.
+
+
+## DEMO-FIXES — Pre-recording fixes P0-1 to P0-4 (24 Nov 2026)
+- **Branch:** `demo-fixes`. Handoff: `handoff/DEMO-FIXES.md`. Screenshots: `docs/screenshots/demo-fixes/`.
+- **DEMO-FIX-1:** every CDS card now carries a CDS Hooks 2.0 `extension.meyar` object (`kind`, gene, diplotype, phenotype, effectivePhenotype, phenoconversion with the activity-score factor, drug, indicator, cpicQuote, cpicQuoteIfStopped, implication, cpicIndication, alternatives, alternativeClass, coverage, callability, guidelineVersion, citation, backwardSweep, affectedDrugs, `mock: true`). `summary` and `detail` are byte-for-byte unchanged. `/preview?lang=ar` and kit `/urgent?lang=ar` render the card in Arabic from that object, with vocabulary from `passport/src/i18n/ar.json`. CPIC text stays verbatim in English, in a block headed «نص CPIC الحرفي». Gene names, alleles, activity-score maths and citations sit in LTR isolates. The same `renderCardAr` is in `cds/lib/preview.js` and `kit/web/urgent.js`, and `kit/test/urgent-ar.test.mjs` keeps the two copies identical.
+- **DEMO-FIX-2:** mock patient banner on `/preview`: pseudonym, age, germline, kit ID, Hijri (Umm al-Qura) and Gregorian result date, and a Demo data chip. Each scenario has its own banner, and every value is `mock: true`.
+- **DEMO-FIX-3:** scenario 5 «demo-006 · كودايين (مع دولوكسيتين)» is selected by default. Backend logic is unchanged.
+- **DEMO-FIX-4:** the `/compare` caption no longer quotes the UF (20%) or PROGRESS (90%) figures. There is no other user-facing occurrence in `cds/`, `kit/` or `passport/`.
+- **Run:** `npm --prefix cds test` (52 pass), `npm --prefix kit test` (34 pass), `node design/build-tokens.mjs` (62/62).
+- **Locked areas:** the data contract, `tables/`, ports, dependencies, `design/` and `passport/` are unchanged.

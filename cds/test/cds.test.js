@@ -1140,7 +1140,7 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /codeine/i);
   });
 
-  it('B5: GET /compare renders both panes on chart-paper ground with exact UF and UK PROGRESS caption', async () => {
+  it('B5: GET /compare renders both panes on chart-paper ground with a figure-free caption (DEMO-FIX-4)', async () => {
     const resp = await fetch(`${baseUrl}/compare`);
     assert.equal(resp.status, 200);
     assert.match(resp.headers.get('content-type') || '', /text\/html/);
@@ -1156,18 +1156,21 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /class="m-cds"/);
     assert.match(html, /class="m-caption"/);
     assert.ok(
-      html.includes(
-        'University of Florida interruptive alerts — 63% of 557 accepted, but only 20% of recommendations followed (79 of 392; Lemke et al., Clin Pharmacol Ther 2023).'
-      ),
-      'Exact UF caption (primary-sourced) must appear; the unsourced PROGRESS 90% is dropped'
+      html.includes("Interruptive alerts are known to cause alert fatigue, so Meyar's card sits beside the order and never blocks it."),
+      'figure-free caption must appear'
     );
+    for (const banned of ['20%', '90%', '63%', 'PROGRESS', 'University of Florida', 'Lemke']) {
+      assert.ok(!html.includes(banned), `compare (en) must not contain ${banned}`);
+    }
 
     const arResp = await fetch(`${baseUrl}/compare?lang=ar`);
     assert.equal(arResp.status, 200);
     const arHtml = await arResp.text();
     assert.match(arHtml, /lang="ar" dir="rtl"/);
-    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && !arHtml.includes('90%'));
-    assert.ok(!html.includes('PROGRESS') && !html.includes('90%'));
+    assert.ok(arHtml.includes('تُظهر الدراسات أن التنبيهات المقاطِعة تُرهق الأطباء'));
+    for (const banned of ['20%', '90%', '63%', '٢٠٪', '٩٠٪', 'PROGRESS', 'Lemke']) {
+      assert.ok(!arHtml.includes(banned), `compare (ar) must not contain ${banned}`);
+    }
   });
 });
 
@@ -1538,5 +1541,204 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
     assert.equal(arResp.status, 200);
     const arHtml = await arResp.text();
     assert.match(arHtml, /lang="ar" dir="rtl"/);
+  });
+});
+
+describe('DEMO-FIXES: structured extension, Arabic card, demo-006 scenario, compare figures', () => {
+  let tmpDir;
+  let server;
+  let baseUrl;
+
+  before(async () => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meyar-demo-fixes-'));
+    server = createCdsServer({
+      fhirBase: 'http://127.0.0.1:1',
+      fhirTimeoutMs: 150,
+      contractsDir: tmpDir,
+      alertsLogPath: path.join(tmpDir, 'alerts.jsonl'),
+    });
+    baseUrl = await startServer(server);
+  });
+
+  after(async () => {
+    await stopServer(server);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  async function postDemo006Codeine() {
+    const resp = await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        makeOrderSignBody({ patientId: 'demo-006', drugCode: '2670', drugDisplay: 'Codeine 30 MG Oral Tablet' })
+      ),
+    });
+    assert.equal(resp.status, 200);
+    const data = await resp.json();
+    const card = data.cards.find((c) => /codeine/.test(c.summary));
+    assert.ok(card, 'demo-006 codeine card');
+    return card;
+  }
+
+  it('(a) summary and detail stay byte-for-byte unchanged for demo-006 codeine', async () => {
+    const card = await postDemo006Codeine();
+    assert.equal(
+      card.summary,
+      'CYP2D6 Ultrarapid Metabolizer, acting like Normal Metabolizer (duloxetine): codeine — Expected morphine formation'
+    );
+    assert.equal(
+      card.detail,
+      '**Order:** Codeine 30 MG Oral Tablet\n\n**Genetic:** CYP2D6 *1/*2x2 (Ultrarapid Metabolizer) · **Acting like:** Normal Metabolizer because of duloxetine\n\nCYP2D6 result from outside call: Mock CNV-aware caller v0.1-demo (StellarPGx-compatible synthetic demo; not run in prototype).\n\n> Use codeine label recommended age- or weight-specific dosing.\n\n**Clinical implication:** Expected morphine formation\n\n**Genetic result (Ultrarapid Metabolizer) applies if duloxetine is stopped:**\n\n> Avoid codeine use because of potential for serious toxicity. If opioid use is warranted, consider a non-tramadol opioid.\n\nSaudi data: No A5 score (Tier 0): structural-variation gene owned by A8; excluded from Goljan et al. 2022 because deletions, duplications and hybrids could not be called.\n\n_Demo data · Advises, does not prescribe. CPIC PharmCAT 3.4.0 · Research prototype — not for clinical use._'
+    );
+  });
+
+  it('(b) extension.meyar carries the structured demo-006 codeine result', async () => {
+    const card = await postDemo006Codeine();
+    const m = card.extension?.meyar;
+    assert.ok(m, 'extension.meyar present');
+    assert.equal(m.mock, true);
+    assert.equal(m.kind, 'cpic');
+    assert.equal(m.gene, 'CYP2D6');
+    assert.equal(m.diplotype, '*1/*2x2');
+    assert.equal(m.phenotype, 'Ultrarapid Metabolizer');
+    assert.equal(m.effectivePhenotype, 'Normal Metabolizer');
+    assert.equal(m.converted, true);
+    assert.equal(m.drug, 'codeine');
+    assert.equal(m.indicator, card.indicator);
+    assert.deepEqual(m.phenoconversion.cause, ['duloxetine']);
+    assert.equal(m.phenoconversion.inhibitorStrength, 'moderate');
+    assert.equal(m.phenoconversion.geneticActivityScore, 3);
+    assert.equal(m.phenoconversion.factor, 0.5);
+    assert.equal(m.phenoconversion.adjustedActivityScore, 1.5);
+    assert.equal(m.cpicQuote, 'Use codeine label recommended age- or weight-specific dosing.');
+    assert.ok(card.detail.includes(`> ${m.cpicQuote}`), 'cpicQuote is the verbatim quote in detail');
+    assert.deepEqual(m.cpicQuoteIfStopped.stoppedDrugs, ['duloxetine']);
+    assert.equal(
+      m.cpicQuoteIfStopped.recommendation,
+      'Avoid codeine use because of potential for serious toxicity. If opioid use is warranted, consider a non-tramadol opioid.'
+    );
+    assert.equal(m.implication, 'Expected morphine formation');
+    assert.equal(m.callability.method, 'outside-call');
+    assert.match(m.callability.source, /Mock CNV-aware caller/);
+    assert.equal(m.coverage.saudiDataTier, 0);
+    assert.equal(m.guidelineVersion, 'CPIC PharmCAT 3.4.0');
+    assert.match(m.citation.pub, /Crews KR et al\./);
+    assert.equal(m.backwardSweep, false);
+    for (const key of ['alternatives', 'alternativeClass', 'cpicIndication', 'affectedDrugs']) {
+      assert.ok(key in m, `extension.meyar.${key} present`);
+    }
+  });
+
+  it('(b2) every card kind carries extension.meyar', async () => {
+    const bodies = [
+      makeOrderSignBody({ patientId: 'demo-001' }),
+      makeOrderSignBody({ patientId: 'demo-002', drugCode: '2670', drugDisplay: 'Codeine 30 MG Oral Tablet' }),
+    ];
+    for (const body of bodies) {
+      const data = await (
+        await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      ).json();
+      assert.ok(data.cards.length > 0);
+      for (const c of data.cards) assert.ok(c.extension?.meyar?.kind, `extension on: ${c.summary}`);
+    }
+  });
+
+  it('(c) /preview?lang=ar renders an Arabic card: verbatim CPIC block, Arabic scale stops, no stray English', async () => {
+    const html = await (await fetch(`${baseUrl}/preview?lang=ar`)).text();
+    assert.ok(html.includes('نص CPIC الحرفي'), 'verbatim CPIC heading');
+    assert.ok(html.includes('سريع جداً'), 'Arabic scale stop from passport i18n');
+
+    const { renderCardAr, loadArabicVocab } = await import('../lib/preview.js');
+    const { scaleHTML, scaleIndex, scaleKind, combHTML } = await import('../../design/meyar.js');
+    const esc = (s) =>
+      String(s ?? '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+    const card = await postDemo006Codeine();
+    const out = renderCardAr(card, { AR: loadArabicVocab(), esc, scaleHTML, scaleIndex, scaleKind, combHTML, idx: 0 });
+
+    const labels = /<div class="m-scale__labels"[^>]*>([\s\S]*?)<\/div>/.exec(out)[1];
+    assert.ok(!/Ultrarapid|Poor|Normal|Intermediate|Rapid/.test(labels), `scale labels are Arabic: ${labels}`);
+    assert.ok(labels.includes('سريع جداً') && labels.includes('بطيء'));
+    assert.ok(out.includes('جيناته') && out.includes('الآن'), 'scale pins');
+    assert.ok(out.includes('CYP2D6</bdi> سريع جداً، يعمل الآن كطبيعي (دولوكسيتين): كودايين'), 'Arabic card title');
+    assert.ok(out.includes('إذا أُوقف دولوكسيتين، تنطبق النتيجة الوراثية:'));
+    assert.ok(out.includes('3.0 × 0.5 = 1.5'));
+    assert.ok(out.includes('كودايين ٣٠ ملغ أقراص'));
+    assert.ok(out.includes('<blockquote class="m-cds__rec" dir="ltr" lang="en">Use codeine label recommended'));
+
+    // Outside the LTR isolates (CPIC quotes, gene/allele names, citations), no English words remain.
+    const visible = out
+      .replace(/<blockquote[\s\S]*?<\/blockquote>/g, ' ')
+      .replace(/<bdi[\s\S]*?<\/bdi>/g, ' ')
+      .replace(/<span class="m-data" dir="ltr">[\s\S]*?<\/span>/g, ' ')
+      .replace(/<[^>]+>/g, ' ');
+    const stray = (visible.match(/[A-Za-z][A-Za-z0-9-]*/g) || []).filter(
+      (w) => !/^(CPIC|CYP\w+|A5|A8|T\d|FDA|germline)$/.test(w)
+    );
+    assert.deepEqual(stray, [], `English left in the Arabic card: ${stray.join(', ')}`);
+  });
+
+  it('DEMO-FIX-2: every preview scenario has a mock patient banner (pseudonym, age 45–64, germline, kit ID, result date)', async () => {
+    const { buildPreviewScenarios } = await import('../lib/preview.js');
+    for (const sc of buildPreviewScenarios()) {
+      const b = sc.banner;
+      assert.ok(b, `${sc.id} has a banner`);
+      assert.equal(b.mock, true);
+      for (const key of ['pseudonym', 'age', 'sampleOrigin', 'kitId', 'resultDate']) {
+        assert.equal(b[key].mock, true, `${sc.id} banner.${key} is mock`);
+      }
+      assert.match(b.pseudonym.ar, /^مريض تجريبي [٠-٩]{3}$/);
+      assert.match(b.pseudonym.en, /^Demo patient \d{3}$/);
+      assert.ok(b.age.value >= 45 && b.age.value <= 64, `${sc.id} age in 45–64`);
+      assert.equal(b.sampleOrigin.value, 'germline');
+      assert.match(b.kitId.value, /^MYR-DEMO-\d{4}$/);
+      assert.match(b.resultDate.value, /^\d{4}-\d{2}-\d{2}$/);
+    }
+    const byPatient = Object.fromEntries(buildPreviewScenarios().map((s) => [s.patientId, s.banner.kitId.value]));
+    assert.equal(byPatient['demo-001'], 'MYR-DEMO-0001');
+    assert.equal(byPatient['demo-002'], 'MYR-DEMO-0002');
+    const html = await (await fetch(`${baseUrl}/preview?lang=ar`)).text();
+    assert.match(html, /id="patient-banner"/);
+    assert.ok(html.includes('ar-SA-u-ca-islamic-umalqura'), 'Hijri (Umm al-Qura) date');
+  });
+
+  it('DEMO-FIX-3: scenario 5 (demo-006 codeine on duloxetine) is the default and its hook body returns the phenoconverted card', async () => {
+    const { buildPreviewScenarios } = await import('../lib/preview.js');
+    const sc = buildPreviewScenarios().find((s) => s.id === 'demo-006-codeine');
+    assert.ok(sc, 'scenario 5 exists');
+    assert.equal(sc.patientId, 'demo-006');
+    assert.equal(sc.banner.kitId.value, 'MYR-DEMO-0006');
+    assert.equal(sc.banner.age.value, 58);
+
+    const html = await (await fetch(`${baseUrl}/preview`)).text();
+    assert.ok(html.includes("SCENARIOS.find((s) => s.id === 'demo-006-codeine')"), 'default scenario is demo-006');
+    assert.ok(html.includes('5. demo-006 · Codeine (on duloxetine)'));
+    assert.ok(html.includes('٥. demo-006 · كودايين (مع دولوكسيتين)'));
+
+    const data = await (
+      await fetch(`${baseUrl}/cds-services/meyar-pgx`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sc.hookBody),
+      })
+    ).json();
+    const card = data.cards.find((c) => /codeine/.test(c.summary));
+    assert.ok(card, 'codeine card');
+    assert.match(card.summary, /^CYP2D6 Ultrarapid Metabolizer, acting like Normal Metabolizer \(duloxetine\): codeine/);
+    assert.match(card.detail, /applies if duloxetine is stopped:\*\*\n\n> Avoid codeine use because of potential for serious toxicity/);
+    assert.match(card.detail, /Mock CNV-aware caller/);
+    assert.equal(card.extension.meyar.phenoconversion.adjustedActivityScore, 1.5);
+  });
+
+  it('(d) /compare in both languages states no unverified figure', async () => {
+    for (const q of ['', '?lang=ar']) {
+      const html = await (await fetch(`${baseUrl}/compare${q}`)).text();
+      for (const banned of ['20%', '90%', '٢٠٪', '٩٠٪', 'PROGRESS']) {
+        assert.ok(!html.includes(banned), `compare${q} must not contain ${banned}`);
+      }
+    }
   });
 });

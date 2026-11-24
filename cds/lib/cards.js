@@ -27,6 +27,60 @@ function footer(guidelineVersion) {
   return `_${DEMO_LABEL} · Advises, does not prescribe.${version} ${FOOTER_SUFFIX}_`;
 }
 
+// DEMO-FIX-1: structured CDS Hooks 2.0 `extension` so a client can render the card in
+// another language without parsing the English Markdown. It carries the same data the
+// English `summary` / `detail` already use; CPIC text is copied verbatim, never translated.
+const INHIBITOR_FACTOR = { strong: 0, moderate: 0.5 };
+
+function pickCallability(callability) {
+  if (!callability || typeof callability !== 'object') return null;
+  const out = { method: callability.method ?? null, svAssessed: Boolean(callability.svAssessed) };
+  if (callability.source) out.source = callability.source;
+  if (callability.reason) out.reason = callability.reason;
+  if (callability.requiredInput) out.requiredInput = callability.requiredInput;
+  return out;
+}
+
+function pickPhenoconversion(pc, extra = {}) {
+  if (!pc || typeof pc !== 'object') return null;
+  const strength = extra.inhibitorStrength ?? pc.inhibitorStrength ?? null;
+  const factor = extra.factor ?? (strength ? INHIBITOR_FACTOR[strength] ?? null : null);
+  const cause = extra.cause ?? pc.cause;
+  return {
+    applied: Boolean(extra.applied ?? pc.applied),
+    cause: Array.isArray(cause) ? [...cause] : [],
+    inhibitorStrength: strength,
+    geneticActivityScore: extra.geneticActivityScore ?? pc.geneticActivityScore ?? null,
+    factor,
+    adjustedActivityScore: extra.adjustedActivityScore ?? pc.adjustedActivityScore ?? null,
+    method: extra.method ?? pc.method ?? null,
+  };
+}
+
+function pickAlternatives(alternatives) {
+  return (alternatives || []).map((a) => ({
+    drug: a?.drug ?? null,
+    drugClass: a?.drugClass ?? null,
+    rxnorm: a?.rxnorm ?? null,
+    condition: a?.condition ?? null,
+    quotedFrom: a?.quotedFrom ?? null,
+  }));
+}
+
+function pickCitation(guideline) {
+  if (!guideline) return null;
+  return {
+    name: guideline.name ?? null,
+    pub: guideline.pub ?? null,
+    doi: guideline.doi ?? null,
+    url: guideline.url ?? null,
+  };
+}
+
+function meyarExtension(fields) {
+  return { meyar: { mock: true, ...fields } };
+}
+
 // Markdown blockquote that keeps every line of a multi-line CPIC text inside the quote.
 function quote(text) {
   return String(text || '')
@@ -158,6 +212,35 @@ export function buildNotAssessedSvCard({ geneRecord, svRow, drugDisplay, isBackw
     indicator: 'info',
     detail: lines.join('\n\n'),
     source: { label: 'Meyar (research prototype)' },
+    extension: meyarExtension({
+      kind: 'not-assessed',
+      gene,
+      diplotype: null,
+      phenotype: null,
+      effectivePhenotype: null,
+      converted: false,
+      phenoconversion: null,
+      drug: null,
+      orderDisplay: drugDisplay ?? null,
+      indicator: 'info',
+      cpicQuote: null,
+      cpicQuoteIfStopped: null,
+      implication: null,
+      cpicIndication: null,
+      alternatives: [],
+      alternativeClass: [],
+      coverage: geneRecord?.coverage ?? null,
+      callability: pickCallability(geneRecord?.callability) ?? {
+        method: 'not-assessed',
+        svAssessed: false,
+        ...(reason ? { reason } : {}),
+        ...(requiredInput ? { requiredInput } : {}),
+      },
+      guidelineVersion,
+      citation: null,
+      backwardSweep: Boolean(isBackwardSweep),
+      affectedDrugs: [],
+    }),
     suggestions: [
       buildPharmacistSuggestion({
         gene,
@@ -193,6 +276,30 @@ export function buildNoResultCard({ gene, geneRecord, drug, drugDisplay }) {
     indicator: 'info',
     detail: lines.join('\n\n'),
     source: { label: 'Meyar (research prototype)' },
+    extension: meyarExtension({
+      kind: 'no-result',
+      gene,
+      diplotype: geneRecord?.diplotype ?? null,
+      phenotype: geneRecord?.phenotype ?? null,
+      effectivePhenotype: null,
+      converted: false,
+      phenoconversion: null,
+      drug,
+      orderDisplay: drugDisplay ?? null,
+      indicator: 'info',
+      cpicQuote: null,
+      cpicQuoteIfStopped: null,
+      implication: null,
+      cpicIndication: null,
+      alternatives: [],
+      alternativeClass: [],
+      coverage: geneRecord?.coverage ?? null,
+      callability: pickCallability(geneRecord?.callability),
+      guidelineVersion: geneRecord?.guidelineVersion ?? null,
+      citation: null,
+      backwardSweep: false,
+      affectedDrugs: [],
+    }),
   };
 }
 
@@ -412,6 +519,24 @@ export function buildCpicCard({
 
   detailParts.push(footer(guidelineVersion));
 
+  const showIfStopped =
+    converted && geneticMatch?.row && geneticMatch.row.recommendation !== row.recommendation;
+  let cpicIndication = null;
+  if (row.population && row.population !== 'general') {
+    cpicIndication = {
+      population: row.population,
+      classification: row.classification ?? null,
+      assumed: !match.indicationInferred,
+      otherPopulations: match.indicationInferred
+        ? []
+        : (match.otherPopulationRows || []).map((r) => ({
+            population: r.population,
+            classification: r.classification ?? null,
+            recommendation: r.recommendation,
+          })),
+    };
+  }
+
   const card = {
     uuid: crypto.randomUUID(),
     summary,
@@ -421,6 +546,40 @@ export function buildCpicCard({
       label: 'Meyar (research prototype)',
       ...(row.guideline?.url ? { url: row.guideline.url } : {}),
     },
+    extension: meyarExtension({
+      kind: 'cpic',
+      gene,
+      diplotype,
+      phenotype: geneticPhenotype,
+      effectivePhenotype,
+      converted,
+      phenoconversion: pickPhenoconversion(geneRecord.phenoconversion),
+      drug: row.drug,
+      orderDisplay: drugDisplay || row.drug,
+      indicator,
+      cpicQuote: row.recommendation,
+      cpicClassification: row.classification ?? null,
+      cpicQuoteIfStopped: showIfStopped
+        ? {
+            phenotype: geneticPhenotype,
+            stoppedDrugs: [...causes],
+            recommendation: geneticMatch.row.recommendation,
+          }
+        : null,
+      implication: row.implication && row.implication !== 'n/a' ? row.implication : null,
+      cpicIndication,
+      alternatives: pickAlternatives(alternatives),
+      alternativeClass: alternatives.filter((a) => !a?.drug && a?.drugClass).map((a) => a.drugClass),
+      alternativesFilteredForIndication: alternatives.length < ownCount,
+      candidates: Array.isArray(geneRecord.candidates) ? [...geneRecord.candidates] : [],
+      germlineOncologyNote: isOncologyDrug(row.drug, gene),
+      coverage: geneRecord.coverage ?? null,
+      callability: pickCallability(geneRecord.callability),
+      guidelineVersion,
+      citation: pickCitation(row.guideline),
+      backwardSweep: Boolean(isBackwardSweep),
+      affectedDrugs: [],
+    }),
   };
 
   if (row.guideline?.url) {
@@ -503,6 +662,7 @@ export function buildInhibitorBackwardSweepCard({
 
   const linksByUrl = new Map();
   let firstGuideline = null;
+  const affectedDrugs = [];
 
   for (const sub of affectedSubstrates) {
     const row = sub.afterMatch.row;
@@ -525,6 +685,19 @@ export function buildInhibitorBackwardSweepCard({
     const ownCount = Array.isArray(row.alternatives) ? row.alternatives.length : 0;
     const altText = formatAlternativesText(alts, alts.length < ownCount);
     if (altText) detailParts.push(altText);
+
+    affectedDrugs.push({
+      drug: sub.drug,
+      drugDisplay: sub.drugDisplay ?? null,
+      coSigned: Boolean(sub.coSigned),
+      cpicQuote: row.recommendation,
+      cpicClassification: row.classification ?? null,
+      implication: row.implication && row.implication !== 'n/a' ? row.implication : null,
+      alternatives: pickAlternatives(alts),
+      alternativeClass: alts.filter((a) => !a?.drug && a?.drugClass).map((a) => a.drugClass),
+      germlineOncologyNote: isOncologyDrug(row.drug, enzyme),
+      citation: pickCitation(row.guideline),
+    });
 
     if (row.guideline?.url && !linksByUrl.has(row.guideline.url)) {
       const gLabel = row.guideline?.pub
@@ -555,6 +728,41 @@ export function buildInhibitorBackwardSweepCard({
       ...(links[0]?.url ? { url: links[0].url } : {}),
     },
     ...(links.length > 0 ? { links } : {}),
+    extension: meyarExtension({
+      kind: 'inhibitor-sweep',
+      gene: enzyme,
+      diplotype,
+      phenotype: simulation.geneticPhenotype,
+      effectivePhenotype: simulation.newPhenotype,
+      converted: Boolean(simulation.scored),
+      phenoconversion: pickPhenoconversion(
+        {},
+        {
+          applied: Boolean(simulation.scored),
+          cause: [inhibitorDrug],
+          inhibitorStrength: strength,
+          geneticActivityScore: simulation.scored ? simulation.geneticActivityScore : null,
+          factor: simulation.scored ? simulation.factor : null,
+          adjustedActivityScore: simulation.scored ? simulation.adjustedActivityScore : null,
+          method: simulation.scored ? simulation.method : null,
+        }
+      ),
+      drug: inhibitorDrug,
+      orderDisplay: inhibitorDisplay || inhibitorDrug,
+      indicator: 'info',
+      cpicQuote: null,
+      cpicQuoteIfStopped: null,
+      implication: null,
+      cpicIndication: null,
+      alternatives: [],
+      alternativeClass: [],
+      coverage: geneRecord.coverage ?? null,
+      callability: pickCallability(geneRecord.callability),
+      guidelineVersion,
+      citation: pickCitation(firstGuideline),
+      backwardSweep: true,
+      affectedDrugs,
+    }),
     suggestions: [
       buildPharmacistSuggestion({
         gene: enzyme,

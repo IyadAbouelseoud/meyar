@@ -5,6 +5,278 @@
 // Meyar's non-interruptive .m-cds side-rail cards with scaleHTML(gene, 'clinician'),
 // combHTML(coverage), Genetic / Acting like list, and .m-btn alternatives.
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// DEMO-FIX-1: Arabic clinician vocabulary comes from the Passport's i18n file
+// (passport/src/i18n/ar.json: scale, phenotypeShort, drugs). The CDS Docker image does
+// not mount passport/, so a minimal copy of the same strings is the fallback.
+const AR_FALLBACK = {
+  scale: {
+    metabolizer: ['بطيء', 'أبطأ قليلاً', 'طبيعي', 'أسرع قليلاً', 'سريع جداً'],
+    function: ['ضعيف', 'أضعف قليلاً', 'طبيعي', 'أقوى قليلاً', '—'],
+  },
+  phenotypeShort: {
+    'Poor Metabolizer': 'بطيء',
+    'Intermediate Metabolizer': 'أبطأ قليلاً',
+    'Normal Metabolizer': 'طبيعي',
+    'Rapid Metabolizer': 'أسرع قليلاً',
+    'Ultrarapid Metabolizer': 'سريع جداً',
+  },
+  drugs: {
+    clopidogrel: 'كلوبيدوجريل',
+    prasugrel: 'براسوغريل',
+    ticagrelor: 'تيكاجريلور',
+    codeine: 'كودايين',
+    tramadol: 'ترامادول',
+    pantoprazole: 'بانتوبرازول',
+    paroxetine: 'باروكسيتين',
+    duloxetine: 'دولوكسيتين',
+    aspirin: 'أسبرين',
+    'non-tramadol opioid': 'مسكّن آخر غير الترامادول',
+    'non-codeine opioid': 'مسكّن آخر غير الكودايين',
+  },
+};
+
+export function loadArabicVocab(file) {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    file,
+    process.env.MEYAR_AR_I18N,
+    path.join(here, '..', '..', 'passport', 'src', 'i18n', 'ar.json'),
+    '/data/passport-i18n/ar.json',
+  ].filter(Boolean);
+  for (const f of candidates) {
+    try {
+      const j = JSON.parse(fs.readFileSync(f, 'utf8'));
+      if (j?.scale?.metabolizer && j?.phenotypeShort && j?.drugs) {
+        return { scale: j.scale, phenotypeShort: j.phenotypeShort, drugs: j.drugs };
+      }
+    } catch {
+      // try the next location
+    }
+  }
+  return AR_FALLBACK;
+}
+
+export function renderCardAr(card, ctx) {
+  // Arabic CDS card from card.extension.meyar (DEMO-FIX-1). UI labels only: every CPIC
+  // text is shown verbatim in English inside an LTR quote (AGENTS.md §7, lookup only).
+  const { AR, esc, scaleHTML, scaleIndex, scaleKind, combHTML } = ctx;
+  const idx = ctx.idx ?? 0;
+  const m = (card && card.extension && card.extension.meyar) || {};
+  const num = (n) => new Intl.NumberFormat('ar-SA').format(n);
+  const ltr = (s) => `<bdi dir="ltr">${esc(s)}</bdi>`;
+  const en = (s) => `<span dir="ltr" lang="en">${esc(s)}</span>`;
+  const drugAr = (d) => {
+    if (!d) return '';
+    const k = String(d).trim().toLowerCase();
+    return AR.drugs && AR.drugs[k] ? esc(AR.drugs[k]) : ltr(d);
+  };
+  const listAr = (arr) => (arr || []).map(drugAr).join('، ');
+  const phenoAr = (p) => {
+    if (!p) return 'لا توجد نتيجة';
+    if (AR.phenotypeShort && AR.phenotypeShort[p]) return esc(AR.phenotypeShort[p]);
+    const i = scaleIndex(p);
+    const labels = AR.scale && AR.scale[scaleKind(p)];
+    return i != null && labels && labels[i] && labels[i] !== '—' ? esc(labels[i]) : ltr(p);
+  };
+  const orderAr = (display) => {
+    const s = String(display || '').trim();
+    const mm = /^([A-Za-z][A-Za-z -]*?)\s+([\d.]+)\s*MG\s+Oral\s+Tablet$/i.exec(s);
+    if (mm) return `${drugAr(mm[1])} ${num(Number(mm[2]))} ملغ أقراص`;
+    if (AR.drugs && AR.drugs[s.toLowerCase()]) return drugAr(s);
+    return ltr(s);
+  };
+  const classAr = (c) =>
+    ({ strong: 'قوية', moderate: 'متوسطة', optional: 'اختيارية', 'no recommendation': 'لا توصية' })[
+      String(c || '').trim().toLowerCase()
+    ] || ltr(c || '');
+  const strengthAr = (s) => ({ strong: 'قوي', moderate: 'متوسط' })[s] || ltr(s || '');
+  const score = (n) => {
+    const v = Number(n);
+    return Number.isInteger(v) ? v.toFixed(1) : String(Math.round(v * 1e6) / 1e6);
+  };
+  const citeText = (c) => (c ? [c.pub, c.name ? `CPIC: ${c.name}` : null].filter(Boolean).join(' · ') : '');
+  const cpicBlock = (quote, citation, heading = 'نص CPIC الحرفي') =>
+    quote
+      ? `<div class="mx-cpic"><p class="mx-cpic__h">${heading}</p><blockquote class="m-cds__rec" dir="ltr" lang="en">${esc(quote)}${
+          citation && citeText(citation) ? `<cite>${esc(citeText(citation))}</cite>` : ''
+        }</blockquote></div>`
+      : '';
+  const altNames = (alts) => (alts || []).map((a) => drugAr(a.drug || a.drugClass)).filter(Boolean);
+  const altBlock = (alts, cpicQuote, filtered) => {
+    const names = altNames(alts);
+    const parts = [];
+    if (names.length > 0) {
+      parts.push(`<p class="mx-line"><strong>أنسب لجينات هذا المريض:</strong> ${names.join('، ')}</p>`);
+      const quotes = [...new Set((alts || []).map((a) => a.quotedFrom).filter((q) => q && q !== cpicQuote))];
+      for (const q of quotes) parts.push(cpicBlock(q, null));
+      if (filtered) {
+        parts.push('<p class="mx-line">تُعرض فقط البدائل التي تذكرها CPIC لهذا النمط في كل الاستطبابات، لأن الطلب لا يذكر استطباباً.</p>');
+      }
+    } else if (filtered) {
+      parts.push('<p class="mx-line"><strong>أنسب لجينات هذا المريض:</strong> لا بديل معروض — تذكر CPIC بدائل مختلفة لاستطبابات مختلفة، والطلب لا يذكر استطباباً.</p>');
+    }
+    return parts.join('');
+  };
+
+  const gene = m.gene || '';
+  const isSweep = Boolean(m.backwardSweep);
+  const kind = m.kind || 'cpic';
+  const pc = m.phenoconversion || null;
+  const causes = (pc && pc.cause) || [];
+  const converted = Boolean(m.converted);
+  const indicator = card.indicator === 'warning' ? 'warning' : 'info';
+  const indWord = (indicator === 'warning' ? 'تحذير' : 'للعلم') + (isSweep ? ' · مراجعة الأدوية الحالية' : '');
+  const sweepPrefix = isSweep ? 'مراجعة الأدوية الحالية — ' : '';
+
+  // Title
+  let title;
+  if (kind === 'not-assessed') {
+    title = `${sweepPrefix}${ltr(gene)}: لم يُفحص عدد النسخ في هذا الاختبار — لا توجد نتيجة`;
+  } else if (kind === 'no-result') {
+    title = `${ltr(gene)}: لا توجد نتيجة من هذا الفحص — لم يُراجَع ${drugAr(m.drug)} وفق إرشاد ${ltr(gene)}`;
+  } else if (kind === 'inhibitor-sweep') {
+    const affected = listAr((m.affectedDrugs || []).map((a) => a.drug));
+    title = converted
+      ? `${sweepPrefix}${ltr(gene)} ${phenoAr(m.phenotype)}، يعمل الآن ك${phenoAr(m.effectivePhenotype)} (${drugAr(m.drug)}): يؤثر في ${affected}`
+      : `${sweepPrefix}${ltr(gene)} قد يتأثر بـ${drugAr(m.drug)}: راجِع ${affected}`;
+  } else {
+    title = converted
+      ? `${sweepPrefix}${ltr(gene)} ${phenoAr(m.phenotype)}، يعمل الآن ك${phenoAr(m.effectivePhenotype)} (${listAr(causes)}): ${drugAr(m.drug)}`
+      : `${sweepPrefix}${ltr(gene)} ${phenoAr(m.phenotype)}: ${drugAr(m.drug)}`;
+  }
+
+  const body = [];
+  body.push(`<p class="m-cds__summary">${title}</p>`);
+
+  if (kind === 'not-assessed') {
+    if (isSweep || m.orderDisplay) {
+      body.push(`<p class="mx-line"><strong>${isSweep ? 'دواء حالي (مراجعة الأدوية الحالية):' : 'الطلب:'}</strong> ${orderAr(m.orderDisplay)}</p>`);
+    }
+    body.push(`<p class="mx-line">عدد نسخ الجين ${ltr(gene)} لم يُفحص في هذا الاختبار — لا توجد نتيجة معروضة. هذه ليست نتيجة طبيعية.</p>`);
+    body.push(`<div class="prv-mini">${scaleHTML({ phenotype: null, callability: { method: 'not-assessed' } }, 'ar', AR.scale.metabolizer, 'patient')}</div>`);
+    if (m.callability && m.callability.reason) body.push(cpicBlock(m.callability.reason, null, 'السبب — نص المصدر الحرفي'));
+  } else if (kind === 'no-result') {
+    body.push(`<p class="mx-line"><strong>الطلب:</strong> ${orderAr(m.orderDisplay)}</p>`);
+    body.push(`<p class="mx-line">لا توجد نتيجة ${ltr(gene)} في ملف هذا المريض، لذلك لم يُراجَع هذا الطلب وفق إرشاد CPIC الخاص بـ${ltr(gene)}. هذه ليست نتيجة طبيعية.</p>`);
+  } else {
+    if (kind === 'inhibitor-sweep') {
+      body.push(`<p class="mx-line"><strong>الطلب (مثبط ${strengthAr(pc && pc.inhibitorStrength)} لـ ${ltr(gene)}):</strong> ${orderAr(m.orderDisplay)}</p>`);
+    } else if (isSweep) {
+      body.push(`<p class="mx-line"><strong>دواء حالي (مراجعة الأدوية الحالية):</strong> ${orderAr(m.orderDisplay)}</p>`);
+    } else if (m.orderDisplay) {
+      body.push(`<p class="mx-line"><strong>الطلب:</strong> ${orderAr(m.orderDisplay)}</p>`);
+    }
+
+    const acting = converted
+      ? `${phenoAr(m.effectivePhenotype)} بسبب ${listAr(causes)}`
+      : pc && pc.applied && causes.length > 0
+        ? `${phenoAr(m.phenotype)} · قد يتأثر بـ${listAr(causes)}`
+        : `${phenoAr(m.phenotype)} (دون تغيّر)`;
+    body.push(`<dl class="m-cds__pheno">
+      <dt>النمط الجيني</dt><dd class="m-data">${ltr(`${gene} ${m.diplotype || ''}`.trim())}</dd>
+      <dt>النتيجة الوراثية (جيناته)</dt><dd>${phenoAr(m.phenotype)}</dd>
+      <dt>يعمل الآن كـ</dt><dd>${acting}</dd>
+    </dl>`);
+    const scaleGene = {
+      phenotype: m.phenotype,
+      effectivePhenotype: converted ? m.effectivePhenotype : m.phenotype,
+      callability: m.callability || undefined,
+    };
+    const labels = AR.scale[scaleKind(m.phenotype || '')] || AR.scale.metabolizer;
+    body.push(`<div class="prv-mini">${scaleHTML(scaleGene, 'ar', labels, 'patient').replace(/جيناتك/g, 'جيناته')}</div>`);
+
+    if (pc && pc.applied && pc.geneticActivityScore != null && pc.factor != null && pc.adjustedActivityScore != null) {
+      body.push(`<p class="m-coverage__line">درجة النشاط: <span class="m-data" dir="ltr">${esc(`${score(pc.geneticActivityScore)} × ${pc.factor} = ${score(pc.adjustedActivityScore)}`)}</span> (مثبط ${strengthAr(pc.inhibitorStrength)}، جدول FDA؛ ${ltr(pc.method || 'Thomas et al. 2020')})</p>`);
+    }
+    if (m.callability && m.callability.method === 'outside-call') {
+      const caller = m.callability.source ? String(m.callability.source).split(' (')[0] : '';
+      body.push(`<p class="mx-line">نتيجة ${ltr(gene)} من استدعاء خارجي تجريبي لتقدير عدد النسخ${caller ? `: ${ltr(caller)}` : ''}.</p>`);
+    }
+    if (Array.isArray(m.candidates) && m.candidates.length > 1) {
+      body.push(`<p class="mx-line">الأنماط الثنائية المرشّحة: ${ltr(m.candidates.join(', '))}</p>`);
+    }
+
+    if (kind === 'inhibitor-sweep') {
+      for (const a of m.affectedDrugs || []) {
+        body.push(`<p class="mx-line"><strong>${a.coSigned ? `موقَّع ضمن هذا الطلب (أُعيد فحصه مع ${drugAr(m.drug)}):` : 'دواء حالي (مراجعة الأدوية الحالية):'}</strong> ${orderAr(a.drugDisplay || a.drug)}</p>`);
+        body.push(cpicBlock(a.cpicQuote, a.citation));
+        if (a.germlineOncologyNote) body.push('<p class="mx-line">نتيجة وراثية (germline) — تحليل الورم منفصل.</p>');
+        body.push(altBlock(a.alternatives, a.cpicQuote, false));
+      }
+    } else {
+      body.push(cpicBlock(m.cpicQuote, m.citation));
+      if (m.cpicClassification) body.push(`<p class="mx-line">قوة التوصية في CPIC: ${classAr(m.cpicClassification)}</p>`);
+      if (m.germlineOncologyNote) body.push('<p class="mx-line">نتيجة وراثية (germline) — تحليل الورم منفصل.</p>');
+      if (m.implication) body.push(cpicBlock(m.implication, null, 'الأثر السريري — نص CPIC الحرفي'));
+      if (m.cpicIndication) {
+        const ci = m.cpicIndication;
+        let line = `<p class="mx-line"><strong>استطباب CPIC:</strong> ${ltr(ci.population)} (${classAr(ci.classification)})`;
+        if (ci.assumed) line += ' — مُفترَض؛ الطلب لا يذكر استطباباً. توصية CPIC لهذا النمط في الاستطبابات الأخرى:';
+        line += '</p>';
+        body.push(line);
+        if (ci.assumed && (ci.otherPopulations || []).length > 0) {
+          body.push(`<ul class="mx-others">${ci.otherPopulations
+            .map((o) => `<li>${ltr(o.population)} (${classAr(o.classification)}): ${en(o.recommendation)}</li>`)
+            .join('')}</ul>`);
+        }
+      }
+      if (m.cpicQuoteIfStopped) {
+        body.push(cpicBlock(m.cpicQuoteIfStopped.recommendation, null, `إذا أُوقف ${listAr(m.cpicQuoteIfStopped.stoppedDrugs)}، تنطبق النتيجة الوراثية:`));
+      }
+      body.push(altBlock(m.alternatives, m.cpicQuote, Boolean(m.alternativesFilteredForIndication)));
+    }
+  }
+
+  // Coverage (A5) and Saudi data tier
+  const cov = m.coverage || {};
+  const tier = cov.saudiDataTier;
+  const covParts = [];
+  if (Number(cov.definingPositionsTotal) > 0) {
+    const untested = Array.isArray(cov.untestedLocalAlleles) ? cov.untestedLocalAlleles : [];
+    covParts.push(`غطّى الفحص ${num(cov.definingPositionsAssayed || 0)} من ${num(cov.definingPositionsTotal)} موضعاً محدِّداً${untested.length ? `؛ لم يفحص ${ltr(untested.join(', '))}` : ''}.`);
+  }
+  if (tier === 0) covParts.push('لا توجد درجة A5 (المستوى 0): جين تغيّر بنيوي يتولاه A8.');
+  else if (tier === 1) covParts.push(`بيانات سعودية: تواتر سعودي منشور${/Goljan/.test(cov.saudiDataNote || '') ? ` ${ltr('(Goljan et al., PLoS ONE 2022, Table 1)')}` : ''}.`);
+  else if (tier === 2) covParts.push('بيانات سعودية: لا يوجد تواتر سعودي منشور.');
+  const tierWord = tier === 1 ? 'تواتر سعودي منشور' : tier === 0 ? 'جين تغيّر بنيوي (A8)' : tier === 2 ? 'لا يوجد تواتر سعودي منشور' : '';
+  const comb = combHTML(cov);
+  if (covParts.length > 0 || comb) {
+    body.push(`<div class="m-coverage">${comb}<p class="m-coverage__line">${covParts.join(' ')}${
+      tierWord ? ` <span class="m-tier"><span class="m-tier__n">T${tier}</span> <span>${tierWord}</span></span>` : ''
+    }</p></div>`);
+  }
+
+  // Suggestions: alternatives as orderable drafts, then pharmacist
+  const suggestions = Array.isArray(card.suggestions) ? card.suggestions : [];
+  const altSugs = suggestions.filter((s) => (s.actions || []).some((a) => a.resource && a.resource.resourceType === 'MedicationRequest'));
+  const pharm = suggestions.find((s) => s.label === 'Send to pharmacist');
+  if (altSugs.length > 0 || pharm) {
+    body.push(`<div class="m-cds__suggest">${altSugs
+      .map((s, i) => {
+        const drug = (s.actions[0].resource.medicationCodeableConcept || {}).text || '';
+        return `<button class="m-btn ${i > 0 ? 'm-btn--secondary' : ''}" type="button" data-alt-drug="${esc(drug)}" data-card-idx="${idx}"><svg aria-hidden="true"><use href="#i-match"/></svg><span>أنسب لجينات هذا المريض: ${drugAr(drug)}</span></button>`;
+      })
+      .join('')}${pharm ? `<button class="m-btn m-btn--quiet" type="button" data-pharm="1" data-card-idx="${idx}"><svg aria-hidden="true"><use href="#i-send"/></svg><span>إرسال إلى الصيدلي</span></button>` : ''}</div>`);
+  }
+
+  const link = Array.isArray(card.links) ? card.links[0] : null;
+  return `<article class="m-cds" lang="ar" dir="rtl" data-card-idx="${idx}" data-render="extension">
+    <div class="m-cds__bar">
+      <span class="m-cds__indicator m-cds__indicator--${indicator}"><svg aria-hidden="true"><use href="${indicator === 'warning' ? '#i-ask' : '#i-info'}"/></svg><span>${indWord}</span></span>
+      <span><span class="m-mock">بيانات تجريبية</span></span>
+    </div>
+    <div class="m-cds__body">${body.join('\n')}</div>
+    <div class="m-cds__foot">
+      <span>بيانات تجريبية · ينصح ولا يصف الدواء · نموذج بحثي — ليس للاستخدام السريري</span>
+      ${link ? `<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--m-brand)">إرشاد CPIC</a>` : ''}
+    </div>
+  </article>`;
+}
+
 const COPY = {
   en: {
     title: 'Meyar — Prescriber card preview',
@@ -45,6 +317,14 @@ const COPY = {
     sc2Label: '2. demo-002 · Codeine (on paroxetine)',
     sc3Label: '3. Paroxetine order · Patient on codeine (effect after signing)',
     sc4Label: '4. Pantoprazole · No CPIC alternative',
+    sc5Label: '5. demo-006 · Codeine (on duloxetine)',
+    bannerLabel: 'Patient (demo data)',
+    bannerName: 'Name',
+    bannerAge: 'Age',
+    bannerSample: 'Sample type',
+    bannerSampleGermline: 'Germline',
+    bannerKit: 'Kit ID',
+    bannerDate: 'Result date',
   },
   ar: {
     title: 'مِعيار — معاينة بطاقة الطبيب',
@@ -85,6 +365,14 @@ const COPY = {
     sc2Label: '٢. demo-002 · كودايين (مع باروكسيتين)',
     sc3Label: '٣. طلب باروكسيتين · مريض يتناول كودايين (الأثر بعد التوقيع)',
     sc4Label: '٤. بانتوبرازول · دون بديل في CPIC',
+    sc5Label: '٥. demo-006 · كودايين (مع دولوكسيتين)',
+    bannerLabel: 'المريض (بيانات تجريبية)',
+    bannerName: 'الاسم',
+    bannerAge: 'العمر',
+    bannerSample: 'نوع العيّنة',
+    bannerSampleGermline: 'وراثية (germline)',
+    bannerKit: 'معرّف العُدّة',
+    bannerDate: 'تاريخ النتيجة',
   },
 };
 
@@ -128,6 +416,15 @@ export function buildPreviewScenarios() {
     {
       id: 'demo-001-clopidogrel',
       labelKey: 'sc1Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠١', en: 'Demo patient 001', mock: true },
+        age: { value: 52, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0001', mock: true },
+        resultDate: { value: '2026-11-18', mock: true },
+        mock: true,
+      },
       patientId: 'demo-001',
       drug: 'clopidogrel',
       orders: [
@@ -184,6 +481,15 @@ export function buildPreviewScenarios() {
     {
       id: 'demo-002-codeine',
       labelKey: 'sc2Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٢', en: 'Demo patient 002', mock: true },
+        age: { value: 61, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0002', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-002',
       drug: 'codeine',
       orders: [
@@ -235,6 +541,15 @@ export function buildPreviewScenarios() {
     {
       id: 'paroxetine-backward-sweep',
       labelKey: 'sc3Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٢', en: 'Demo patient 002', mock: true },
+        age: { value: 61, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0002', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-002-sweep',
       drug: 'paroxetine',
       orders: [
@@ -327,6 +642,15 @@ export function buildPreviewScenarios() {
     {
       id: 'pantoprazole-no-alt',
       labelKey: 'sc4Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٤', en: 'Demo patient 004', mock: true },
+        age: { value: 47, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0004', mock: true },
+        resultDate: { value: '2026-11-19', mock: true },
+        mock: true,
+      },
       patientId: 'demo-cyp2c19-um',
       drug: 'pantoprazole',
       orders: [
@@ -395,6 +719,103 @@ export function buildPreviewScenarios() {
         },
       },
     },
+    {
+      // DEMO-FIX-3: hero patient for the video. Prefetch built from docs/fixtures/demo-006.contract.json:
+      // CYP2D6 *1/*2x2 Ultrarapid (mock outside call), acting like Normal because of duloxetine
+      // (moderate inhibitor, tables/cyp_inhibitors.json): 3.0 × 0.5 = 1.5. Backend logic unchanged.
+      id: 'demo-006-codeine',
+      labelKey: 'sc5Label',
+      // DEMO-FIX-2: mock patient banner. Pseudonym only; every value is mock.
+      banner: {
+        pseudonym: { ar: 'مريض تجريبي ٠٠٦', en: 'Demo patient 006', mock: true },
+        age: { value: 58, mock: true },
+        sampleOrigin: { value: 'germline', mock: true },
+        kitId: { value: 'MYR-DEMO-0006', mock: true },
+        resultDate: { value: '2026-11-22', mock: true },
+        mock: true,
+      },
+      patientId: 'demo-006',
+      drug: 'codeine',
+      orders: [
+        { name: 'Codeine 30 MG Oral Tablet', context: 'New analgesic order', status: 'Signing now', pending: true },
+        { name: 'Duloxetine', context: 'Patient-entered current medicine (CYP2D6 moderate inhibitor)', status: 'Active', pending: false },
+      ],
+      geneProfile: {
+        gene: 'CYP2D6',
+        diplotype: '*1/*2x2',
+        phenotype: 'Ultrarapid Metabolizer',
+        effectivePhenotype: 'Normal Metabolizer',
+        phenoconversion: { applied: true, cause: ['duloxetine'] },
+        callability: { method: 'outside-call', svAssessed: true },
+        coverage: { definingPositionsAssayed: 0, definingPositionsTotal: 0, saudiDataTier: 0 },
+      },
+      hookBody: {
+        hook: 'order-sign',
+        hookInstance: 'b6-preview-006',
+        context: {
+          userId: 'Practitioner/demo-clinician',
+          patientId: 'demo-006',
+          draftOrders: {
+            resourceType: 'Bundle',
+            type: 'collection',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'MedicationRequest',
+                  id: 'medrx-b6-6',
+                  status: 'draft',
+                  intent: 'order',
+                  subject: { reference: 'Patient/demo-006' },
+                  medicationCodeableConcept: {
+                    coding: [
+                      {
+                        system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
+                        code: '2670',
+                        display: 'Codeine 30 MG Oral Tablet',
+                      },
+                    ],
+                    text: 'Codeine 30 MG Oral Tablet',
+                  },
+                },
+              },
+            ],
+          },
+        },
+        prefetch: {
+          pgxObservations: {
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: makeObs({
+                  patientId: 'demo-006',
+                  gene: 'CYP2D6',
+                  diplotype: '*1/*2x2',
+                  phenotype: 'Ultrarapid Metabolizer',
+                  guidelineVersion: 'CPIC PharmCAT 3.4.0',
+                }),
+              },
+            ],
+          },
+          currentMedications: {
+            resourceType: 'Bundle',
+            type: 'searchset',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'MedicationStatement',
+                  id: 'stmt-duloxetine-6',
+                  status: 'active',
+                  subject: { reference: 'Patient/demo-006' },
+                  informationSource: { reference: 'Patient/demo-006', display: 'patient-entered (mock)' },
+                  medicationCodeableConcept: { text: 'duloxetine' },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
   ];
 }
 
@@ -404,6 +825,8 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
   const c = COPY[initialLang];
   const copyJson = JSON.stringify(COPY).replace(/</g, '\\u003c');
   const scenariosJson = JSON.stringify(buildPreviewScenarios()).replace(/</g, '\\u003c');
+  const arVocabJson = JSON.stringify(loadArabicVocab()).replace(/</g, '\\u003c');
+  const renderCardArSource = renderCardAr.toString();
 
   return `<!doctype html>
 <html lang="${initialLang}" dir="${dir}" data-theme="paper" data-voice="clinician" data-elder="off">
@@ -545,6 +968,31 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     background: var(--m-ask-tint);
     color: var(--m-text);
   }
+  .prv-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--m-space-3) var(--m-space-4);
+    padding: var(--m-space-3) var(--m-space-4);
+    background: var(--m-surface);
+    border-block-end: 1px solid var(--m-line);
+    margin: 0;
+  }
+  .prv-banner__item { display: grid; gap: 2px; min-inline-size: 0; }
+  .prv-banner dt {
+    font-size: var(--m-size-xs);
+    color: var(--m-text2);
+    font-weight: 600;
+  }
+  .prv-banner dd {
+    margin: 0;
+    font-size: var(--m-size-sm);
+    font-weight: 700;
+    color: var(--m-text);
+    overflow-wrap: anywhere;
+  }
+  .prv-banner__date { display: grid; gap: 2px; }
+  .prv-banner__date span + span { font-weight: 500; color: var(--m-text2); }
+  .prv-banner__chip { align-self: center; justify-self: start; }
   .prv-ehr__actions {
     padding: var(--m-space-4);
     display: flex;
@@ -601,6 +1049,25 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     max-inline-size: 100%;
     height: auto;
     padding-block: var(--m-space-2);
+  }
+  .mx-line { font-size: var(--m-size-sm); color: var(--m-text); }
+  .m-cds .m-coverage { grid-template-columns: minmax(0, 1fr); }
+  .m-cds .m-comb { max-inline-size: 100%; overflow: hidden; }
+  .m-cds bdi { overflow-wrap: anywhere; }
+  .mx-cpic { display: grid; gap: var(--m-space-1); }
+  .mx-cpic__h {
+    font-size: var(--m-size-xs);
+    font-weight: 700;
+    color: var(--m-text2);
+  }
+  .mx-cpic .m-cds__rec { text-align: left; }
+  .mx-others {
+    margin: 0;
+    padding-inline-start: var(--m-space-4);
+    font-size: var(--m-size-xs);
+    color: var(--m-text2);
+    display: grid;
+    gap: var(--m-space-1);
   }
   .prv-json {
     background: var(--m-surface);
@@ -686,6 +1153,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
         <span><strong data-t="ordersTitle">${c.ordersTitle}</strong> · <span class="m-data" id="patient-label">demo-001</span></span>
         <span class="m-mock" data-t="demo">${c.demo}</span>
       </header>
+      <section class="prv-banner-host" id="patient-banner" aria-label="${c.bannerLabel}"></section>
       <div class="prv-table-wrap">
         <table class="prv-table">
           <thead>
@@ -725,12 +1193,16 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 </main>
 
 <script type="module">
-  import { scaleHTML, combHTML, calibrate, initMotion, setLang, clinicianScaleHTML } from '/design/meyar.js';
+  import { scaleHTML, scaleIndex, scaleKind, combHTML, calibrate, initMotion, setLang, clinicianScaleHTML } from '/design/meyar.js';
+
+  const AR = ${arVocabJson};
+  ${renderCardArSource}
 
   const COPY = ${copyJson};
   const SCENARIOS = ${scenariosJson};
   let currentLang = ${JSON.stringify(initialLang)};
-  let currentScenario = SCENARIOS[0];
+  // DEMO-FIX-3: the video opens on scenario 5 (demo-006 codeine on duloxetine).
+  let currentScenario = SCENARIOS.find((s) => s.id === 'demo-006-codeine') || SCENARIOS[0];
   let lastResponse = null;
 
   function esc(str) {
@@ -814,6 +1286,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
     'Hospital record (CYP2D6 strong inhibitor)': 'سجل المستشفى (مثبط قوي لـ CYP2D6)',
     'Strong CYP2D6 inhibitor': 'مثبط قوي لـ CYP2D6',
     'Existing active order': 'طلب حالي نشط',
+    'Patient-entered current medicine (CYP2D6 moderate inhibitor)': 'دواء حالي أدخله المريض (مثبط متوسط لـ CYP2D6)',
     'PPI dose adjustment (no CPIC alternative)': 'تعديل جرعة مثبط مضخة البروتون (لا بديل في CPIC)',
     'Signing now': 'قيد التوقيع',
     'Active': 'نشط',
@@ -821,12 +1294,64 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
   };
   const trOrder = (s) => (currentLang === 'ar' && ORDER_AR[s]) || s;
 
+  // Arabic order line: drug name from passport/src/i18n/ar.json + strength, e.g. «كودايين ٣٠ ملغ أقراص».
+  function orderNameHtml(name) {
+    if (currentLang !== 'ar') return esc(name);
+    const s = String(name || '').trim();
+    const m = /^([A-Za-z][A-Za-z -]*?)\\s+([\\d.]+)\\s*MG\\s+Oral\\s+Tablet$/i.exec(s);
+    const drugAr = (d) => AR.drugs[String(d).toLowerCase()];
+    if (m && drugAr(m[1])) {
+      return \`\${esc(drugAr(m[1]))} \${esc(new Intl.NumberFormat('ar-SA').format(Number(m[2])))} ملغ أقراص\`;
+    }
+    if (drugAr(s)) return esc(drugAr(s));
+    return \`<bdi dir="ltr">\${esc(s)}</bdi>\`;
+  }
+
+  // DEMO-FIX-2: result date in Hijri (Umm al-Qura) and Gregorian, as cds/lib/dashboard.js does.
+  function formatResultDate(iso) {
+    const d = new Date(iso + 'T12:00:00Z');
+    const ar = currentLang === 'ar';
+    let hijri = '';
+    try {
+      hijri = new Intl.DateTimeFormat(ar ? 'ar-SA-u-ca-islamic-umalqura' : 'en-GB-u-ca-islamic-umalqura', {
+        day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+      }).format(d);
+    } catch { /* calendar unsupported */ }
+    const greg = new Intl.DateTimeFormat(ar ? 'ar-SA-u-ca-gregory' : 'en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+    }).format(d);
+    return { hijri, greg };
+  }
+
+  function renderBanner() {
+    const host = document.getElementById('patient-banner');
+    const b = currentScenario.banner;
+    if (!b) { host.innerHTML = ''; host.hidden = true; return; }
+    host.hidden = false;
+    const c = COPY[currentLang];
+    const ar = currentLang === 'ar';
+    const n = (v) => new Intl.NumberFormat(ar ? 'ar-SA' : 'en-GB').format(v);
+    const date = formatResultDate(b.resultDate.value);
+    const item = (label, value) =>
+      '<div class="prv-banner__item"><dt>' + esc(label) + '</dt><dd>' + value + '</dd></div>';
+    host.innerHTML =
+      '<dl class="prv-banner">' +
+      item(c.bannerName, esc(ar ? b.pseudonym.ar : b.pseudonym.en)) +
+      item(c.bannerAge, esc(n(b.age.value))) +
+      item(c.bannerSample, esc(b.sampleOrigin.value === 'germline' ? c.bannerSampleGermline : b.sampleOrigin.value)) +
+      item(c.bannerKit, '<bdi class="m-data" dir="ltr">' + esc(b.kitId.value) + '</bdi>') +
+      item(c.bannerDate, '<span class="prv-banner__date"><span>' + esc(date.hijri) + '</span><span>' + esc(date.greg) + '</span></span>') +
+      '<div class="prv-banner__chip"><span class="m-mock">' + esc(c.demo) + '</span></div>' +
+      '</dl>';
+  }
+
   function renderOrdersTable() {
+    renderBanner();
     document.getElementById('patient-label').textContent = currentScenario.patientId;
     const tbody = document.getElementById('orders-body');
     tbody.innerHTML = currentScenario.orders
       .map(
-        (o) => \`<tr class="\${o.pending ? 'is-pending' : ''}"><td><strong>\${esc(o.name)}</strong></td><td>\${esc(trOrder(o.context))}</td><td>\${esc(trOrder(o.status))}</td></tr>\`
+        (o) => \`<tr class="\${o.pending ? 'is-pending' : ''}"><td><strong>\${orderNameHtml(o.name)}</strong></td><td>\${esc(trOrder(o.context))}</td><td>\${esc(trOrder(o.status))}</td></tr>\`
       )
       .join('');
   }
@@ -869,6 +1394,10 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
 
     host.innerHTML = cards
       .map((card, idx) => {
+        // DEMO-FIX-1: Arabic cards render from the structured extension, never from the English Markdown.
+        if (currentLang === 'ar' && card.extension?.meyar) {
+          return renderCardAr(card, { AR, esc, scaleHTML, scaleIndex, scaleKind, combHTML, idx });
+        }
         const isWarn = card.indicator === 'warning';
         const isSweep = /backward sweep/i.test(card.summary);
         const indClass = isWarn ? 'm-cds__indicator--warning' : 'm-cds__indicator--info';
@@ -991,6 +1520,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
       btn.setAttribute('aria-pressed', btn.dataset.langBtn === currentLang ? 'true' : 'false');
     });
     renderScenarioButtons();
+    renderOrdersTable();
     if (lastResponse) renderCards(lastResponse);
   }
 
