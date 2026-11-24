@@ -9,6 +9,10 @@ export const NONCE_BYTES = 12;
 const GCM_TAG_BYTES = 16;
 // Longest emergency line the patient may type (UI limit to keep the QR scannable).
 export const EMERGENCY_MAX_CHARS = 120;
+// Most current medicines the card carries (UI limit to keep the QR scannable).
+// At this count the 28 mm card QR decoded in every 300 dpi raster trial
+// (docs/REVIEW.md); more medicines made it fail. Not yet tested on paper.
+export const MAX_CURRENT_MEDS = 4;
 
 export function toBase64Url(bytes) {
   let bin = '';

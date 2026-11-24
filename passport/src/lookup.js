@@ -121,3 +121,20 @@ export function getShiftedGenesForMed(medName, genes) {
     )
     .map((g) => g.gene);
 }
+
+/**
+ * Split the genes a current medication affects into scored (CYP2D6 activity
+ * score shifted, Thomas et al. 2020) and flagged-only (non-CYP2D6, no score).
+ */
+export function getMedGeneEffects(medName, genes) {
+  const canon = canonicalDrugName(medName);
+  const scored = [];
+  const flagged = [];
+  for (const g of genes) {
+    const pc = g.phenoconversion;
+    if (!pc?.applied || !Array.isArray(pc.cause)) continue;
+    if (!pc.cause.some((c) => canonicalDrugName(c) === canon)) continue;
+    (pc.adjustedActivityScore != null ? scored : flagged).push(g.gene);
+  }
+  return { scored, flagged };
+}

@@ -310,7 +310,8 @@ export function mergeCurrentMedications(baseMeds = [], extraMeds = []) {
  */
 export function applyPhenoconversion(contract, extraMedications = [], options = {}) {
   if (!contract || contract.sampleOrigin !== 'germline') {
-    return contract;
+    // Mirrors engine/phenoconvert.py: refuse anything that is not germline (A6).
+    throw new Error(`Refusing non-germline contract: sampleOrigin=${contract?.sampleOrigin}`);
   }
 
   const inhibitorIndex = options.inhibitorRows

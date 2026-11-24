@@ -6,7 +6,7 @@ import './app.css';
 import { initMotion, calibrate, setLang, setElder } from '@design/meyar.js';
 import { getDrugsForGene } from './lookup.js';
 import { applyPhenoconversion, canonicalDrugName } from './phenoconvert.js';
-import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg } from './qr.js';
+import { encodeQrEnvelope, decodeQrEnvelope, renderQrSvg, MAX_CURRENT_MEDS } from './qr.js';
 import { isValidPin, normalizeDigits } from './pinguard.js';
 import { renderApp, renderOtcResultHtml } from './render.js';
 import { COPY } from './i18n.js';
@@ -164,7 +164,18 @@ async function loadPatient(patientId) {
   try {
     const res = await fetch(`/demo/${encodeURIComponent(patientId)}.contract.json`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    state.contract = await res.json();
+    const loaded = await res.json();
+    if (loaded?.sampleOrigin !== 'germline') {
+      // A6: never show a non-germline profile.
+      state.contract = null;
+      state.localMeds = [];
+      state.effectiveContract = null;
+      state.error = COPY[state.lang].profileNotGermline;
+      update();
+      refreshQr();
+      return;
+    }
+    state.contract = loaded;
     state.localMeds = readLocalMeds(patientId);
     recomputeEffectiveContract();
   } catch (err) {
@@ -184,9 +195,10 @@ function addPatientMedication(rawName) {
   const trimmed = String(rawName || '').trim();
   if (!trimmed) return;
   const canon = canonicalDrugName(trimmed);
-  const existing = (state.effectiveContract?.currentMedications || [])
-    .some((m) => canonicalDrugName(m.name) === canon);
-  if (!existing) {
+  const current = state.effectiveContract?.currentMedications || [];
+  const existing = current.some((m) => canonicalDrugName(m.name) === canon);
+  state.medsFull = !existing && current.length >= MAX_CURRENT_MEDS;
+  if (!existing && !state.medsFull) {
     state.localMeds = [
       ...state.localMeds,
       { name: canon, source: 'patient-entered', mock: true },
@@ -203,6 +215,7 @@ function removePatientMedication(medName) {
   if (state.caregiverMode || !state.contract) return;
   const canon = canonicalDrugName(medName);
   state.localMeds = state.localMeds.filter((m) => canonicalDrugName(m.name) !== canon);
+  state.medsFull = false;
   writeLocalMeds(state.patientId, state.localMeds);
   recomputeEffectiveContract();
   update();

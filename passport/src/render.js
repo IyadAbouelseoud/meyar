@@ -1,10 +1,17 @@
 import { scaleHTML, combHTML } from '@design/meyar.js';
 import { COPY, PHENOTYPE_PLAIN, PHENOTYPE_SHORT, drugLabel, formatNum, getScaleLabels } from './i18n.js';
-import { getDrugsForGene, getShiftedGenesForMed, getTierInfo, isMedCausingShift } from './lookup.js';
+import { getDrugsForGene, getMedGeneEffects, getTierInfo } from './lookup.js';
 import { canonicalDrugName } from './phenoconvert.js';
 import { lookupOtcProduct } from './otc.js';
 import { renderId1CardHtml, renderA6FoldoutHtml } from './print.js';
 import { buildGeneSpeakText } from './speech.js';
+
+function medGeneNote(fx, t) {
+  const parts = [];
+  if (fx.scored.length) parts.push(`<span class="m-data">${esc(fx.scored.join(', '))}</span>`);
+  if (fx.flagged.length) parts.push(`${esc(t.mayAffectPrefix)} <span class="m-data">${esc(fx.flagged.join(', '))}</span>`);
+  return parts.join(' · ');
+}
 
 function esc(str) {
   return String(str ?? '')
@@ -302,8 +309,10 @@ function renderMedsView(contract, lang, t, state = {}) {
         ${meds.length === 0
           ? `<div class="m-medlist__empty">${esc(t.noMeds)}</div>`
           : meds.map((m) => {
-              const shifts = isMedCausingShift(m.name, genes);
-              const shiftedGenes = getShiftedGenesForMed(m.name, genes);
+              const fx = getMedGeneEffects(m.name, genes);
+              const shifts = fx.scored.length > 0;
+              const flaggedOnly = !shifts && fx.flagged.length > 0;
+              const geneNote = medGeneNote(fx, t);
               const srcText = m.source === 'hospital-record' ? t.sourceHospital : t.sourcePatient;
               const canRemove = !state.caregiverMode && localNames.has(canonicalDrugName(m.name));
               return `
@@ -312,12 +321,12 @@ function renderMedsView(contract, lang, t, state = {}) {
                     <b>${esc(drugLabel(m.name, lang))}</b>
                     ${m.mock ? `<span class="m-mock">${esc(t.demo)}</span>` : ''}
                     <br>
-                    <small>${esc(srcText)}${shiftedGenes.length ? ` · <span class="m-data">${esc(shiftedGenes.join(', '))}</span>` : ''}</small>
+                    <small>${esc(srcText)}${geneNote ? ` · ${geneNote}` : ''}</small>
                   </div>
                   <div class="m-medlist__actions">
-                    <span class="m-status ${shifts ? 'm-status--info' : 'm-status--none'}">
-                      <svg aria-hidden="true"><use href="#${shifts ? 'i-info' : 'i-none'}"/></svg>
-                      <span>${esc(shifts ? t.changesGene : t.noGeneImpact)}</span>
+                    <span class="m-status ${shifts || flaggedOnly ? 'm-status--info' : 'm-status--none'}">
+                      <svg aria-hidden="true"><use href="#${shifts || flaggedOnly ? 'i-info' : 'i-none'}"/></svg>
+                      <span>${esc(shifts ? t.changesGene : flaggedOnly ? t.mayAffectGene : t.noGeneImpact)}</span>
                     </span>
                     ${canRemove ? `
                       <button type="button" class="m-btn m-btn--quiet m-ctrl-btn" data-action="remove-med" data-med="${esc(m.name)}">
@@ -335,6 +344,7 @@ function renderMedsView(contract, lang, t, state = {}) {
               <b>${esc(t.medsAddTitle)}</b>
               <small>${esc(t.medsAddSub)}</small>
             </div>
+            ${state.medsFull ? `<p class="m-coverage__line" role="status" data-testid="meds-full">${esc(t.medsListFull)}</p>` : ''}
             <div class="m-field">
               <label for="med-add-input">${esc(t.medsInputLabel)}</label>
               <div class="m-otc-inputrow">
@@ -730,8 +740,10 @@ export function renderPharmacistView(contract, lang, t, state = {}) {
           ? `<div class="m-empty">${esc(t.noMeds)}</div>`
           : `<div class="m-medlist">
               ${meds.map((m) => {
-                const shifts = isMedCausingShift(m.name, genes);
-                const shiftedGenes = getShiftedGenesForMed(m.name, genes);
+                const fx = getMedGeneEffects(m.name, genes);
+                const shifts = fx.scored.length > 0;
+                const flaggedOnly = !shifts && fx.flagged.length > 0;
+                const geneNote = medGeneNote(fx, t);
                 const srcText = m.source === 'hospital-record' ? t.sourceHospital : t.sourcePatient;
                 return `
                   <div class="m-medlist__row">
@@ -739,11 +751,11 @@ export function renderPharmacistView(contract, lang, t, state = {}) {
                       <b>${esc(drugLabel(m.name, lang))}</b>
                       ${m.mock ? `<span class="m-mock">${esc(t.demo)}</span>` : ''}
                       <br>
-                      <small>${esc(srcText)}${shiftedGenes.length ? ` · <span class="m-data">${esc(shiftedGenes.join(', '))}</span>` : ''}</small>
+                      <small>${esc(srcText)}${geneNote ? ` · ${geneNote}` : ''}</small>
                     </div>
-                    <span class="m-status ${shifts ? 'm-status--info' : 'm-status--none'}">
-                      <svg aria-hidden="true"><use href="#${shifts ? 'i-info' : 'i-none'}"/></svg>
-                      <span>${esc(shifts ? t.changesGene : t.noGeneImpact)}</span>
+                    <span class="m-status ${shifts || flaggedOnly ? 'm-status--info' : 'm-status--none'}">
+                      <svg aria-hidden="true"><use href="#${shifts || flaggedOnly ? 'i-info' : 'i-none'}"/></svg>
+                      <span>${esc(shifts ? t.changesGene : flaggedOnly ? t.mayAffectGene : t.noGeneImpact)}</span>
                     </span>
                   </div>
                 `;
