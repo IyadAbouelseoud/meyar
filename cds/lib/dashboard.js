@@ -131,7 +131,9 @@ export function loadCoverageGrid(fixturesDir) {
           const g = byGene.get(gene);
           const assayed = Number(g?.coverage?.definingPositionsAssayed || 0);
           const total = Number(g?.coverage?.definingPositionsTotal || 0);
-          const ratio = total > 0 ? Math.max(0.2, Math.min(1, assayed / total)) : 0.25;
+          // No coverage data for this gene: show "no data", never an invented shade (REVIEW).
+          if (!(total > 0)) return { gene, ratio: null, sv: false, noData: true };
+          const ratio = Math.max(0.2, Math.min(1, assayed / total));
           return { gene, ratio, sv: false };
         }),
       });
@@ -248,7 +250,7 @@ body.m-body { background: var(--m-bg); color: var(--m-text); margin: 0; overflow
       <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-pc" data-v="0">0</span><span class="m-delta" id="d-pc"></span></div><div id="s-pc"></div></div>
     </div>
     <div class="m-tile m-tile--3">
-      <div class="m-tile__head"><span class="m-tile__title" id="t-k4">Switched</span><span class="m-tile__meta" id="t-k4m">backward sweep</span></div>
+      <div class="m-tile__head"><span class="m-tile__title" id="t-k4">Backward-sweep cards</span><span class="m-tile__meta" id="t-k4m">existing orders re-checked</span></div>
       <div class="m-kpi"><div class="m-kpi__row"><span class="m-kpi__num" id="k-sw" data-v="0">0</span><span class="m-delta" id="d-sw"></span></div><div id="s-sw"></div></div>
     </div>
 
@@ -312,8 +314,8 @@ const I18N = {
     k2: 'Accepted',
     k2m: 'better match',
     k3: 'Phenoconversion flags',
-    k4: 'Switched',
-    k4m: 'backward sweep',
+    k4: 'Backward-sweep cards',
+    k4m: 'existing orders re-checked',
     area: 'Cards fired over time',
     areaToday: 'per hour · hover or use arrow keys',
     areaWeek: 'per day · hover or use arrow keys',
@@ -360,7 +362,7 @@ const I18N = {
     k2: 'المقبولة',
     k2m: 'البديل الأنسب',
     k3: 'تنبيهات التحوّل الظاهري',
-    k4: 'المُحوّلة',
+    k4: 'بطاقات المراجعة الرجعية',
     k4m: 'مراجعة الوصفات السابقة',
     area: 'البطاقات المُرسلة عبر الزمن',
     areaToday: 'في الساعة · مرّر أو استخدم الأسهم',
@@ -599,6 +601,8 @@ function renderStaticFixtures() {
       .map((pt) => '<div class="m-heat__row" style="--n:' + g.genes.length + '"><span>' + esc(pt.patientId) + '</span>' +
         pt.cells.map((cell) => cell.sv
           ? '<span class="m-heat__cell is-na" title="Not called from VCF (A8)">SV</span>'
+          : cell.noData
+          ? '<span class="m-heat__cell is-na" title="No coverage data in this contract">—</span>'
           : '<span class="m-heat__cell" style="--v:' + Number(cell.ratio).toFixed(2) + '" title="Demo coverage shading"></span>'
         ).join('') + '</div>')
       .join('');
