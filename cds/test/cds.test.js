@@ -1528,7 +1528,9 @@ describe('Meyar B6: alternatives, phenoconversion, inhibitor backward sweep, and
     assert.match(enHtml, /\/design\/tokens\.css/);
     assert.match(enHtml, /\/design\/meyar\.css/);
     assert.match(enHtml, /\/design\/meyar\.js/);
-    assert.match(enHtml, /scaleHTML\(gp, 'clinician'\)/);
+    // CPIC terms in the page language (REVIEW: 'clinician' was passed as the language, so AR showed English).
+    assert.match(enHtml, /clinScale\(gp, currentLang\)/);
+    assert.match(enHtml, /SCALE\[scaleKind\(g\.phenotype\)\]\.clinician/);
     assert.match(enHtml, /POST \/cds-services\/meyar-pgx/);
 
     const arResp = await fetch(`${baseUrl}/preview?lang=ar`);
