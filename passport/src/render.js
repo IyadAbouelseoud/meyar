@@ -527,19 +527,20 @@ function renderDoctorView(contract, lang, t, state) {
           const covSummary = notAssessed
             ? (g.callability?.reason || t.notAssessedBody)
             : (cov.definingPositionsTotal > 0
-                ? `${cov.definingPositionsAssayed}/${cov.definingPositionsTotal} positions; untested: ${(cov.untestedLocalAlleles || []).join(', ') || 'none'}`
-                : (g.callability?.source || 'Outside call'));
+                ? `${formatNum(cov.definingPositionsAssayed, lang)}/${formatNum(cov.definingPositionsTotal, lang)} ${t.doctorPositions}; ${t.doctorUntested}: ${(cov.untestedLocalAlleles || []).join(', ') || t.doctorNone}`
+                : (g.callability?.source || t.doctorOutsideCall));
           return `
             <div class="m-doctor-row">
               <div class="m-doctor-row__head">
-                <strong class="m-data">${esc(g.gene)}${g.diplotype ? ` · ${esc(g.diplotype)}` : ' · Not assessed'}</strong>
+                <strong class="m-data">${esc(g.gene)}${g.diplotype ? ` · ${esc(g.diplotype)}` : ` · ${esc(t.doctorNotAssessed)}`}</strong>
                 <span class="m-tier"><span class="m-tier__n">T${tierInfo.tier}</span> ${esc(g.guidelineVersion || '')}</span>
               </div>
               <div class="m-doctor-row__grid">
-                <div><strong>${esc(t.doctorColGenetic)}:</strong> ${esc(g.phenotype || 'Not assessed')}</div>
-                <div><strong>${esc(t.doctorColEffective)}:</strong> ${esc(g.effectivePhenotype || g.phenotype || 'Not assessed')}${g.phenoconversion?.applied ? ` (${esc((g.phenoconversion.cause || []).join(', '))}; ${esc(g.phenoconversion.method || '')})` : ''}</div>
+                <div><strong>${esc(t.doctorColGenetic)}:</strong> ${esc(g.phenotype || t.doctorNotAssessed)}</div>
+                <div><strong>${esc(t.doctorColEffective)}:</strong> ${esc(g.effectivePhenotype || g.phenotype || t.doctorNotAssessed)}${g.phenoconversion?.applied ? ` (${esc((g.phenoconversion.cause || []).join(', '))}; ${esc(g.phenoconversion.method || '')})` : ''}</div>
                 <div><strong>${esc(t.doctorColCoverage)}:</strong> ${esc(covSummary)}</div>
               </div>
+              <div class="m-doctor-row__scale">${scaleHTML(g, lang, getScaleLabels(g, lang))}</div>
               ${drugs.length > 0
                 ? `<div class="m-gene__drugs">
                     ${drugs.map((d) => `

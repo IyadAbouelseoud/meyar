@@ -56,3 +56,19 @@ test('the QR card states the PIN limit honestly (AGENTS.md section 8)', () => {
   assert.match(m[1], /stops casual scanning only/);
   assert.match(m[1], /brute-forced offline/);
 });
+
+test('doctor tab draws every gene with the Meyar Scale and has no English left in Arabic (AGENTS 11, C4)', () => {
+  for (const lang of ['ar', 'en']) {
+    const root = { innerHTML: '' };
+    renderApp(root, { lang, elder: false, tab: 'doctor', contract: demo001, effectiveContract: demo001, localMeds: [] });
+    const rows = root.innerHTML.split('class="m-doctor-row"').slice(1);
+    assert.equal(rows.length, demo001.genes.length);
+    for (const r of rows) assert.match(r, /class="m-scale/, `${lang}: scale in every doctor row`);
+    if (lang === 'ar') {
+      const visible = root.innerHTML.replace(/<[^>]+>/g, ' ');
+      for (const word of ['Not assessed', 'positions;', 'untested:', 'Outside call']) {
+        assert.ok(!visible.includes(word), `ar doctor tab shows English "${word}"`);
+      }
+    }
+  }
+});

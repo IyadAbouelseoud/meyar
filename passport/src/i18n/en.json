@@ -234,7 +234,12 @@
     "id1ProtoAr": "نموذج بحثي — ليس للاستخدام السريري",
     "id1ProtoEn": "Research prototype — not for clinical use",
     "foldoutReminder": "Tell your doctor or pharmacist before any new medicine.",
-    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used."
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used.",
+    "doctorNotAssessed": "Not assessed",
+    "doctorPositions": "positions",
+    "doctorUntested": "untested",
+    "doctorNone": "none",
+    "doctorOutsideCall": "Outside call"
   },
   "scan": {
     "proto": "Research prototype — not for clinical use.",
