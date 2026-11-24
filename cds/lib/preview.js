@@ -673,6 +673,7 @@ export function renderPreviewHtml({ lang = 'en' } = {}) {
   <section class="prv-intro">
     <h1 data-t="heading">${c.heading}</h1>
     <p data-t="subtitle">${c.subtitle}</p>
+    <figure class="m-figure m-figure--band prv-figure" data-image="img-05"><picture><img src="/design/imagery/img-05.webp" srcset="/design/imagery/img-05-640.webp 640w, /design/imagery/img-05.webp 1280w, /design/imagery/img-05-1920.webp 1920w" sizes="(min-width: 960px) 900px, 100vw" width="1280" height="800" alt="يدا طبيب بجانب جهاز لوحي على مكتب العيادة — A clinician's hands beside a tablet at a consulting desk" loading="lazy" decoding="async"></picture><figcaption class="m-figure__label">صورة توضيحية مولَّدة · AI-generated illustration</figcaption></figure>
   </section>
 
   <section aria-label="${c.scenariosLabel}">
