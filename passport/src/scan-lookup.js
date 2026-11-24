@@ -1,3 +1,4 @@
+import { decodeQrEnvelope } from './qr.js';
 /**
  * Pure CPIC/A5/A8/A7 card builder from a decrypted C2/C3 QR payload.
  * Never invents dosing or alternatives; every recommendation comes from tables/cpic_recommendations.json.
@@ -184,4 +185,21 @@ export function buildCdsCardsFromPayload(payload, { cpicRows = [], freqRows = []
       contractGene,
     };
   });
+}
+
+/**
+ * Decrypt a scanned card and build its cards, keeping the two failure kinds apart (REVIEW, A6):
+ * a wrong PIN counts against the lock-out; a card that decrypts but is not germline is refused with its
+ * own message and never costs the holder a PIN attempt.
+ * @returns {Promise<{payload?: object, cards?: object[], error?: 'pin'|'not-germline'}>}
+ */
+export async function openScannedCard(rawQrText, pin, tables) {
+  let payload;
+  try {
+    payload = await decodeQrEnvelope(rawQrText, { pin });
+  } catch {
+    return { error: 'pin' };
+  }
+  if (!payload || payload.o !== 'germline') return { error: 'not-germline' };
+  return { payload, cards: buildCdsCardsFromPayload(payload, tables) };
 }

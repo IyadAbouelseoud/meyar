@@ -218,7 +218,7 @@
     "qrEmergencyToggle": "Add an emergency line readable without the PIN",
     "qrEmergencyLabel": "Emergency line (anyone who scans the card sees it)",
     "qrEmergencyHint": "Write only what you want everyone to see. The full record is at the hospital.",
-    "qrPinBrute": "A 6-digit PIN can be guessed on another device if the QR is copied. The card holds gene results only, never your genome or your name.",
+    "qrPinBrute": "The PIN stops casual scanning only; a copied QR can be brute-forced offline. The card holds gene results only, never your genome or your name.",
     "qrPinErrSix": "The PIN must be exactly 6 digits.",
     "qrPinErrMatch": "The two PINs do not match. Type it again.",
     "printTitle": "Printable card & elder fold-out",
@@ -282,6 +282,7 @@
     "emergencyLabel": "Emergency line (chosen by the patient, not encrypted):",
     "pinLocked": "Too many wrong PINs. Wait {s} s, then try again, or ask the patient for the PIN.",
     "patientNoId": "The QR carries no name and no ID number",
-    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used."
+    "noPatientData": "Runs on synthetic and GeT-RM reference data; no patient data was used.",
+    "notGermlineCard": "This card opened, but it is not from an inherited (germline) sample, so Meyar does not show it. Tumour profiling is separate."
   }
 }

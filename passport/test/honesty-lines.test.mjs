@@ -47,3 +47,12 @@ for (const lang of ['en', 'ar']) {
     }
   });
 }
+
+test('the QR card states the PIN limit honestly (AGENTS.md section 8)', () => {
+  const root = { innerHTML: '' };
+  renderApp(root, { lang: 'en', elder: false, tab: 'doctor', contract: demo001, effectiveContract: demo001, localMeds: [] });
+  const m = root.innerHTML.match(/data-testid="qr-brute-honesty">([^<]*)</);
+  assert.ok(m, 'honesty paragraph present');
+  assert.match(m[1], /stops casual scanning only/);
+  assert.match(m[1], /brute-forced offline/);
+});
