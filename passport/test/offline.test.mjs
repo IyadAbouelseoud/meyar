@@ -17,7 +17,7 @@ function walk(dir, base = dir) {
 
 test('dist/sw.js precaches every file the built pages need', () => {
   const sw = fs.readFileSync(path.join(dist, 'sw.js'), 'utf8');
-  const needed = walk(dist).filter((f) => f !== '/sw.js');
+  const needed = walk(dist).filter((f) => f !== '/sw.js' && f !== '/_headers');
   const missing = needed.filter((f) => !sw.includes(`'${f}'`) && !sw.includes(`"${f}"`));
   assert.deepEqual(missing, [], `not precached: ${missing.join(', ')}`);
 });
@@ -25,4 +25,9 @@ test('dist/sw.js precaches every file the built pages need', () => {
 test('dist/sw.js cache name changes when the build changes', () => {
   const sw = fs.readFileSync(path.join(dist, 'sw.js'), 'utf8');
   assert.match(sw, /meyar-passport-offline-[0-9a-f]{8}/, 'cache name carries a build hash so new deploys replace old caches');
+});
+
+test('dist/sw.js never precaches Netlify config (cache.addAll is atomic; one 404 would break offline)', () => {
+  const sw = fs.readFileSync(path.join(dist, 'sw.js'), 'utf8');
+  assert.doesNotMatch(sw, /_headers/);
 });

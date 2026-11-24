@@ -15,7 +15,8 @@ function precacheServiceWorker() {
     closeBundle() {
       const walk = (d) => readdirSync(d, { withFileTypes: true })
         .flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
-      const files = walk(outDir).filter((f) => relative(outDir, f) !== 'sw.js').sort();
+      // _headers is Netlify config, never served: precaching it would 404 and fail cache.addAll.
+      const files = walk(outDir).filter((f) => !['sw.js', '_headers'].includes(relative(outDir, f))).sort();
       const hash = createHash('sha256');
       for (const f of files) hash.update(relative(outDir, f)).update(readFileSync(f));
       const urls = ['/', ...files.map((f) => '/' + relative(outDir, f).split(sep).join('/'))];
