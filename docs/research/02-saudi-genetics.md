@@ -16,7 +16,7 @@ Supporting evidence: 26 of 37 imported markers had MAF = 0 in a Saudi cohort (n=
 | CYP3A5 non-expressers | 77.8% | — |
 | DPYD c.257C>T | ~1 in 333 Saudis | ≥52× rarer in Europeans |
 | CYP2C9*2 | 0.136 | higher than regional reference |
-| Carriers of ≥1 actionable variant | 99.2% of 11,889 Saudis (SHGP, 8 genes) | 99.5% Qataris, 99.99% Estonians |
+| Carriers of ≥1 actionable variant | 99.2% of the 1,928 Saudis genotyped with the PGx panel (Goljan et al. 2022; not of all 11,889) | 99.5% Qataris, 99.99% Estonians |
 
 Sources: Arab PGx systematic review (295 studies / 94,346 participants, Saudi = 38 studies), SHGP, Front Pharmacol 2025;16:1559399, KFSHRC paper above.
 

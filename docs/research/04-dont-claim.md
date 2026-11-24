@@ -1,7 +1,7 @@
 # Do not claim (read before writing any string, doc or poster line)
 
 ## Killed outright — never say, write or code
-1. Saudi mandatory premarital screening does **not** collect G6PD. It screens sickle cell, thalassaemia, HBV, HCV, HIV; G6PD appears only in the separate non-Saudi-spouse panel. The 1.87 million figure is sickle/thalassaemia screens. Two advisors in the project's own council round amplified this error without checking — it is the single most likely way to lose a clinical judge.
+1. Saudi mandatory premarital screening does **not** collect G6PD. The MoH premarital-screening page (opened 24 Nov 2026) names sickle cell anaemia, thalassaemia, HBV, HCV and HIV and does not mention G6PD (it says "such as", so claim only that the page does not mention it). The 1.87 million figure is sickle/thalassaemia screens. Two advisors in the project's own council round amplified this error without checking — it is the single most likely way to lose a clinical judge.
 2. **Sickle cell trait is not pharmacogenetically actionable.** There is no CPIC or DPWG guideline for HBB (ClinPGx checked 24 Nov 2026); trait is a carrier state, not a drug-response phenotype.
 3. Co-trimoxazole is **low-to-no risk** in the 2022 G6PD update.
 4. The 25% G6PD figure is **Al-Ahsa**, not Aseer.
@@ -17,7 +17,7 @@
 - No PGx test price in any Saudi laboratory could be sourced. No price in the pitch as fact.
 - Whether PGx is covered by the Council of Health Insurance Essential Benefit Package is unconfirmed; do not assert exclusion. Published statement: reimbursement pathways "not yet well defined".
 - No Saudi cost of ADRs or medication errors exists. The only verified Saudi ADR-admission study (Qassim 2018) reports 0.8% of 4,739 ward admissions and contradicts itself (0.08%). Frame as a **measurement gap**, not low risk. UK benchmark for contrast: Pirmohamed BMJ 2004, 6.5% of 18,820 admissions, £466m/yr.
-- Aseer's 57.64/100,000 stroke incidence is a single 2016 study with no stated sample size. Not a headline.
+- Aseer's 57.64/100,000 is a minimal incidence of *hospitalised* first-time stroke (Alhazzani et al., IJERPH 2018;15(2):215; 1,249 cases in 2016 over 2,166,983 people). Not a headline; always say "hospitalised".
 - PIM prevalence: use **43.6–80%** (not the 19–80% in one abstract). Largest recent Saudi studies cluster 56–66%; global benchmark 36.7%.
 - Which EHR systems the Saudi clusters run is unconfirmed (Cerner is confirmed at KFSHRC only).
 - No judging rubric or poster spec was published for this hackathon.

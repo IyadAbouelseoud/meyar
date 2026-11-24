@@ -4,8 +4,8 @@
 |---|---|
 | UF interruptive alerts: 63% of 557 alerts accepted, 47% congruent, 20% followed (79/392; a different denominator) | Lemke LK, Cicali EJ, Williams R, Nguyen KA, Cavallari LH, Wiisanen K, Clin Pharmacol Ther 2023;114(6):1350–1357, doi:10.1002/cpt.3051 (verified 2026-11-24) |
 | UK PROGRESS (ISRCTN15390784): pharmacogenetic-guided prescribing in 21 general practices; outcome results not published in a peer-reviewed source as of 2026-11-24. The "90% acted on" figure could not be sourced and is DROPPED | Brunton L et al., Implement Sci Commun 2026;7(1):149, doi:10.1186/s43058-026-01005-x; ISRCTN registry doi:10.1186/ISRCTN15390784 |
-| Ages 45–64 peak exposure band, 31.3% | see EN detail doc, "Burden and target population" |
-| 26 of 37 listed variants zero frequency in a Saudi sample | see EN detail doc, "Saudi population genetics" |
+| Ages 45–64 peak exposure band, 31.3% | Alshabeeb MA et al., Saudi Pharm J 2022;30(8):1181–1192, Table 2: 561,150 of 1,790,910 per-drug exposure records (31.33%). A share of exposure records, not a prevalence (verified 2026-11-24) |
+| 26 of 37 tested markers not inherited in a Saudi sample (n=95; Axiom Precision Medicine Diversity Array Plus) | Alshabeeb MA et al., Front Pharmacol 2025;16:1559399. The paper also says 38 variants were analysed, an internal inconsistency (verified 2026-11-24) |
 | GeT-RM: 363 samples, 34 genes; 70 raw at ENA PRJEB19931 | CDC GeT-RM; ENA PRJEB19931 |
 | Genomadix Cube, FDA 510(k) K220026, CYP2C19 *2/*3/*17 | FDA 510(k) database |
 | KFSHRC programme | Bakheet et al., Genetics in Medicine Open 3:103426 (2025), doi:10.1016/j.gimo.2025.103426 |
