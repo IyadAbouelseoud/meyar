@@ -3,13 +3,15 @@
 // Ground: data-theme="paper" data-voice="clinician" (.m-chartpaper).
 // Left: deliberately generic grey interruptive modal (counter-example).
 // Right: Meyar's non-interruptive .m-cds card as in design/showcase/index.html.
-// Caption: UF Health figures from Lemke et al. 2023 (docs/sources.md). The PROGRESS "90%" was dropped: no primary source (REVIEW 2026-11-24).
+// Caption: no figures. The UF Health and UK PROGRESS numbers are left out of the
+// demo (DEMO-FIX-4): the research validation flagged them, so the caption states the
+// design reason only and quotes no number.
 
 export const COMPARISON_CAPTION_EN =
-  'University of Florida interruptive alerts — 63% of 557 accepted, but only 20% of recommendations followed (79 of 392; Lemke et al., Clin Pharmacol Ther 2023).';
+  "Interruptive alerts are known to cause alert fatigue, so Meyar's card sits beside the order and never blocks it.";
 
 export const COMPARISON_CAPTION_AR =
-  'تنبيهات جامعة فلوريدا المقاطِعة — قُبل 63% من 557 تنبيهاً، لكن لم يُتَّبع سوى 20% من التوصيات (79 من 392؛ Lemke et al., Clin Pharmacol Ther 2023).';
+  'تُظهر الدراسات أن التنبيهات المقاطِعة تُرهق الأطباء؛ لذلك بطاقة مِعيار جانبية ولا تقاطع.';
 
 const COPY = {
   en: {

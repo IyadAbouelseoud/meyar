@@ -1140,7 +1140,7 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /codeine/i);
   });
 
-  it('B5: GET /compare renders both panes on chart-paper ground with exact UF and UK PROGRESS caption', async () => {
+  it('B5: GET /compare renders both panes on chart-paper ground with a figure-free caption (DEMO-FIX-4)', async () => {
     const resp = await fetch(`${baseUrl}/compare`);
     assert.equal(resp.status, 200);
     assert.match(resp.headers.get('content-type') || '', /text\/html/);
@@ -1156,18 +1156,21 @@ describe('Meyar alert log and counts dashboard (B4)', () => {
     assert.match(html, /class="m-cds"/);
     assert.match(html, /class="m-caption"/);
     assert.ok(
-      html.includes(
-        'University of Florida interruptive alerts — 63% of 557 accepted, but only 20% of recommendations followed (79 of 392; Lemke et al., Clin Pharmacol Ther 2023).'
-      ),
-      'Exact UF caption (primary-sourced) must appear; the unsourced PROGRESS 90% is dropped'
+      html.includes("Interruptive alerts are known to cause alert fatigue, so Meyar's card sits beside the order and never blocks it."),
+      'figure-free caption must appear'
     );
+    for (const banned of ['20%', '90%', '63%', 'PROGRESS', 'University of Florida', 'Lemke']) {
+      assert.ok(!html.includes(banned), `compare (en) must not contain ${banned}`);
+    }
 
     const arResp = await fetch(`${baseUrl}/compare?lang=ar`);
     assert.equal(arResp.status, 200);
     const arHtml = await arResp.text();
     assert.match(arHtml, /lang="ar" dir="rtl"/);
-    assert.ok(arHtml.includes('63%') && arHtml.includes('20%') && !arHtml.includes('90%'));
-    assert.ok(!html.includes('PROGRESS') && !html.includes('90%'));
+    assert.ok(arHtml.includes('تُظهر الدراسات أن التنبيهات المقاطِعة تُرهق الأطباء'));
+    for (const banned of ['20%', '90%', '63%', '٢٠٪', '٩٠٪', 'PROGRESS', 'Lemke']) {
+      assert.ok(!arHtml.includes(banned), `compare (ar) must not contain ${banned}`);
+    }
   });
 });
 
